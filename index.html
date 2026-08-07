@@ -30,90 +30,90 @@ Rutas del sitio:
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --ink: #23231f;
-  --green-dark: #1f5c46;
-  --green: #2f7a5c;
-  --green-soft: #e8f0ea;
-  --maroon: #a3243f;
-  --cream: #faf7f1;
-  --cream-deep: #f1eadd;
-  --line: #e6ddd0;
-  --gray: #767066;
-  --white: #ffffff;
+  --ink: #2b211a;
+  --primary: #c9662f;
+  --primary-light: #e08a52;
+  --primary-soft: #f6e4d3;
+  --accent: #7a4a2e;
+  --bg: #fdf6ee;
+  --surface: #ffffff;
+  --line: #ecdfd0;
+  --muted: #8a7a68;
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --radius: 10px;
-  --shadow: 0 10px 26px -14px rgba(31, 92, 70, 0.35);
+  --shadow: 0 10px 26px -14px rgba(20, 15, 10, 0.35);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; font-family: var(--font-body); color: var(--ink); background: var(--white); -webkit-font-smoothing: antialiased; }
+body { margin: 0; font-family: var(--font-body); color: var(--ink); background: var(--surface); -webkit-font-smoothing: antialiased; }
 img { max-width: 100%; display: block; }
 button { font-family: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-:focus-visible { outline: 2px solid var(--green-dark); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1.1rem; }
 
 /* ---------- Header ---------- */
 .top-header { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
 .top-header__bar { display: flex; align-items: center; gap: 1.2rem; }
-.brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--green-dark); flex-shrink: 0; }
+.brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--primary); flex-shrink: 0; }
 .brand img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
 .search-wrap { flex: 1; max-width: 560px; position: relative; display: none; }
-.search-wrap input { width: 100%; padding: 0.6rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--green-dark); font-size: 0.92rem; }
-.search-wrap button { position: absolute; right: 4px; top: 4px; bottom: 4px; width: 38px; border-radius: 999px; border: none; background: var(--green-dark); color: var(--white); display: flex; align-items: center; justify-content: center; }
+.search-wrap input { width: 100%; padding: 0.6rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--primary); font-size: 0.92rem; }
+.search-wrap button { position: absolute; right: 4px; top: 4px; bottom: 4px; width: 38px; border-radius: 999px; border: none; background: var(--primary); color: var(--surface); display: flex; align-items: center; justify-content: center; }
 @media (min-width: 720px) { .search-wrap { display: block; margin: 0 auto; } }
 .header-icons { display: flex; align-items: center; gap: 0.6rem; margin-left: auto; }
-.icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--green-dark); }
-.icon-btn:hover { border-color: var(--green-dark); }
-.cart-badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 4px; border-radius: 999px; background: var(--maroon); color: var(--white); font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--primary); }
+.icon-btn.is-authed { background: var(--primary); color: var(--surface); border-color: var(--primary); }
+.icon-btn:hover { border-color: var(--primary); }
+.cart-badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: var(--surface); font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
 
 /* ---------- Nav ---------- */
-.main-nav { border-bottom: 1px solid var(--line); background: var(--white); position: sticky; top: 0; z-index: 40; }
+.main-nav { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 40; }
 .main-nav__bar { display: flex; align-items: center; gap: 1.4rem; padding: 0.85rem 0; overflow-x: auto; scrollbar-width: none; }
 .main-nav__bar::-webkit-scrollbar { display: none; }
-.nav-cats-trigger { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--green-dark); background: none; border: none; white-space: nowrap; font-size: 0.94rem; }
+.nav-cats-trigger { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); background: none; border: none; white-space: nowrap; font-size: 0.94rem; }
 .main-nav a { font-size: 0.9rem; font-weight: 600; color: var(--ink); white-space: nowrap; }
-.main-nav a:hover, .nav-cats-trigger:hover { color: var(--green-dark); }
-.main-nav a.is-ofertas { color: var(--maroon); }
+.main-nav a:hover, .nav-cats-trigger:hover { color: var(--primary); }
+.main-nav a.is-ofertas { color: var(--accent); }
 
 .cats-panel-overlay { position: fixed; inset: 0; background: rgba(30,25,15,0.35); z-index: 90; display: none; }
 .cats-panel-overlay.is-open { display: block; }
-.cats-panel { position: fixed; top: 0; left: 0; bottom: 0; width: min(340px, 88vw); background: var(--white); z-index: 91; padding: 1.2rem; overflow-y: auto; transform: translateX(-105%); transition: transform 0.2s ease; }
+.cats-panel { position: fixed; top: 0; left: 0; bottom: 0; width: min(340px, 88vw); background: var(--surface); z-index: 91; padding: 1.2rem; overflow-y: auto; transform: translateX(-105%); transition: transform 0.2s ease; }
 .cats-panel-overlay.is-open .cats-panel { transform: translateX(0); }
-.cats-panel h3 { font-family: var(--font-display); margin: 0 0 1rem; color: var(--green-dark); }
-.cats-panel__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.3rem; color: var(--gray); }
+.cats-panel h3 { font-family: var(--font-display); margin: 0 0 1rem; color: var(--primary); }
+.cats-panel__close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.3rem; color: var(--muted); }
 .cats-panel__list button { display: block; width: 100%; text-align: left; padding: 0.65rem 0.4rem; border: none; background: none; border-bottom: 1px solid var(--line); font-size: 0.95rem; font-weight: 600; color: var(--ink); }
-.cats-panel__list button:hover { color: var(--green-dark); }
+.cats-panel__list button:hover { color: var(--primary); }
 
 /* ---------- Hero ---------- */
-.hero { margin-top: 1.2rem; border-radius: var(--radius); overflow: hidden; position: relative; padding: 3.4rem 1.6rem; background: linear-gradient(120deg, var(--green-dark), var(--green) 65%, #4a8f6d); color: var(--white); }
+.hero { margin-top: 1.2rem; border-radius: var(--radius); overflow: hidden; position: relative; padding: 3.4rem 1.6rem; background: linear-gradient(120deg, var(--primary), var(--primary-light)); color: var(--surface); }
 .hero::before { content: ""; position: absolute; inset: 0; opacity: 0.12; background-image: radial-gradient(rgba(255,255,255,0.6) 1.3px, transparent 1.3px); background-size: 16px 16px; }
 .hero__inner { position: relative; max-width: 640px; }
-.hero__badge { position: absolute; top: -1.2rem; right: 0; width: 66px; height: 66px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
+.hero__badge { position: absolute; top: -1.2rem; right: 0; width: 66px; height: 66px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
 .hero__badge img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
 .hero h1 { font-family: var(--font-display); font-size: clamp(1.7rem, 4vw, 2.6rem); margin: 0 0 0.6rem; line-height: 1.15; }
 .hero p { font-size: 1.02rem; opacity: 0.94; margin: 0 0 1.4rem; max-width: 480px; }
-.hero .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 999px; background: var(--white); color: var(--green-dark); font-weight: 800; font-size: 0.92rem; border: none; }
+.hero .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.7rem 1.4rem; border-radius: 999px; background: var(--surface); color: var(--primary); font-weight: 800; font-size: 0.92rem; border: none; }
 
 /* ---------- Info strip ---------- */
 .info-strip { display: grid; grid-template-columns: 1fr; gap: 1.1rem; margin-top: 2rem; }
 @media (min-width: 720px) { .info-strip { grid-template-columns: repeat(3, 1fr); } }
 .info-item { display: flex; gap: 0.8rem; align-items: flex-start; }
-.info-item svg { flex-shrink: 0; color: var(--green-dark); margin-top: 2px; }
+.info-item svg { flex-shrink: 0; color: var(--primary); margin-top: 2px; }
 .info-item strong { display: block; font-size: 0.96rem; margin-bottom: 0.15rem; }
-.info-item span { font-size: 0.85rem; color: var(--gray); }
+.info-item span { font-size: 0.85rem; color: var(--muted); }
 
 /* ---------- Section titles ---------- */
 .section-band { margin-top: 2.6rem; }
-.section-band__title { border: 1.5px solid var(--green-dark); border-radius: 999px; padding: 0.7rem 1rem; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--green-dark); text-transform: uppercase; }
+.section-band__title { border: 1.5px solid var(--primary); border-radius: 999px; padding: 0.7rem 1rem; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--primary); text-transform: uppercase; }
 .section-title-plain { display: flex; align-items: baseline; justify-content: space-between; margin: 2.6rem 0 1.1rem; }
 .section-title-plain h2 { font-family: var(--font-display); font-size: 1.35rem; margin: 0; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink); }
 
 /* ---------- Categorías ---------- */
 .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; margin-top: 1.3rem; }
 @media (min-width: 640px) { .cat-grid { grid-template-columns: repeat(4, 1fr); } }
-.cat-tile { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; background: var(--green-dark); color: var(--white); border: none; padding: 0; }
+.cat-tile { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; background: var(--primary); color: var(--surface); border: none; padding: 0; }
 .cat-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.72; }
 .cat-tile__fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; opacity: 0.55; }
 .cat-tile span.label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0.6rem; font-weight: 800; font-size: 1rem; letter-spacing: 0.02em; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.35); background: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.28)); }
@@ -121,10 +121,10 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Banners promo ---------- */
 .promo-strip { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin-top: 2.6rem; }
 @media (min-width: 780px) { .promo-strip { grid-template-columns: repeat(3, 1fr); } }
-.promo-tile { position: relative; border-radius: var(--radius); overflow: hidden; padding: 2.2rem 1.3rem; color: var(--white); min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; border: none; text-align: left; }
-.promo-tile--a { background: linear-gradient(135deg, #6b4a2f, #a3243f); }
-.promo-tile--b { background: linear-gradient(135deg, #2f4a3a, #1f5c46); }
-.promo-tile--c { background: linear-gradient(135deg, #3a3a2f, #767066); }
+.promo-tile { position: relative; border-radius: var(--radius); overflow: hidden; padding: 2.2rem 1.3rem; color: var(--surface); min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; border: none; text-align: left; }
+.promo-tile--a { background: linear-gradient(135deg, var(--accent), var(--primary)); }
+.promo-tile--b { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+.promo-tile--c { background: linear-gradient(135deg, var(--muted), var(--ink)); }
 .promo-tile small { font-size: 0.68rem; letter-spacing: 0.14em; opacity: 0.85; text-transform: uppercase; margin-bottom: 0.35rem; }
 .promo-tile strong { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; }
 
@@ -137,77 +137,92 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 620px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 960px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
 
-.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--white); display: flex; flex-direction: column; }
-.p-card__media { position: relative; aspect-ratio: 1/1; background: var(--cream); }
+.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+.p-card__media { position: relative; aspect-ratio: 1/1; background: var(--bg); }
 .p-card__media img { width: 100%; height: 100%; object-fit: cover; }
-.p-badge { position: absolute; left: 0.5rem; top: 0.5rem; font-size: 0.66rem; font-weight: 800; padding: 0.22rem 0.5rem; border-radius: 5px; color: var(--white); background: var(--maroon); }
-.p-badge--nuevo { left: auto; right: 0.5rem; background: var(--green-dark); }
-.p-badge--agotado { background: var(--gray); }
+.p-badge { position: absolute; left: 0.5rem; top: 0.5rem; font-size: 0.66rem; font-weight: 800; padding: 0.22rem 0.5rem; border-radius: 5px; color: var(--surface); background: var(--accent); }
+.p-badge--nuevo { left: auto; right: 0.5rem; background: var(--primary); }
+.p-badge--agotado { background: var(--muted); }
 .p-card__body { padding: 0.75rem 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
 .p-card__name { font-size: 0.87rem; font-weight: 600; line-height: 1.3; min-height: 2.3em; }
 .p-card__price-row { display: flex; align-items: baseline; gap: 0.4rem; margin-top: auto; }
 .p-card__price { font-weight: 800; font-size: 1.02rem; }
-.p-card__compare { font-size: 0.78rem; color: var(--gray); text-decoration: line-through; }
-.p-card__add { margin-top: 0.5rem; width: 100%; padding: 0.55rem; border-radius: 7px; border: none; background: var(--green-dark); color: var(--white); font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
-.p-card__add:disabled { background: var(--line); color: var(--gray); }
-.p-card__add:hover:not(:disabled) { background: var(--green); }
+.p-card__compare { font-size: 0.78rem; color: var(--muted); text-decoration: line-through; }
+.p-card__add { margin-top: 0.5rem; width: 100%; padding: 0.55rem; border-radius: 7px; border: none; background: var(--primary); color: var(--surface); font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.p-card__add:disabled { background: var(--line); color: var(--muted); }
+.p-card__add:hover:not(:disabled) { background: var(--primary-light); }
 
 .more-btn-wrap { text-align: center; margin-top: 1.3rem; }
-.more-btn { border: 1.5px solid var(--green-dark); background: var(--white); color: var(--green-dark); font-weight: 800; padding: 0.7rem 1.5rem; border-radius: 999px; font-size: 0.85rem; letter-spacing: 0.03em; text-transform: uppercase; }
-.more-btn:hover { background: var(--green-soft); }
+.more-btn { border: 1.5px solid var(--primary); background: var(--surface); color: var(--primary); font-weight: 800; padding: 0.7rem 1.5rem; border-radius: 999px; font-size: 0.85rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.more-btn:hover { background: var(--primary-soft); }
 
-.empty-note { color: var(--gray); font-size: 0.88rem; padding: 0.6rem 0; }
+.empty-note { color: var(--muted); font-size: 0.88rem; padding: 0.6rem 0; }
 
 /* ---------- Contacto / footer ---------- */
-.contact-section { margin-top: 3rem; background: var(--green-soft); border-radius: var(--radius); padding: 2.4rem 1.6rem; text-align: center; }
-.contact-section h2 { font-family: var(--font-display); margin: 0 0 0.4rem; color: var(--green-dark); }
-.contact-section p { color: var(--gray); margin: 0 0 1.2rem; }
+.contact-section { margin-top: 3rem; background: var(--primary-soft); border-radius: var(--radius); padding: 2.4rem 1.6rem; text-align: center; }
+.contact-section h2 { font-family: var(--font-display); margin: 0 0 0.4rem; color: var(--primary); }
+.contact-section p { color: var(--muted); margin: 0 0 1.2rem; }
 .contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; }
 .contact-actions a { padding: 0.7rem 1.3rem; border-radius: 999px; font-weight: 800; font-size: 0.86rem; }
-.contact-actions .btn-wsp { background: var(--green-dark); color: var(--white); }
-.contact-actions .btn-outline { border: 1.5px solid var(--green-dark); color: var(--green-dark); }
+.contact-actions .btn-wsp { background: var(--primary); color: var(--surface); }
+.contact-actions .btn-outline { border: 1.5px solid var(--primary); color: var(--primary); }
 
-.site-footer { margin-top: 2.6rem; padding: 2rem 0 3rem; border-top: 1px solid var(--line); color: var(--gray); font-size: 0.85rem; text-align: center; }
-.site-footer a { color: var(--green-dark); font-weight: 600; }
+.site-footer { margin-top: 2.6rem; padding: 2rem 0 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; text-align: center; }
+.site-footer a { color: var(--primary); font-weight: 600; }
 .switch-note { display: block; margin-top: 0.6rem; font-size: 0.78rem; }
 
 /* ---------- Cart drawer ---------- */
 .overlay { position: fixed; inset: 0; background: rgba(20,20,15,0.4); z-index: 95; opacity: 0; pointer-events: none; transition: opacity 0.18s ease; }
 .overlay.is-open { opacity: 1; pointer-events: auto; }
-.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 92vw); background: var(--white); z-index: 96; display: flex; flex-direction: column; transform: translateX(105%); transition: transform 0.22s ease; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 92vw); background: var(--surface); z-index: 96; display: flex; flex-direction: column; transform: translateX(105%); transition: transform 0.22s ease; }
 .drawer.is-open { transform: translateX(0); }
 .drawer__head { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.2rem; border-bottom: 1px solid var(--line); }
-.drawer__head h3 { margin: 0; font-family: var(--font-display); color: var(--green-dark); }
-.drawer__close { background: none; border: none; font-size: 1.3rem; color: var(--gray); }
+.drawer__head h3 { margin: 0; font-family: var(--font-display); color: var(--primary); }
+.drawer__close { background: none; border: none; font-size: 1.3rem; color: var(--muted); }
 .drawer__body { flex: 1; overflow-y: auto; padding: 1rem 1.2rem; }
 .cart-line { display: flex; gap: 0.7rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
-.cart-line img { width: 56px; height: 56px; border-radius: 7px; object-fit: cover; background: var(--cream); }
+.cart-line img { width: 56px; height: 56px; border-radius: 7px; object-fit: cover; background: var(--bg); }
 .cart-line__info { flex: 1; }
 .cart-line__info p { margin: 0 0 0.3rem; font-size: 0.86rem; font-weight: 600; }
 .qty-row { display: flex; align-items: center; gap: 0.5rem; }
-.qty-row button { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: var(--white); }
-.cart-line__remove { background: none; border: none; color: var(--maroon); font-size: 0.78rem; font-weight: 700; }
+.qty-row button { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); }
+.cart-line__remove { background: none; border: none; color: var(--accent); font-size: 0.78rem; font-weight: 700; }
 .drawer__foot { padding: 1.1rem 1.2rem 1.4rem; border-top: 1px solid var(--line); }
 .drawer__total { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 0.8rem; font-size: 1.02rem; }
-.btn-checkout { width: 100%; padding: 0.85rem; border-radius: 999px; border: none; background: var(--green-dark); color: var(--white); font-weight: 800; font-size: 0.92rem; }
-.btn-checkout:hover { background: var(--green); }
+.btn-checkout { width: 100%; padding: 0.85rem; border-radius: 999px; border: none; background: var(--primary); color: var(--surface); font-weight: 800; font-size: 0.92rem; }
+.btn-checkout:hover { background: var(--primary-light); }
 
 /* ---------- Modal auth ---------- */
 .modal-overlay { position: fixed; inset: 0; background: rgba(20,20,15,0.4); z-index: 98; display: none; align-items: center; justify-content: center; padding: 1rem; }
 .modal-overlay.is-open { display: flex; }
-.modal { background: var(--white); border-radius: var(--radius); padding: 1.6rem; width: min(400px, 100%); }
-.modal h3 { font-family: var(--font-display); margin: 0 0 1rem; color: var(--green-dark); }
+.modal { background: var(--surface); border-radius: var(--radius); padding: 1.6rem; width: min(400px, 100%); }
+.modal h3 { font-family: var(--font-display); margin: 0 0 1rem; color: var(--primary); }
 .field { margin-bottom: 0.9rem; }
 .field label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
 .field input { width: 100%; padding: 0.6rem 0.7rem; border-radius: 7px; border: 1px solid var(--line); font-size: 0.92rem; }
 .modal .btn-checkout { margin-top: 0.4rem; }
 .modal-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-.modal-tabs button { flex: 1; padding: 0.5rem; border-radius: 7px; border: 1px solid var(--line); background: var(--white); font-weight: 700; font-size: 0.85rem; }
-.modal-tabs button.is-active { background: var(--green-dark); color: var(--white); border-color: var(--green-dark); }
-.modal-error { color: var(--maroon); font-size: 0.82rem; margin-top: 0.5rem; display: none; }
+.modal-tabs button { flex: 1; padding: 0.5rem; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: 0.85rem; }
+.modal-tabs button.is-active { background: var(--primary); color: var(--surface); border-color: var(--primary); }
+.modal-error { color: var(--accent); font-size: 0.82rem; margin-top: 0.5rem; display: none; }
 .modal-error.is-visible { display: block; }
-.link-btn { background: none; border: none; color: var(--green-dark); font-weight: 700; font-size: 0.82rem; padding: 0; }
-.toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--white); padding: 0.7rem 1.2rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 200; }
+.link-btn { background: none; border: none; color: var(--primary); font-weight: 700; font-size: 0.82rem; padding: 0; }
+.toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--surface); padding: 0.7rem 1.2rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 200; }
+
+/* ---------- Acceso al panel (solo visible para cuentas admin logueadas) ---------- */
+.admin-fab {
+  position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 120;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--primary); color: var(--surface); text-decoration: none;
+  padding: 0.75rem 1.1rem; border-radius: 999px; font-weight: 800; font-size: 0.85rem;
+  box-shadow: 0 10px 24px -8px rgba(20, 15, 10, 0.5);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.admin-fab:hover { background: var(--primary-light); transform: translateY(-2px); }
+@media (max-width: 719px) {
+  .admin-fab span.fab-label { display: none; }
+  .admin-fab { padding: 0.8rem; }
+}
 .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ============================================================
@@ -223,26 +238,26 @@ a { color: inherit; text-decoration: none; }
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap");
 
 #adminView {
-  --black: #221912;
-  --charcoal: #4a382c;
-  --gray-700: #6e5c4e;
-  --gray-500: #9c8977;
-  --gray-300: #d6c7b8;
-  --gray-150: #ece1d4;
-  --gray-100: #f2ebe1;
-  --off-white: #faf6f0;
+  --black: #1f5c46;
+  --charcoal: #2f4a3a;
+  --gray-700: #5c6b60;
+  --gray-500: #8a9188;
+  --gray-300: #cddbd0;
+  --gray-150: #e6efe8;
+  --gray-100: #f0f5f1;
+  --off-white: #faf7f1;
   --white: #ffffff;
 
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --radius-lg: 22px;
-  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
   --radius-sm: 8px;
 
   --container: 1180px;
-  --shadow-soft: 0 10px 30px -12px rgba(23, 23, 26, 0.18);
-  --shadow-lift: 0 18px 40px -14px rgba(23, 23, 26, 0.28);
+  --shadow-soft: 0 10px 30px -12px rgba(20, 15, 10, 0.16);
+  --shadow-lift: 0 18px 40px -14px rgba(20, 15, 10, 0.22);
 }
 
 
@@ -732,6 +747,10 @@ a { color: inherit; text-decoration: none; }
 #adminView .badge { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.2rem 0.5rem; border-radius: 999px; background: var(--gray-100); color: var(--gray-700); }
 #adminView .badge.is-off { background: var(--gray-150); }
 #adminView .row-actions { display: flex; gap: 0.4rem; }
+#adminView .reorder-actions { display: flex; flex-direction: column; gap: 0.15rem; flex-shrink: 0; }
+#adminView .reorder-actions .icon-action { width: 30px; height: 24px; font-size: 0.7rem; }
+#adminView .reorder-actions .icon-action:disabled { opacity: 0.3; cursor: default; }
+#adminView .reorder-actions .icon-action:disabled:hover { border-color: var(--gray-150); }
 #adminView .icon-action { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--gray-150); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 #adminView .icon-action:hover { border-color: var(--black); }
 
@@ -757,6 +776,33 @@ a { color: inherit; text-decoration: none; }
 #adminView .switch input:checked + .switch-track::before { transform: translateX(18px); }
 #adminView .form-actions { display: flex; gap: 0.6rem; margin-top: 1.3rem; }
 #adminView .helper-text { font-size: 0.78rem; color: var(--gray-500); margin-top: -0.3rem; margin-bottom: 1rem; }
+
+/* ---------- Selector de paleta de colores ---------- */
+#adminView .palette-picker { display: flex; gap: 1.2rem; flex-wrap: wrap; align-items: flex-start; }
+#adminView .palette-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; flex: 1; min-width: 240px; }
+#adminView .palette-card { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.75rem; border: 1.5px solid var(--gray-150); border-radius: var(--radius-md); background: var(--white); cursor: pointer; text-align: left; transition: border-color 0.12s ease; }
+#adminView .palette-card:hover { border-color: var(--gray-300); }
+#adminView .palette-card.is-selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+#adminView .palette-dots { display: flex; gap: 3px; flex-shrink: 0; }
+#adminView .palette-dots span { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); display: block; }
+#adminView .palette-name { font-size: 0.82rem; font-weight: 700; line-height: 1.25; }
+
+#adminView .palette-preview {
+  width: 220px; flex-shrink: 0; border-radius: var(--radius-md); overflow: hidden;
+  border: 1px solid var(--gray-150); font-family: var(--font-body); background: var(--pp-bg, #f4f4f2);
+}
+#adminView .pp-hero {
+  background: linear-gradient(120deg, var(--pp-primary, #888), var(--pp-primary-light, #aaa));
+  color: var(--pp-surface, #fff); padding: 1rem 0.9rem; display: flex; flex-direction: column; gap: 0.55rem;
+}
+#adminView .pp-hero__brand { font-family: var(--font-display); font-weight: 700; font-size: 0.98rem; }
+#adminView .pp-hero__btn { align-self: flex-start; background: var(--pp-surface, #fff); color: var(--pp-primary, #333); border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.68rem; font-weight: 800; }
+#adminView .pp-card { padding: 0.75rem; }
+#adminView .pp-card__media { position: relative; aspect-ratio: 1.7/1; background: var(--pp-bg, #eee); border-radius: 8px; margin-bottom: 0.55rem; }
+#adminView .pp-badge { position: absolute; top: 0.4rem; left: 0.4rem; background: var(--pp-accent, #a33); color: #fff; font-size: 0.6rem; font-weight: 800; padding: 0.16rem 0.42rem; border-radius: 5px; }
+#adminView .pp-card__name { font-size: 0.78rem; font-weight: 600; color: var(--pp-ink, #222); margin: 0 0 0.4rem; }
+#adminView .pp-card__price { font-weight: 800; font-size: 0.85rem; color: var(--pp-ink, #222); margin-bottom: 0.5rem; }
+#adminView .pp-card__add { display: block; width: 100%; text-align: center; padding: 0.42rem; border-radius: 6px; background: var(--pp-primary, #333); color: var(--pp-surface, #fff); font-weight: 800; font-size: 0.72rem; }
 
 #adminView .password-field { position: relative; }
 #adminView .password-field input { padding-right: 2.6rem; }
@@ -1161,21 +1207,19 @@ a { color: inherit; text-decoration: none; }
           </div>
           <div class="field">
             <label>Paleta de colores</label>
+            <p class="helper-text" style="margin:0 0 0.8rem;">Elegí una paleta para toda la tienda y el panel. Al tocar una, la vista previa de al lado se actualiza al toque — se guarda cuando apretás "Guardar ajustes".</p>
             <div class="palette-picker">
               <div class="palette-grid" id="paletteGrid"></div>
               <div class="palette-preview" id="palettePreview">
-                <div class="palette-preview__header">
-                  <span class="palette-preview__badge">SANO</span>
-                  <span class="palette-preview__dot"></span>
+                <div class="pp-hero">
+                  <span class="pp-hero__brand">Sano Antojo</span>
+                  <span class="pp-hero__btn">Ver catálogo</span>
                 </div>
-                <div class="palette-preview__hero">
-                  <span class="palette-preview__eyebrow">DIETÉTICA NATURAL</span>
-                  <strong>Sano Antojo</strong>
-                  <span class="palette-preview__btn">Ver catálogo</span>
-                </div>
-                <div class="palette-preview__card">
-                  <div class="palette-preview__thumb"></div>
-                  <span class="palette-preview__price">$ 24.999</span>
+                <div class="pp-card">
+                  <div class="pp-card__media"><span class="pp-badge">Oferta</span></div>
+                  <p class="pp-card__name">Mix de frutos secos</p>
+                  <div class="pp-card__price">$4.500</div>
+                  <span class="pp-card__add">Agregar</span>
                 </div>
               </div>
             </div>
@@ -1302,10 +1346,6 @@ a { color: inherit; text-decoration: none; }
         <div class="field">
           <label for="categoryName">Nombre</label>
           <input type="text" id="categoryName" required />
-        </div>
-        <div class="field">
-          <label for="categoryOrder">Orden (menor número aparece primero)</label>
-          <input type="number" id="categoryOrder" value="0" />
         </div>
         <div class="field">
           <label>Foto de la categoría (para la grilla "Explorá por categoría")</label>
@@ -1459,6 +1499,11 @@ a { color: inherit; text-decoration: none; }
 
 </div>
 
+<a href="#admin" class="admin-fab store-only" id="adminFab" style="display:none">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+  <span class="fab-label">Panel de administración</span>
+</a>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -1528,48 +1573,73 @@ function compressImage(file, maxWidth = 1000, quality = 0.82) {
   });
 }
 
-
 /* ============================================================
-   PALETAS DE COLORES — el dueño elige una desde Ajustes.
-   Cada paleta reemplaza los mismos 9 tokens que ya usa todo el
-   sitio, así que cambia todo (tienda + panel) sin tocar el resto
-   del diseño ni la estructura.
+   PALETAS DE COLORES — la dueña elige una desde el panel
+   (Ajustes → Paleta de colores). Cada paleta trae los tokens de
+   la tienda Y del panel, así que un solo click cambia todo el
+   sitio de una vez, sin tocar el resto del diseño.
    ============================================================ */
 const PALETTES = {
-  monocromo: {
-    label: "Monocromo", black: "#17171a", charcoal: "#34343a", gray700: "#55555c",
-    gray500: "#83838a", gray300: "#c6c6cb", gray150: "#e3e3e6", gray100: "#eeeeef",
-    offwhite: "#f6f6f4", white: "#ffffff",
-  },
-  arena: {
-    label: "Arena cálida", black: "#221912", charcoal: "#4a382c", gray700: "#6e5c4e",
-    gray500: "#9c8977", gray300: "#d6c7b8", gray150: "#ece1d4", gray100: "#f2ebe1",
-    offwhite: "#faf6f0", white: "#ffffff",
-  },
-  pizarra: {
-    label: "Pizarra fría", black: "#12161c", charcoal: "#2c333d", gray700: "#4c5560",
-    gray500: "#78838f", gray300: "#c1c9d1", gray150: "#e0e4e9", gray100: "#eceff2",
-    offwhite: "#f5f7f9", white: "#ffffff",
+  durazno: {
+    label: "Durazno y Canela",
+    store: { ink: "#2b211a", primary: "#c9662f", primaryLight: "#e08a52", primarySoft: "#f6e4d3", accent: "#7a4a2e", bg: "#fdf6ee", surface: "#ffffff", line: "#ecdfd0", muted: "#8a7a68" },
+    admin: { black: "#7a4a2e", charcoal: "#5c3a24", gray700: "#8a6b52", gray500: "#ab8f78", gray300: "#dcc9b4", gray150: "#ede1d2", gray100: "#f5ede2", offwhite: "#fdf8f2", white: "#ffffff" },
   },
   salvia: {
-    label: "Verde salvia", black: "#161a15", charcoal: "#333c2f", gray700: "#525d4c",
-    gray500: "#82897a", gray300: "#c6cdbd", gray150: "#e2e6da", gray100: "#edf0e7",
-    offwhite: "#f6f8f2", white: "#ffffff",
+    label: "Salvia y Arcilla",
+    store: { ink: "#23261f", primary: "#6f8259", primaryLight: "#8fa178", primarySoft: "#e7ecdd", accent: "#c1683f", bg: "#f6f7f0", surface: "#ffffff", line: "#dee3d2", muted: "#7f8874" },
+    admin: { black: "#4f5c40", charcoal: "#3c4630", gray700: "#6b7860", gray500: "#93a087", gray300: "#cdd6c2", gray150: "#e4ead9", gray100: "#f0f4ea", offwhite: "#f8faf4", white: "#ffffff" },
+  },
+  miel: {
+    label: "Miel y Mostaza",
+    store: { ink: "#2c2417", primary: "#b8892b", primaryLight: "#d6a94f", primarySoft: "#f3e6c4", accent: "#6b3f2e", bg: "#fdf8ef", surface: "#ffffff", line: "#ecdfc2", muted: "#8f7f56" },
+    admin: { black: "#6b3f2e", charcoal: "#523021", gray700: "#856048", gray500: "#a8886a", gray300: "#dcc79b", gray150: "#ede2c6", gray100: "#f5eeda", offwhite: "#fbf6e9", white: "#ffffff" },
+  },
+  lavanda: {
+    label: "Lavanda Silvestre",
+    store: { ink: "#241f2e", primary: "#6b5b95", primaryLight: "#8b7ab8", primarySoft: "#ece6f5", accent: "#b6577f", bg: "#f8f6fb", surface: "#ffffff", line: "#e2daf0", muted: "#847997" },
+    admin: { black: "#4c3f6e", charcoal: "#3a3054", gray700: "#6a5c8a", gray500: "#948bab", gray300: "#cfc6e0", gray150: "#e5e0f1", gray100: "#f1eef8", offwhite: "#f9f7fc", white: "#ffffff" },
+  },
+  berries: {
+    label: "Berries y Crema",
+    store: { ink: "#2a1f24", primary: "#7c2f4d", primaryLight: "#a04a6c", primarySoft: "#f1dee5", accent: "#c98a3a", bg: "#fbf6f2", surface: "#ffffff", line: "#ecd9df", muted: "#93808a" },
+    admin: { black: "#5c2438", charcoal: "#451b2a", gray700: "#7d5060", gray500: "#a67e8b", gray300: "#dcbfc7", gray150: "#ecdde1", gray100: "#f5ebee", offwhite: "#fbf5f3", white: "#ffffff" },
+  },
+  oceano: {
+    label: "Océano Suave",
+    store: { ink: "#1f2b2b", primary: "#2e6b6b", primaryLight: "#4d8f8f", primarySoft: "#dfeeed", accent: "#d97b3f", bg: "#f4f9f8", surface: "#ffffff", line: "#d9e6e4", muted: "#6f8482" },
+    admin: { black: "#1f5050", charcoal: "#173c3c", gray700: "#4c6b6b", gray500: "#7c9695", gray300: "#c3d6d5", gray150: "#dfeae9", gray100: "#eef5f4", offwhite: "#f6faf9", white: "#ffffff" },
   },
 };
+const DEFAULT_PALETTE = "durazno";
 
-function applyPalette(key) {
-  const p = PALETTES[key] || PALETTES.arena;
-  const root = document.documentElement.style;
-  root.setProperty("--black", p.black);
-  root.setProperty("--charcoal", p.charcoal);
-  root.setProperty("--gray-700", p.gray700);
-  root.setProperty("--gray-500", p.gray500);
-  root.setProperty("--gray-300", p.gray300);
-  root.setProperty("--gray-150", p.gray150);
-  root.setProperty("--gray-100", p.gray100);
-  root.setProperty("--off-white", p.offwhite);
-  root.setProperty("--white", p.white);
+function applyStorePalette(key, targetEl = document.documentElement) {
+  const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).store;
+  const s = targetEl.style;
+  s.setProperty("--ink", p.ink);
+  s.setProperty("--primary", p.primary);
+  s.setProperty("--primary-light", p.primaryLight);
+  s.setProperty("--primary-soft", p.primarySoft);
+  s.setProperty("--accent", p.accent);
+  s.setProperty("--bg", p.bg);
+  s.setProperty("--surface", p.surface);
+  s.setProperty("--line", p.line);
+  s.setProperty("--muted", p.muted);
+}
+
+function applyAdminPalette(key, targetEl) {
+  if (!targetEl) return;
+  const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).admin;
+  const s = targetEl.style;
+  s.setProperty("--black", p.black);
+  s.setProperty("--charcoal", p.charcoal);
+  s.setProperty("--gray-700", p.gray700);
+  s.setProperty("--gray-500", p.gray500);
+  s.setProperty("--gray-300", p.gray300);
+  s.setProperty("--gray-150", p.gray150);
+  s.setProperty("--gray-100", p.gray100);
+  s.setProperty("--off-white", p.offwhite);
+  s.setProperty("--white", p.white);
 }
 
 /* ============================================================
@@ -1622,6 +1692,7 @@ const Auth = (() => {
     logoutBtn: document.getElementById("accountLogoutBtn"),
     modalTitle: document.getElementById("authModalTitle"),
     accountBtn: document.getElementById("accountBtn"),
+    adminFab: document.getElementById("adminFab"),
   };
 
   function show() { overlayEl.classList.add("is-open"); }
@@ -1702,6 +1773,12 @@ const Auth = (() => {
     el.accountBtn.classList.toggle("is-authed", !!currentUser);
   }
 
+  async function updateAdminFab() {
+    if (!currentUser) { el.adminFab.style.display = "none"; return; }
+    const { data } = await supabase.from("sano_antojo_admins").select("id").eq("id", currentUser.id).maybeSingle();
+    el.adminFab.style.display = data ? "flex" : "none";
+  }
+
   function requireAuth(callback) {
     if (currentUser) { callback(); return; }
     pendingAction = callback;
@@ -1712,9 +1789,11 @@ const Auth = (() => {
     const { data: { session } } = await supabase.auth.getSession();
     currentUser = session?.user || null;
     updateButtonState();
+    updateAdminFab();
     supabase.auth.onAuthStateChange((_event, newSession) => {
       currentUser = newSession?.user || null;
       updateButtonState();
+      updateAdminFab();
     });
   }
 
@@ -1788,7 +1867,7 @@ const Store = (() => {
     }
     el.cartBody.innerHTML = cart.map((i) => `
       <div class="cart-line" data-id="${i.id}">
-        ${i.image_url ? `<img src="${i.image_url}" alt="" />` : `<div style="width:56px;height:56px;border-radius:7px;background:var(--cream);"></div>`}
+        ${i.image_url ? `<img src="${i.image_url}" alt="" />` : `<div style="width:56px;height:56px;border-radius:7px;background:var(--bg);"></div>`}
         <div class="cart-line__info">
           <p>${escapeHtml(i.name)}</p>
           <div class="qty-row">
@@ -1865,6 +1944,7 @@ const Store = (() => {
     const { data, error } = await supabase.from("sano_antojo_settings").select("*").eq("id", 1).single();
     if (error || !data) return;
     settings = data;
+    applyStorePalette(data.color_palette);
     el.heroTitle.textContent = data.store_name || "Sano Antojo";
     el.heroTagline.textContent = data.tagline || "";
     el.brandName.textContent = data.store_name || "Sano Antojo";
@@ -2066,8 +2146,8 @@ const Admin = (() => {
   let removeImage2 = false;
   let removeImage3 = false;
   let pendingCategoryImageFile = null;
+  let adminSelectedPalette = DEFAULT_PALETTE;
   let pendingNewsVideoFile = null;
-  let selectedPalette = "arena";
 
   const el = {
     loginScreen: document.getElementById("loginScreen"),
@@ -2167,7 +2247,6 @@ const Admin = (() => {
     categoryForm: document.getElementById("categoryForm"),
     categoryId: document.getElementById("categoryId"),
     categoryName: document.getElementById("categoryName"),
-    categoryOrder: document.getElementById("categoryOrder"),
     categoryImageDrop: document.getElementById("categoryImageDrop"),
     categoryImageInput: document.getElementById("categoryImageInput"),
     productTagChecks: document.querySelectorAll(".productTagCheck"),
@@ -2270,14 +2349,6 @@ const Admin = (() => {
       el.newsVideoDrop.innerHTML = `<span>🎥 ${escapeHtml(file.name)}</span>`;
     });
 
-    el.paletteGrid.addEventListener("click", (e) => {
-      const card = e.target.closest(".palette-card");
-      if (!card) return;
-      selectedPalette = card.dataset.key;
-      applyPalette(selectedPalette);
-      renderPaletteGrid();
-    });
-
     el.newCategoryBtn.addEventListener("click", () => openCategoryModal());
     el.categoriesList.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
@@ -2286,6 +2357,8 @@ const Admin = (() => {
       const category = categories.find((c) => c.id === id);
       if (btn.dataset.action === "edit") openCategoryModal(category);
       if (btn.dataset.action === "delete") deleteCategory(category);
+      if (btn.dataset.action === "move-up") moveCategory(id, -1);
+      if (btn.dataset.action === "move-down") moveCategory(id, 1);
     });
     el.closeCategoryModal.addEventListener("click", closeCategoryModalFn);
     el.cancelCategoryBtn.addEventListener("click", closeCategoryModalFn);
@@ -2373,14 +2446,39 @@ const Admin = (() => {
 
   function renderCategoriesList() {
     if (categories.length === 0) { el.categoriesList.innerHTML = `<p style="color:var(--gray-500)">Todavía no creaste categorías.</p>`; return; }
-    el.categoriesList.innerHTML = categories.map((c) => `
+    el.categoriesList.innerHTML = categories.map((c, i) => `
       <div class="admin-row" data-id="${c.id}">
-        <div class="admin-row__info"><strong>${escapeHtml(c.name)}</strong><span>Orden: ${c.sort_order}</span></div>
+        <div class="reorder-actions">
+          <button class="icon-action" data-action="move-up" aria-label="Subir" ${i === 0 ? "disabled" : ""}>▲</button>
+          <button class="icon-action" data-action="move-down" aria-label="Bajar" ${i === categories.length - 1 ? "disabled" : ""}>▼</button>
+        </div>
+        <div class="admin-row__info"><strong>${escapeHtml(c.name)}</strong></div>
         <div class="row-actions">
           <button class="icon-action" data-action="edit" aria-label="Editar">✎</button>
           <button class="icon-action" data-action="delete" aria-label="Eliminar">🗑</button>
         </div>
       </div>`).join("");
+  }
+
+  async function persistCategoryOrder() {
+    // Renumeramos todo 0..n-1 según el orden actual del array, así el
+    // orden siempre queda prolijo y sin ambigüedades para la próxima vez.
+    await Promise.all(categories.map((c, i) =>
+      supabase.from("sano_antojo_categories").update({ sort_order: i }).eq("id", c.id)
+    ));
+  }
+
+  async function moveCategory(id, direction) {
+    const index = categories.findIndex((c) => c.id === id);
+    const targetIndex = index + direction;
+    if (index === -1 || targetIndex < 0 || targetIndex >= categories.length) return;
+    [categories[index], categories[targetIndex]] = [categories[targetIndex], categories[index]];
+    renderCategoriesList(); // respuesta visual inmediata
+    try {
+      await persistCategoryOrder();
+    } catch (err) {
+      console.error(err); showToast("No se pudo guardar el nuevo orden"); loadCategories();
+    }
   }
 
   function fillCategorySelect() {
@@ -2392,7 +2490,6 @@ const Admin = (() => {
     el.categoryModalTitle.textContent = category ? "Editar categoría" : "Nueva categoría";
     el.categoryId.value = category?.id || "";
     el.categoryName.value = category?.name || "";
-    el.categoryOrder.value = category?.sort_order ?? 0;
     pendingCategoryImageFile = null;
     el.categoryImageDrop.innerHTML = category?.image_url ? `<img src="${category.image_url}" alt="" />` : `<span>Tocá para subir una foto</span>`;
     el.categoryModalOverlay.classList.add("is-open");
@@ -2413,9 +2510,11 @@ const Admin = (() => {
       const payload = {
         name: el.categoryName.value.trim(),
         slug: slugify(el.categoryName.value.trim()) || crypto.randomUUID().slice(0, 8),
-        sort_order: Number(el.categoryOrder.value) || 0,
         image_url: imageUrl,
       };
+      // Las categorías nuevas van siempre al final; el orden de las
+      // existentes se maneja solo con las flechas de la lista.
+      if (!id) payload.sort_order = categories.length;
       const query = id ? supabase.from("sano_antojo_categories").update(payload).eq("id", id) : supabase.from("sano_antojo_categories").insert(payload);
       const { error } = await query;
       if (error) throw error;
@@ -2431,6 +2530,8 @@ const Admin = (() => {
     if (!confirm(`¿Eliminar la categoría "${category.name}"? Los productos quedarán sin categoría.`)) return;
     const { error } = await supabase.from("sano_antojo_categories").delete().eq("id", category.id);
     if (error) { showToast("No se pudo eliminar"); return; }
+    categories = categories.filter((c) => c.id !== category.id);
+    await persistCategoryOrder(); // cierra el hueco que dejó la borrada
     showToast("Categoría eliminada"); loadCategories(); loadProducts();
   }
 
@@ -3036,34 +3137,39 @@ const Admin = (() => {
   }
 
   function setPalettePreview(key) {
-    const p = PALETTES[key] || PALETTES.arena;
+    const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).store;
     const style = el.palettePreview.style;
-    style.setProperty("--p-black", p.black);
-    style.setProperty("--p-white", p.white);
-    style.setProperty("--p-offwhite", p.offwhite);
-    style.setProperty("--p-gray150", p.gray150);
-    style.setProperty("--p-gray300", p.gray300);
-    style.setProperty("--p-gray500", p.gray500);
-    style.setProperty("--p-gray100", p.gray100);
+    style.setProperty("--pp-ink", p.ink);
+    style.setProperty("--pp-primary", p.primary);
+    style.setProperty("--pp-primary-light", p.primaryLight);
+    style.setProperty("--pp-accent", p.accent);
+    style.setProperty("--pp-bg", p.bg);
+    style.setProperty("--pp-surface", p.surface);
   }
 
   function renderPaletteGrid() {
     el.paletteGrid.innerHTML = Object.entries(PALETTES).map(([key, p]) => `
-      <button type="button" class="palette-card ${key === selectedPalette ? "is-selected" : ""}" data-key="${key}">
+      <button type="button" class="palette-card ${key === adminSelectedPalette ? "is-selected" : ""}" data-key="${key}">
         <span class="palette-dots">
-          <span style="background:${p.black}"></span>
-          <span style="background:${p.gray500}"></span>
-          <span style="background:${p.offwhite}"></span>
+          <span style="background:${p.store.primary}"></span>
+          <span style="background:${p.store.accent}"></span>
+          <span style="background:${p.store.bg}"></span>
         </span>
         <span class="palette-name">${p.label}</span>
       </button>`).join("");
 
     el.paletteGrid.querySelectorAll(".palette-card").forEach((card) => {
       card.addEventListener("mouseenter", () => setPalettePreview(card.dataset.key));
-      card.addEventListener("mouseleave", () => setPalettePreview(selectedPalette));
       card.addEventListener("focus", () => setPalettePreview(card.dataset.key));
+      card.addEventListener("mouseleave", () => setPalettePreview(adminSelectedPalette));
+      card.addEventListener("click", () => {
+        adminSelectedPalette = card.dataset.key;
+        applyStorePalette(adminSelectedPalette);
+        applyAdminPalette(adminSelectedPalette, adminViewEl);
+        renderPaletteGrid();
+      });
     });
-    setPalettePreview(selectedPalette);
+    setPalettePreview(adminSelectedPalette);
   }
 
   async function loadSettings() {
@@ -3077,8 +3183,8 @@ const Admin = (() => {
     el.setAddress.value = data.address || "";
     el.setMapsUrl.value = data.maps_url || "";
     el.setAboutUs.value = data.about_us || "";
-    selectedPalette = data.color_palette || "arena";
-    applyPalette(selectedPalette);
+    adminSelectedPalette = data.color_palette || DEFAULT_PALETTE;
+    applyAdminPalette(adminSelectedPalette, adminViewEl);
     renderPaletteGrid();
   }
 
@@ -3095,7 +3201,7 @@ const Admin = (() => {
         address: el.setAddress.value.trim(),
         maps_url: el.setMapsUrl.value.trim(),
         about_us: el.setAboutUs.value.trim(),
-        color_palette: selectedPalette,
+        color_palette: adminSelectedPalette,
       }).eq("id", 1);
       if (error) throw error;
       showToast("Ajustes guardados");
