@@ -30,15 +30,16 @@ Rutas del sitio:
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --ink: #2b211a;
-  --primary: #c9662f;
-  --primary-light: #e08a52;
-  --primary-soft: #f6e4d3;
-  --accent: #7a4a2e;
-  --bg: #fdf6ee;
+  --ink: #23261f;
+  --primary: #6f8259;
+  --primary-light: #8fa178;
+  --primary-soft: #e7ecdd;
+  --accent: #c1683f;
+  --bg: #f6f7f0;
   --surface: #ffffff;
-  --line: #ecdfd0;
-  --muted: #8a7a68;
+  --line: #dee3d2;
+  --muted: #7f8874;
+  --product-bg: #ffffff;
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --radius: 10px;
@@ -54,14 +55,14 @@ a { color: inherit; text-decoration: none; }
 .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1.1rem; }
 
 /* ---------- Header ---------- */
-.top-header { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
-.top-header__bar { display: flex; align-items: center; gap: 1.2rem; }
+.top-header { padding: 0.9rem 0 0; border-bottom: 1px solid var(--line); }
+.top-header__bar { display: flex; align-items: center; gap: 1.2rem; padding-bottom: 0.8rem; }
 .brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--primary); flex-shrink: 0; }
 .brand img { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
-.search-wrap { flex: 1; max-width: 560px; position: relative; display: none; }
-.search-wrap input { width: 100%; padding: 0.6rem 0.9rem; border-radius: 999px; border: 1.5px solid var(--primary); font-size: 0.92rem; }
+.top-header__search-row { padding: 0 0 0.8rem; }
+.search-wrap { position: relative; width: 100%; max-width: 640px; margin: 0 auto; }
+.search-wrap input { width: 100%; padding: 0.6rem 2.6rem 0.6rem 1rem; border-radius: 999px; border: 1.5px solid var(--primary); font-size: 0.92rem; }
 .search-wrap button { position: absolute; right: 4px; top: 4px; bottom: 4px; width: 38px; border-radius: 999px; border: none; background: var(--primary); color: var(--surface); display: flex; align-items: center; justify-content: center; }
-@media (min-width: 720px) { .search-wrap { display: block; margin: 0 auto; } }
 .header-icons { display: flex; align-items: center; gap: 0.6rem; margin-left: auto; }
 .icon-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--primary); }
 .icon-btn.is-authed { background: var(--primary); color: var(--surface); border-color: var(--primary); }
@@ -70,6 +71,9 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Nav ---------- */
 .main-nav { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 40; }
+/* Al saltar a una sección (categoría, ofertas, catálogo, contacto), dejamos
+   este margen arriba para que el menú fijo no tape el título. */
+#catalogo, #ofertasSection, #recomendadosSection, #contacto, #categoriasSection { scroll-margin-top: 76px; }
 .main-nav__bar { display: flex; align-items: center; gap: 1.4rem; padding: 0.85rem 0; overflow-x: auto; scrollbar-width: none; }
 .main-nav__bar::-webkit-scrollbar { display: none; }
 .nav-cats-trigger { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); background: none; border: none; white-space: nowrap; font-size: 0.94rem; }
@@ -137,9 +141,9 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 620px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 960px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
 
-.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
-.p-card__media { position: relative; aspect-ratio: 1/1; background: var(--bg); }
-.p-card__media img { width: 100%; height: 100%; object-fit: cover; }
+.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; cursor: pointer; }
+.p-card__media { position: relative; aspect-ratio: 1/1; background: var(--product-bg); }
+.p-card__media img { width: 100%; height: 100%; object-fit: contain; }
 .p-badge { position: absolute; left: 0.5rem; top: 0.5rem; font-size: 0.66rem; font-weight: 800; padding: 0.22rem 0.5rem; border-radius: 5px; color: var(--surface); background: var(--accent); }
 .p-badge--nuevo { left: auto; right: 0.5rem; background: var(--primary); }
 .p-badge--agotado { background: var(--muted); }
@@ -207,6 +211,35 @@ a { color: inherit; text-decoration: none; }
 .modal-error { color: var(--accent); font-size: 0.82rem; margin-top: 0.5rem; display: none; }
 .modal-error.is-visible { display: block; }
 .link-btn { background: none; border: none; color: var(--primary); font-weight: 700; font-size: 0.82rem; padding: 0; }
+
+/* ---------- Modal de detalle de producto ---------- */
+.pd-modal { width: min(760px, 100%); max-height: 90vh; overflow-y: auto; padding: 0; display: grid; grid-template-columns: 1fr; position: relative; }
+@media (min-width: 720px) { .pd-modal { grid-template-columns: 1fr 1fr; } }
+.pd-close-btn {
+  position: absolute; top: 0.8rem; right: 0.8rem; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: var(--surface); color: var(--ink); display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow); font-size: 1rem;
+}
+.pd-gallery { padding: 1.2rem; }
+.pd-gallery__main { aspect-ratio: 1/1; border-radius: var(--radius); overflow: hidden; background: var(--product-bg); margin-bottom: 0.6rem; }
+.pd-gallery__main img { width: 100%; height: 100%; object-fit: cover; }
+.pd-gallery__thumbs { display: flex; gap: 0.5rem; }
+.pd-gallery__thumbs button { width: 56px; height: 56px; border-radius: 8px; overflow: hidden; border: 2px solid transparent; padding: 0; background: var(--product-bg); }
+.pd-gallery__thumbs button.is-active { border-color: var(--primary); }
+.pd-gallery__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.pd-info { padding: 1.2rem 1.4rem 1.6rem; display: flex; flex-direction: column; }
+.pd-name { font-family: var(--font-display); font-size: 1.3rem; margin: 0.4rem 0 0.5rem; padding-right: 2rem; }
+.pd-price-row { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; }
+.pd-price { font-size: 1.4rem; font-weight: 800; }
+.pd-compare { font-size: 0.95rem; color: var(--muted); text-decoration: line-through; }
+.pd-stock { font-size: 0.82rem; font-weight: 700; margin: 0 0 0.9rem; }
+.pd-stock.is-out { color: var(--accent); }
+.pd-stock.is-low { color: var(--primary); }
+.pd-description { font-size: 0.9rem; color: var(--muted); line-height: 1.5; margin: 0 0 1.2rem; white-space: pre-line; }
+.pd-qty-row { margin-top: auto; display: flex; align-items: center; gap: 0.8rem; }
+.pd-qty-row .qty-row { border: 1px solid var(--line); border-radius: 999px; padding: 0.2rem 0.5rem; }
+.pd-qty-row .qty-row button { width: 28px; height: 28px; }
+.pd-qty-row .btn-checkout { flex: 1; margin-top: 0; }
 .toast { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--surface); padding: 0.7rem 1.2rem; border-radius: 999px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 200; }
 
 /* ---------- Acceso al panel (solo visible para cuentas admin logueadas) ---------- */
@@ -765,7 +798,8 @@ a { color: inherit; text-decoration: none; }
 #adminView .form-grid .span-2 { grid-column: 1 / -1; }
 #adminView .tag-check-group { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; }
 #adminView .tag-check-group label { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; font-weight: 500; cursor: pointer; }
-#adminView .image-drop { border: 1.5px dashed var(--gray-300); border-radius: var(--radius-md); padding: 1rem; text-align: center; cursor: pointer; color: var(--gray-500); font-size: 0.85rem; }
+#adminView .image-drop { border: 1.5px dashed var(--gray-300); border-radius: var(--radius-md); padding: 1rem; text-align: center; cursor: pointer; color: var(--gray-500); font-size: 0.85rem; transition: border-color 0.12s ease, background 0.12s ease; }
+#adminView .image-drop.is-dragover { border-color: var(--black); background: var(--gray-100); border-style: solid; }
 #adminView .image-drop img { max-height: 120px; margin: 0 auto 0.5rem; border-radius: var(--radius-sm); }
 #adminView .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; }
 #adminView .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
@@ -779,6 +813,13 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Selector de paleta de colores ---------- */
 #adminView .palette-picker { display: flex; gap: 1.2rem; flex-wrap: wrap; align-items: flex-start; }
+#adminView .image-bg-picker { display: flex; gap: 0.7rem; }
+#adminView .image-bg-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border: 1.5px solid var(--gray-150); border-radius: var(--radius-md); background: var(--white); cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+#adminView .image-bg-option:hover { border-color: var(--gray-300); }
+#adminView .image-bg-option.is-selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+#adminView .image-bg-swatch { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+#adminView .image-bg-swatch--white { background: #ffffff; border: 1px solid var(--gray-300); }
+#adminView .image-bg-swatch--black { background: #000000; }
 #adminView .palette-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; flex: 1; min-width: 240px; }
 #adminView .palette-card { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.75rem; border: 1.5px solid var(--gray-150); border-radius: var(--radius-md); background: var(--white); cursor: pointer; text-align: left; transition: border-color 0.12s ease; }
 #adminView .palette-card:hover { border-color: var(--gray-300); }
@@ -868,6 +909,49 @@ a { color: inherit; text-decoration: none; }
 </style>
 </head>
 <body>
+<script>
+// Aplica el color guardado ANTES de pintar la página, para que no se vea
+// ni por un instante el color por defecto y después "salte" al elegido.
+// Esta lista de tokens tiene que reflejar los mismos valores de "store"
+// que están en PALETTES más abajo (si agregás/cambiás una paleta ahí,
+// actualizá también acá).
+(function () {
+  try {
+    var s = document.documentElement.style;
+
+    var savedImageBg = localStorage.getItem("sano_antojo_image_bg");
+    if (savedImageBg) s.setProperty("--product-bg", savedImageBg === "black" ? "#000000" : "#ffffff");
+
+    var saved = localStorage.getItem("sano_antojo_palette");
+    if (!saved) return;
+    var PALETTES_STORE = {
+      salvia: { ink: "#23261f", primary: "#6f8259", primaryLight: "#8fa178", primarySoft: "#e7ecdd", accent: "#c1683f", bg: "#f6f7f0", surface: "#ffffff", line: "#dee3d2", muted: "#7f8874" },
+      oliva_lino: { ink: "#435235", primary: "#829369", primaryLight: "#a3b28d", primarySoft: "#eef1e8", accent: "#bc7e56", bg: "#f9f8f3", surface: "#ffffff", line: "#e6e5db", muted: "#8c9280" },
+      semillas_cereales: { ink: "#3e2723", primary: "#daa520", primaryLight: "#e8bc5c", primarySoft: "#faf1db", accent: "#c89d66", bg: "#fafafa", surface: "#ffffff", line: "#ede4d2", muted: "#a9977c" },
+      matcha_almendra: { ink: "#33402c", primary: "#588157", primaryLight: "#a3b18a", primarySoft: "#e3d5ca", accent: "#b08968", bg: "#ffffff", surface: "#ffffff", line: "#ece5da", muted: "#8b9483" },
+      frutos_rojos_chia: { ink: "#332219", primary: "#9e2a2b", primaryLight: "#c25758", primarySoft: "#f3d5c0", accent: "#c9506a", bg: "#fdfbf7", surface: "#ffffff", line: "#f1e0d3", muted: "#9c8177" },
+      tierra_botanica: { ink: "#2b2b2b", primary: "#6b4226", primaryLight: "#8a6244", primarySoft: "#eae3d2", accent: "#4a7c59", bg: "#faf7f1", surface: "#ffffff", line: "#ece5d8", muted: "#9c8f7c" },
+      citrico_vitalidad: { ink: "#3d405b", primary: "#81b29a", primaryLight: "#a8c9b8", primarySoft: "#e7f0ea", accent: "#e07a5f", bg: "#f4f1de", surface: "#ffffff", line: "#ece8d8", muted: "#7a7f96" },
+      lavanda_manzanilla: { ink: "#4a3e3d", primary: "#6e8b74", primaryLight: "#93aa97", primarySoft: "#e8ede9", accent: "#a391b3", bg: "#fffff0", surface: "#ffffff", line: "#eee9df", muted: "#948a86" },
+      miel_avena: { ink: "#333333", primary: "#e6a15c", primaryLight: "#edb87e", primarySoft: "#faedd9", accent: "#8c5a3c", bg: "#faf4eb", surface: "#ffffff", line: "#efe3d0", muted: "#9c9088" },
+      eco_minimal: { ink: "#1a1a1a", primary: "#496a55", primaryLight: "#6f8f7a", primarySoft: "#e6ece8", accent: "#a56a43", bg: "#f8f9fa", surface: "#ffffff", line: "#d8d8d8", muted: "#7c8480" },
+      sol_huerto: { ink: "#264653", primary: "#2a9d8f", primaryLight: "#5cbcaf", primarySoft: "#e2f2f0", accent: "#f4a261", bg: "#f7f7f7", surface: "#ffffff", line: "#e6e6e6", muted: "#7c9098" },
+    };
+    var p = PALETTES_STORE[saved];
+    if (!p) return;
+    s.setProperty("--ink", p.ink);
+    s.setProperty("--primary", p.primary);
+    s.setProperty("--primary-light", p.primaryLight);
+    s.setProperty("--primary-soft", p.primarySoft);
+    s.setProperty("--accent", p.accent);
+    s.setProperty("--bg", p.bg);
+    s.setProperty("--surface", p.surface);
+    s.setProperty("--line", p.line);
+    s.setProperty("--muted", p.muted);
+  } catch (e) {}
+})();
+</script>
+
 
 <header class="top-header store-only">
   <div class="container top-header__bar">
@@ -875,12 +959,6 @@ a { color: inherit; text-decoration: none; }
       <img src="sano_antojo_logo.jpg" alt="" onerror="this.style.display='none'" />
       <span id="brandName">Sano Antojo</span>
     </a>
-    <div class="search-wrap">
-      <input type="search" id="searchInput" placeholder="¿Qué estás buscando?" />
-      <button type="button" id="searchBtn" aria-label="Buscar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-    </div>
     <div class="header-icons">
       <button class="icon-btn" id="accountBtn" aria-label="Mi cuenta">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -891,9 +969,12 @@ a { color: inherit; text-decoration: none; }
       </button>
     </div>
   </div>
-  <div class="container" style="margin-top:0.7rem;">
-    <div class="search-wrap" style="display:block; max-width:none;">
-      <input type="search" id="searchInputMobile" placeholder="¿Qué estás buscando?" />
+  <div class="container top-header__search-row">
+    <div class="search-wrap">
+      <input type="search" id="searchInput" placeholder="¿Qué estás buscando?" />
+      <button type="button" id="searchBtn" aria-label="Buscar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -904,7 +985,7 @@ a { color: inherit; text-decoration: none; }
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       CATEGORIAS
     </button>
-    <a href="#ofertas" class="is-ofertas">OFERTAS</a>
+    <a href="#ofertasSection" class="is-ofertas">OFERTAS</a>
     <a href="#catalogo">Catálogo</a>
     <a href="#contacto">Contacto</a>
   </div>
@@ -919,7 +1000,7 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <main class="container store-only">
-  <section class="hero">
+  <section class="hero" id="heroSection">
     <div class="hero__badge"><img src="sano_antojo_logo.jpg" alt="" onerror="this.style.display='none'" /></div>
     <div class="hero__inner">
       <h1 id="heroTitle">Sano Antojo</h1>
@@ -948,8 +1029,8 @@ a { color: inherit; text-decoration: none; }
     <div class="cat-grid" id="catGrid"></div>
   </section>
 
-  <section class="promo-strip">
-    <a href="#ofertas" class="promo-tile promo-tile--a"><small>Conocé nuestras</small><strong>Ofertas del mes</strong></a>
+  <section class="promo-strip" id="promoStripSection">
+    <a href="#ofertasSection" class="promo-tile promo-tile--a"><small>Conocé nuestras</small><strong>Ofertas del mes</strong></a>
     <a href="#contacto" class="promo-tile promo-tile--b"><small>Info sobre el local</small><strong>Dónde encontrarnos</strong></a>
     <a href="#" class="promo-tile promo-tile--c" id="promoWhatsapp"><small>Pedidos y consultas</small><strong>Escribinos por WhatsApp</strong></a>
   </section>
@@ -1003,6 +1084,34 @@ a { color: inherit; text-decoration: none; }
     <button class="btn-checkout" id="checkoutBtn">Coordinar por WhatsApp</button>
   </div>
 </aside>
+
+<!-- Detalle de producto -->
+<div class="modal-overlay" id="productDetailOverlay">
+  <div class="modal pd-modal">
+    <button type="button" class="pd-close-btn" id="closePdModal" aria-label="Cerrar">✕</button>
+    <div class="pd-gallery">
+      <div class="pd-gallery__main" id="pdMainImage"></div>
+      <div class="pd-gallery__thumbs" id="pdThumbs"></div>
+    </div>
+    <div class="pd-info">
+      <p class="pd-name" id="pdName"></p>
+      <div class="pd-price-row">
+        <span class="pd-price" id="pdPrice"></span>
+        <span class="pd-compare" id="pdCompare"></span>
+      </div>
+      <p class="pd-stock" id="pdStockNote"></p>
+      <p class="pd-description" id="pdDescription"></p>
+      <div class="pd-qty-row">
+        <div class="qty-row">
+          <button type="button" id="pdQtyDec" aria-label="Menos">−</button>
+          <span id="pdQtyValue">1</span>
+          <button type="button" id="pdQtyInc" aria-label="Más">+</button>
+        </div>
+        <button type="button" class="btn-checkout" id="pdAddBtn">Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Login / cuenta -->
 <div class="modal-overlay" id="authModalOverlay">
@@ -1204,6 +1313,18 @@ a { color: inherit; text-decoration: none; }
           <div class="field">
             <label for="setAboutUs">Sobre nosotros (aparece como una sección en la tienda)</label>
             <textarea id="setAboutUs" placeholder="Contales quiénes son, hace cuánto están, qué los distingue..." style="min-height:140px"></textarea>
+          </div>
+          <div class="field">
+            <label>Fondo de las fotos de producto</label>
+            <p class="helper-text" style="margin:0 0 0.8rem;">Todas las fotos se muestran en un cuadrado del mismo tamaño. Si la foto no es cuadrada, se completa con este color a los costados.</p>
+            <div class="image-bg-picker" id="imageBgPicker">
+              <button type="button" class="image-bg-option" data-value="white">
+                <span class="image-bg-swatch image-bg-swatch--white"></span> Blanco
+              </button>
+              <button type="button" class="image-bg-option" data-value="black">
+                <span class="image-bg-swatch image-bg-swatch--black"></span> Negro
+              </button>
+            </div>
           </div>
           <div class="field">
             <label>Paleta de colores</label>
@@ -1580,38 +1701,63 @@ function compressImage(file, maxWidth = 1000, quality = 0.82) {
    sitio de una vez, sin tocar el resto del diseño.
    ============================================================ */
 const PALETTES = {
-  durazno: {
-    label: "Durazno y Canela",
-    store: { ink: "#2b211a", primary: "#c9662f", primaryLight: "#e08a52", primarySoft: "#f6e4d3", accent: "#7a4a2e", bg: "#fdf6ee", surface: "#ffffff", line: "#ecdfd0", muted: "#8a7a68" },
-    admin: { black: "#7a4a2e", charcoal: "#5c3a24", gray700: "#8a6b52", gray500: "#ab8f78", gray300: "#dcc9b4", gray150: "#ede1d2", gray100: "#f5ede2", offwhite: "#fdf8f2", white: "#ffffff" },
-  },
   salvia: {
     label: "Salvia y Arcilla",
     store: { ink: "#23261f", primary: "#6f8259", primaryLight: "#8fa178", primarySoft: "#e7ecdd", accent: "#c1683f", bg: "#f6f7f0", surface: "#ffffff", line: "#dee3d2", muted: "#7f8874" },
     admin: { black: "#4f5c40", charcoal: "#3c4630", gray700: "#6b7860", gray500: "#93a087", gray300: "#cdd6c2", gray150: "#e4ead9", gray100: "#f0f4ea", offwhite: "#f8faf4", white: "#ffffff" },
   },
-  miel: {
-    label: "Miel y Mostaza",
-    store: { ink: "#2c2417", primary: "#b8892b", primaryLight: "#d6a94f", primarySoft: "#f3e6c4", accent: "#6b3f2e", bg: "#fdf8ef", surface: "#ffffff", line: "#ecdfc2", muted: "#8f7f56" },
-    admin: { black: "#6b3f2e", charcoal: "#523021", gray700: "#856048", gray500: "#a8886a", gray300: "#dcc79b", gray150: "#ede2c6", gray100: "#f5eeda", offwhite: "#fbf6e9", white: "#ffffff" },
+  oliva_lino: {
+    label: "Verde Oliva Orgánico y Lino",
+    store: { ink: "#435235", primary: "#829369", primaryLight: "#a3b28d", primarySoft: "#eef1e8", accent: "#bc7e56", bg: "#f9f8f3", surface: "#ffffff", line: "#e6e5db", muted: "#8c9280" },
+    admin: { black: "#435235", charcoal: "#34401f", gray700: "#647256", gray500: "#8f9880", gray300: "#c9cebd", gray150: "#e2e4d8", gray100: "#eff0e8", offwhite: "#f9f8f3", white: "#ffffff" },
   },
-  lavanda: {
-    label: "Lavanda Silvestre",
-    store: { ink: "#241f2e", primary: "#6b5b95", primaryLight: "#8b7ab8", primarySoft: "#ece6f5", accent: "#b6577f", bg: "#f8f6fb", surface: "#ffffff", line: "#e2daf0", muted: "#847997" },
-    admin: { black: "#4c3f6e", charcoal: "#3a3054", gray700: "#6a5c8a", gray500: "#948bab", gray300: "#cfc6e0", gray150: "#e5e0f1", gray100: "#f1eef8", offwhite: "#f9f7fc", white: "#ffffff" },
+  semillas_cereales: {
+    label: "Semillas y Cereales",
+    store: { ink: "#3e2723", primary: "#daa520", primaryLight: "#e8bc5c", primarySoft: "#faf1db", accent: "#c89d66", bg: "#fafafa", surface: "#ffffff", line: "#ede4d2", muted: "#a9977c" },
+    admin: { black: "#3e2723", charcoal: "#2c1b18", gray700: "#6b5646", gray500: "#9c8874", gray300: "#d9c9b0", gray150: "#ede4d2", gray100: "#f5efe3", offwhite: "#fafafa", white: "#ffffff" },
   },
-  berries: {
-    label: "Berries y Crema",
-    store: { ink: "#2a1f24", primary: "#7c2f4d", primaryLight: "#a04a6c", primarySoft: "#f1dee5", accent: "#c98a3a", bg: "#fbf6f2", surface: "#ffffff", line: "#ecd9df", muted: "#93808a" },
-    admin: { black: "#5c2438", charcoal: "#451b2a", gray700: "#7d5060", gray500: "#a67e8b", gray300: "#dcbfc7", gray150: "#ecdde1", gray100: "#f5ebee", offwhite: "#fbf5f3", white: "#ffffff" },
+  matcha_almendra: {
+    label: "Matcha y Almendra",
+    store: { ink: "#33402c", primary: "#588157", primaryLight: "#a3b18a", primarySoft: "#e3d5ca", accent: "#b08968", bg: "#ffffff", surface: "#ffffff", line: "#ece5da", muted: "#8b9483" },
+    admin: { black: "#3d5a3b", charcoal: "#2e442c", gray700: "#5c6f54", gray500: "#8b9880", gray300: "#cad2bd", gray150: "#e5e9dc", gray100: "#f1f3ea", offwhite: "#f8f9f5", white: "#ffffff" },
   },
-  oceano: {
-    label: "Océano Suave",
-    store: { ink: "#1f2b2b", primary: "#2e6b6b", primaryLight: "#4d8f8f", primarySoft: "#dfeeed", accent: "#d97b3f", bg: "#f4f9f8", surface: "#ffffff", line: "#d9e6e4", muted: "#6f8482" },
-    admin: { black: "#1f5050", charcoal: "#173c3c", gray700: "#4c6b6b", gray500: "#7c9695", gray300: "#c3d6d5", gray150: "#dfeae9", gray100: "#eef5f4", offwhite: "#f6faf9", white: "#ffffff" },
+  frutos_rojos_chia: {
+    label: "Frutos Rojos y Chía",
+    store: { ink: "#332219", primary: "#9e2a2b", primaryLight: "#c25758", primarySoft: "#f3d5c0", accent: "#c9506a", bg: "#fdfbf7", surface: "#ffffff", line: "#f1e0d3", muted: "#9c8177" },
+    admin: { black: "#332219", charcoal: "#241811", gray700: "#5c4438", gray500: "#8f7267", gray300: "#d3bcae", gray150: "#ecddd2", gray100: "#f5ece5", offwhite: "#fdfbf7", white: "#ffffff" },
+  },
+  tierra_botanica: {
+    label: "Tierra y Botánica",
+    store: { ink: "#2b2b2b", primary: "#6b4226", primaryLight: "#8a6244", primarySoft: "#eae3d2", accent: "#4a7c59", bg: "#faf7f1", surface: "#ffffff", line: "#ece5d8", muted: "#9c8f7c" },
+    admin: { black: "#6b4226", charcoal: "#543319", gray700: "#816653", gray500: "#a68f7c", gray300: "#d9cabb", gray150: "#ece3d8", gray100: "#f5efe6", offwhite: "#faf7f1", white: "#ffffff" },
+  },
+  citrico_vitalidad: {
+    label: "Cítrico y Vitalidad",
+    store: { ink: "#3d405b", primary: "#81b29a", primaryLight: "#a8c9b8", primarySoft: "#e7f0ea", accent: "#e07a5f", bg: "#f4f1de", surface: "#ffffff", line: "#ece8d8", muted: "#7a7f96" },
+    admin: { black: "#3d405b", charcoal: "#2e3047", gray700: "#5c5f78", gray500: "#8b8ea3", gray300: "#c7c9d6", gray150: "#e2e3ea", gray100: "#eff0f4", offwhite: "#f7f6ee", white: "#ffffff" },
+  },
+  lavanda_manzanilla: {
+    label: "Lavanda y Manzanilla",
+    store: { ink: "#4a3e3d", primary: "#6e8b74", primaryLight: "#93aa97", primarySoft: "#e8ede9", accent: "#a391b3", bg: "#fffff0", surface: "#ffffff", line: "#eee9df", muted: "#948a86" },
+    admin: { black: "#4a3e3d", charcoal: "#382e2d", gray700: "#6d605e", gray500: "#988c89", gray300: "#d2c7c4", gray150: "#e7dfdc", gray100: "#f2ede9", offwhite: "#fffff0", white: "#ffffff" },
+  },
+  miel_avena: {
+    label: "Miel y Avena",
+    store: { ink: "#333333", primary: "#e6a15c", primaryLight: "#edb87e", primarySoft: "#faedd9", accent: "#8c5a3c", bg: "#faf4eb", surface: "#ffffff", line: "#efe3d0", muted: "#9c9088" },
+    admin: { black: "#8c5a3c", charcoal: "#6d4530", gray700: "#9c7c62", gray500: "#bfa78f", gray300: "#e2d2c0", gray150: "#efe4d6", gray100: "#f7f0e6", offwhite: "#faf4eb", white: "#ffffff" },
+  },
+  eco_minimal: {
+    label: "Eco Minimal",
+    store: { ink: "#1a1a1a", primary: "#496a55", primaryLight: "#6f8f7a", primarySoft: "#e6ece8", accent: "#a56a43", bg: "#f8f9fa", surface: "#ffffff", line: "#d8d8d8", muted: "#7c8480" },
+    admin: { black: "#496a55", charcoal: "#37503f", gray700: "#63796d", gray500: "#93a49b", gray300: "#cdd6d0", gray150: "#e3e8e4", gray100: "#f0f3f1", offwhite: "#f8f9fa", white: "#ffffff" },
+  },
+  sol_huerto: {
+    label: "Sol y Huerto",
+    store: { ink: "#264653", primary: "#2a9d8f", primaryLight: "#5cbcaf", primarySoft: "#e2f2f0", accent: "#f4a261", bg: "#f7f7f7", surface: "#ffffff", line: "#e6e6e6", muted: "#7c9098" },
+    admin: { black: "#264653", charcoal: "#1c3540", gray700: "#4c6a75", gray500: "#7f99a1", gray300: "#c3d2d6", gray150: "#dfe7e9", gray100: "#eef2f3", offwhite: "#f7f7f7", white: "#ffffff" },
   },
 };
-const DEFAULT_PALETTE = "durazno";
+const DEFAULT_PALETTE = "salvia";
 
 function applyStorePalette(key, targetEl = document.documentElement) {
   const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).store;
@@ -1640,6 +1786,10 @@ function applyAdminPalette(key, targetEl) {
   s.setProperty("--gray-100", p.gray100);
   s.setProperty("--off-white", p.offwhite);
   s.setProperty("--white", p.white);
+}
+
+function applyProductImageBg(value, targetEl = document.documentElement) {
+  targetEl.style.setProperty("--product-bg", value === "black" ? "#000000" : "#ffffff");
 }
 
 /* ============================================================
@@ -1820,6 +1970,9 @@ const Store = (() => {
     infoAddress: document.getElementById("infoAddress"),
     promoWhatsapp: document.getElementById("promoWhatsapp"),
     contactActions: document.getElementById("contactActions"),
+    heroSection: document.getElementById("heroSection"),
+    brandLink: document.getElementById("brandLink"),
+    promoStripSection: document.getElementById("promoStripSection"),
     categoriasSection: document.getElementById("categoriasSection"),
     catGrid: document.getElementById("catGrid"),
     catsPanelOverlay: document.getElementById("catsPanelOverlay"),
@@ -1836,7 +1989,6 @@ const Store = (() => {
     moreBtnWrap: document.getElementById("moreBtnWrap"),
     moreBtn: document.getElementById("moreBtn"),
     searchInput: document.getElementById("searchInput"),
-    searchInputMobile: document.getElementById("searchInputMobile"),
     searchBtn: document.getElementById("searchBtn"),
     cartBtn: document.getElementById("cartBtn"),
     cartBadge: document.getElementById("cartBadge"),
@@ -1847,6 +1999,19 @@ const Store = (() => {
     cartFooter: document.getElementById("cartFooter"),
     cartTotal: document.getElementById("cartTotal"),
     checkoutBtn: document.getElementById("checkoutBtn"),
+    productDetailOverlay: document.getElementById("productDetailOverlay"),
+    closePdModal: document.getElementById("closePdModal"),
+    pdMainImage: document.getElementById("pdMainImage"),
+    pdThumbs: document.getElementById("pdThumbs"),
+    pdName: document.getElementById("pdName"),
+    pdPrice: document.getElementById("pdPrice"),
+    pdCompare: document.getElementById("pdCompare"),
+    pdStockNote: document.getElementById("pdStockNote"),
+    pdDescription: document.getElementById("pdDescription"),
+    pdQtyDec: document.getElementById("pdQtyDec"),
+    pdQtyInc: document.getElementById("pdQtyInc"),
+    pdQtyValue: document.getElementById("pdQtyValue"),
+    pdAddBtn: document.getElementById("pdAddBtn"),
   };
 
   function loadCart() {
@@ -1945,6 +2110,11 @@ const Store = (() => {
     if (error || !data) return;
     settings = data;
     applyStorePalette(data.color_palette);
+    applyProductImageBg(data.product_image_bg);
+    try {
+      localStorage.setItem("sano_antojo_palette", data.color_palette || DEFAULT_PALETTE);
+      localStorage.setItem("sano_antojo_image_bg", data.product_image_bg || "white");
+    } catch (e) {}
     el.heroTitle.textContent = data.store_name || "Sano Antojo";
     el.heroTagline.textContent = data.tagline || "";
     el.brandName.textContent = data.store_name || "Sano Antojo";
@@ -2045,14 +2215,83 @@ const Store = (() => {
   function wireAddButtons(container) {
     container.addEventListener("click", (e) => {
       const btn = e.target.closest(".p-card__add");
-      if (!btn || btn.disabled) return;
-      const product = products.find((p) => p.id === btn.dataset.id);
-      if (product) Auth.requireAuth(() => addToCart(product));
+      if (btn) {
+        if (btn.disabled) return;
+        const product = products.find((p) => p.id === btn.dataset.id);
+        if (product) Auth.requireAuth(() => addToCart(product));
+        return;
+      }
+      const card = e.target.closest(".p-card");
+      if (card) {
+        const product = products.find((p) => p.id === card.dataset.id);
+        if (product) openProductDetail(product);
+      }
     });
   }
   wireAddButtons(el.ofertasRow);
   wireAddButtons(el.recomendadosRow);
   wireAddButtons(el.productGrid);
+
+  let pdCurrentProduct = null;
+  let pdQty = 1;
+
+  function setPdMainImage(src) {
+    el.pdMainImage.innerHTML = src ? `<img src="${src}" alt="" />` : "";
+  }
+
+  function openProductDetail(product) {
+    pdCurrentProduct = product;
+    pdQty = 1;
+    el.pdQtyValue.textContent = pdQty;
+
+    const images = [product.image_url, product.image_url_2, product.image_url_3].filter(Boolean);
+    const outOfStock = (product.stock ?? 0) <= 0;
+    const lowStock = !outOfStock && product.stock <= 3;
+    const pct = discountPct(product);
+
+    el.pdName.textContent = product.name;
+    el.pdPrice.textContent = money(product.price);
+    el.pdCompare.textContent = pct ? money(product.compare_at_price) : "";
+    el.pdCompare.style.display = pct ? "inline" : "none";
+    el.pdDescription.textContent = product.description?.trim() || "Sin descripción todavía.";
+    el.pdStockNote.textContent = outOfStock ? "Sin stock" : lowStock ? `¡Últimas ${product.stock}!` : "En stock";
+    el.pdStockNote.className = `pd-stock ${outOfStock ? "is-out" : lowStock ? "is-low" : ""}`;
+    el.pdAddBtn.disabled = outOfStock;
+    el.pdAddBtn.textContent = outOfStock ? "Sin stock" : "Agregar al carrito";
+
+    setPdMainImage(images[0]);
+    el.pdThumbs.innerHTML = images.length > 1
+      ? images.map((src, i) => `<button type="button" data-src="${src}" class="${i === 0 ? "is-active" : ""}"><img src="${src}" alt="" /></button>`).join("")
+      : "";
+
+    el.productDetailOverlay.classList.add("is-open");
+  }
+  function closePdModalFn() { el.productDetailOverlay.classList.remove("is-open"); }
+  el.closePdModal.addEventListener("click", closePdModalFn);
+  el.productDetailOverlay.addEventListener("click", (e) => { if (e.target === el.productDetailOverlay) closePdModalFn(); });
+
+  el.pdThumbs.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-src]");
+    if (!btn) return;
+    setPdMainImage(btn.dataset.src);
+    el.pdThumbs.querySelectorAll("button").forEach((b) => b.classList.toggle("is-active", b === btn));
+  });
+
+  function updatePdQty(delta) {
+    const max = pdCurrentProduct?.stock ?? 99;
+    pdQty = Math.min(max, Math.max(1, pdQty + delta));
+    el.pdQtyValue.textContent = pdQty;
+  }
+  el.pdQtyDec.addEventListener("click", () => updatePdQty(-1));
+  el.pdQtyInc.addEventListener("click", () => updatePdQty(1));
+
+  el.pdAddBtn.addEventListener("click", () => {
+    if (!pdCurrentProduct || el.pdAddBtn.disabled) return;
+    Auth.requireAuth(() => {
+      for (let i = 0; i < pdQty; i++) addToCart(pdCurrentProduct);
+      closePdModalFn();
+    });
+  });
 
   function renderOfertas() {
     const list = products.filter((p) => discountPct(p) !== null);
@@ -2090,20 +2329,51 @@ const Store = (() => {
   }
   el.moreBtn.addEventListener("click", () => { newProductsLimit += 12; renderMainGrid(); });
 
+  // Mientras hay una búsqueda activa, la home (hero, categorías, banners,
+  // ofertas, recomendados) se oculta y solo se ve el resultado — así el
+  // cliente cae directo en lo que buscó, sin tener que bajar a mano.
+  function applySearchVisibility() {
+    const active = !!searchTerm;
+    el.heroSection.style.display = active ? "none" : "";
+    el.promoStripSection.style.display = active ? "none" : "";
+    if (active) {
+      el.categoriasSection.style.display = "none";
+      el.ofertasSection.style.display = "none";
+      el.recomendadosSection.style.display = "none";
+    } else {
+      renderCategories();
+      renderOfertas();
+      renderRecomendados();
+    }
+  }
+
   function onSearch(value) {
     searchTerm = value.trim().toLowerCase();
     el.searchInput.value = value;
-    el.searchInputMobile.value = value;
+    applySearchVisibility();
     renderMainGrid();
+    if (searchTerm) document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  let searchDebounce = null;
-  function debounceSearch(value) {
-    clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(() => onSearch(value), 200);
-  }
-  el.searchInput.addEventListener("input", (e) => debounceSearch(e.target.value));
-  el.searchInputMobile.addEventListener("input", (e) => debounceSearch(e.target.value));
   el.searchBtn.addEventListener("click", () => onSearch(el.searchInput.value));
+  el.searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); onSearch(el.searchInput.value); }
+  });
+  // Si borra todo el texto y lo deja vacío, volvemos a mostrar la home
+  // igual (sin esperar a que aprieten buscar), para que no quede "trabado"
+  // en modo resultados con la caja de búsqueda en blanco.
+  el.searchInput.addEventListener("input", (e) => {
+    if (e.target.value.trim() === "" && searchTerm !== "") onSearch("");
+  });
+
+  function goHome() {
+    searchTerm = "";
+    activeCategory = "all";
+    el.searchInput.value = "";
+    applySearchVisibility();
+    renderMainGrid();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  el.brandLink.addEventListener("click", (e) => { e.preventDefault(); goHome(); });
 
   async function loadProducts() {
     const { data, error } = await supabase.from("sano_antojo_products").select("*").eq("active", true).order("created_at", { ascending: false });
@@ -2147,6 +2417,7 @@ const Admin = (() => {
   let removeImage3 = false;
   let pendingCategoryImageFile = null;
   let adminSelectedPalette = DEFAULT_PALETTE;
+  let adminSelectedImageBg = "white";
   let pendingNewsVideoFile = null;
 
   const el = {
@@ -2262,6 +2533,7 @@ const Admin = (() => {
     setAddress: document.getElementById("setAddress"),
     setMapsUrl: document.getElementById("setMapsUrl"),
     setAboutUs: document.getElementById("setAboutUs"),
+    imageBgPicker: document.getElementById("imageBgPicker"),
     paletteGrid: document.getElementById("paletteGrid"),
     palettePreview: document.getElementById("palettePreview"),
     saveSettingsBtn: document.getElementById("saveSettingsBtn"),
@@ -2349,6 +2621,14 @@ const Admin = (() => {
       el.newsVideoDrop.innerHTML = `<span>🎥 ${escapeHtml(file.name)}</span>`;
     });
 
+    el.imageBgPicker.addEventListener("click", (e) => {
+      const btn = e.target.closest(".image-bg-option");
+      if (!btn) return;
+      adminSelectedImageBg = btn.dataset.value;
+      applyProductImageBg(adminSelectedImageBg, adminViewEl);
+      renderImageBgPicker();
+    });
+
     el.newCategoryBtn.addEventListener("click", () => openCategoryModal());
     el.categoriesList.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
@@ -2426,14 +2706,59 @@ const Admin = (() => {
   }
 
   function setupImageDrop(dropEl, inputEl, onFile) {
-    dropEl.addEventListener("click", () => inputEl.click());
-    inputEl.addEventListener("change", () => {
-      const file = inputEl.files[0];
-      if (!file) return;
+    function handleFile(file) {
+      if (!file || !file.type.startsWith("image/")) return;
       onFile(file);
       const reader = new FileReader();
       reader.onload = () => { dropEl.innerHTML = `<img src="${reader.result}" alt="" />`; };
       reader.readAsDataURL(file);
+    }
+
+    dropEl.addEventListener("click", () => inputEl.click());
+    inputEl.addEventListener("change", () => handleFile(inputEl.files[0]));
+
+    // Arrastrar y soltar: desde el explorador de archivos, el escritorio,
+    // o incluso una imagen abierta en otra pestaña del navegador.
+    ["dragenter", "dragover"].forEach((evt) => {
+      dropEl.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropEl.classList.add("is-dragover");
+      });
+    });
+    ["dragleave", "dragend"].forEach((evt) => {
+      dropEl.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropEl.classList.remove("is-dragover");
+      });
+    });
+    dropEl.addEventListener("drop", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropEl.classList.remove("is-dragover");
+
+      // Caso normal: arrastraron un archivo de imagen.
+      const file = e.dataTransfer.files?.[0];
+      if (file) { handleFile(file); return; }
+
+      // Caso "imagen abierta en otra pestaña": el navegador no entrega
+      // un archivo, entrega la URL de la imagen. La descargamos nosotros
+      // y la convertimos en archivo para poder subirla igual.
+      const url = e.dataTransfer.getData("text/uri-list") || e.dataTransfer.getData("text/plain");
+      if (url && /^https?:\/\//i.test(url)) {
+        dropEl.innerHTML = `<span>Descargando imagen...</span>`;
+        fetch(url)
+          .then((res) => res.blob())
+          .then((blob) => {
+            if (!blob.type.startsWith("image/")) throw new Error("no es una imagen");
+            handleFile(new File([blob], "imagen.jpg", { type: blob.type }));
+          })
+          .catch(() => {
+            showToast("No se pudo traer esa imagen. Probá guardarla en tu compu y subila desde ahí.");
+            dropEl.innerHTML = `<span>Tocá para subir una foto</span>`;
+          });
+      }
     });
   }
 
@@ -3136,6 +3461,12 @@ const Admin = (() => {
     renderBarList(el.statTraffic, rows);
   }
 
+  function renderImageBgPicker() {
+    el.imageBgPicker.querySelectorAll(".image-bg-option").forEach((btn) => {
+      btn.classList.toggle("is-selected", btn.dataset.value === adminSelectedImageBg);
+    });
+  }
+
   function setPalettePreview(key) {
     const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).store;
     const style = el.palettePreview.style;
@@ -3183,6 +3514,9 @@ const Admin = (() => {
     el.setAddress.value = data.address || "";
     el.setMapsUrl.value = data.maps_url || "";
     el.setAboutUs.value = data.about_us || "";
+    adminSelectedImageBg = data.product_image_bg || "white";
+    applyProductImageBg(adminSelectedImageBg, adminViewEl);
+    renderImageBgPicker();
     adminSelectedPalette = data.color_palette || DEFAULT_PALETTE;
     applyAdminPalette(adminSelectedPalette, adminViewEl);
     renderPaletteGrid();
@@ -3202,8 +3536,13 @@ const Admin = (() => {
         maps_url: el.setMapsUrl.value.trim(),
         about_us: el.setAboutUs.value.trim(),
         color_palette: adminSelectedPalette,
+        product_image_bg: adminSelectedImageBg,
       }).eq("id", 1);
       if (error) throw error;
+      try {
+        localStorage.setItem("sano_antojo_palette", adminSelectedPalette);
+        localStorage.setItem("sano_antojo_image_bg", adminSelectedImageBg);
+      } catch (e) {}
       showToast("Ajustes guardados");
     } catch (err) {
       console.error(err); showToast("No se pudieron guardar los ajustes");
