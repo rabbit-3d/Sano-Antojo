@@ -1056,7 +1056,7 @@ a { color: inherit; text-decoration: none; }
 
   <section class="promo-strip" id="promoStripSection">
     <a href="#ofertasSection" class="promo-tile promo-tile--a"><small>Conocé nuestras</small><strong>Ofertas del mes</strong></a>
-    <a href="#contacto" class="promo-tile promo-tile--b"><small>Info sobre el local</small><strong>Dónde encontrarnos</strong></a>
+    <a href="#contacto" class="promo-tile promo-tile--b" id="promoLocation"><small>Info sobre el local</small><strong>Dónde encontrarnos</strong></a>
     <a href="#" class="promo-tile promo-tile--c" id="promoWhatsapp"><small>Pedidos y consultas</small><strong>Escribinos por WhatsApp</strong></a>
   </section>
 
@@ -2021,6 +2021,7 @@ const Store = (() => {
     footerStoreName: document.getElementById("footerStoreName"),
     infoAddress: document.getElementById("infoAddress"),
     promoWhatsapp: document.getElementById("promoWhatsapp"),
+    promoLocation: document.getElementById("promoLocation"),
     contactActions: document.getElementById("contactActions"),
     heroSection: document.getElementById("heroSection"),
     brandLink: document.getElementById("brandLink"),
@@ -2182,13 +2183,22 @@ const Store = (() => {
     document.title = `${data.store_name || "Sano Antojo"} — ${data.tagline || ""}`;
     if (data.address) el.infoAddress.textContent = data.address;
 
+    const contactLinks = [];
     if (data.whatsapp_phone) {
       const phone = data.whatsapp_phone.replace(/[^\d]/g, "");
-      el.contactActions.innerHTML = `<a href="https://wa.me/${phone}" target="_blank" rel="noopener" class="btn-wsp">💬 Escribinos por WhatsApp</a>` +
-        (data.instagram_url ? `<a href="${data.instagram_url}" target="_blank" rel="noopener" class="btn-outline">Instagram</a>` : "");
+      contactLinks.push(`<a href="https://wa.me/${phone}" target="_blank" rel="noopener" class="btn-wsp">💬 Escribinos por WhatsApp</a>`);
       el.promoWhatsapp.href = `https://wa.me/${phone}`;
       el.promoWhatsapp.target = "_blank";
     }
+    if (data.maps_url) {
+      contactLinks.push(`<a href="${data.maps_url}" target="_blank" rel="noopener" class="btn-outline">📍 Ver en el mapa</a>`);
+      el.promoLocation.href = data.maps_url;
+      el.promoLocation.target = "_blank";
+    }
+    if (data.instagram_url) {
+      contactLinks.push(`<a href="${data.instagram_url}" target="_blank" rel="noopener" class="btn-outline">Instagram</a>`);
+    }
+    el.contactActions.innerHTML = contactLinks.join("");
   }
 
   async function loadCategories() {
