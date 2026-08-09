@@ -158,6 +158,29 @@ a { color: inherit; text-decoration: none; }
 .p-card__add:hover:not(:disabled) { background: var(--primary-light); }
 
 .more-btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; margin-top: 1.3rem; }
+
+/* ---------- Recetas (video + ingredientes) ---------- */
+.recipes-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 0.3rem; }
+@media (min-width: 640px) { .recipes-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .recipes-grid { grid-template-columns: repeat(3, 1fr); } }
+.recipe-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+.recipe-card__video { position: relative; aspect-ratio: 9/16; max-height: 480px; background: #000; }
+.recipe-card__video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.recipe-card__video .recipe-video-fallback {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+  color: var(--surface); padding: 1rem; font-size: 0.85rem;
+}
+.recipe-card__video .recipe-video-fallback a { color: var(--surface); text-decoration: underline; }
+.recipe-card__body { padding: 1rem 1.1rem 1.2rem; display: flex; flex-direction: column; flex: 1; }
+.recipe-card__title { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 0.6rem; }
+.recipe-ingredients { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.recipe-ingredients li { font-size: 0.85rem; color: var(--ink); display: flex; align-items: baseline; gap: 0.4rem; }
+.recipe-ingredients li::before { content: "•"; color: var(--primary); flex-shrink: 0; }
+.recipe-ingredients .ing-linked { color: var(--primary); font-weight: 700; font-size: 0.72rem; }
+.recipe-card__add-all { margin-top: auto; width: 100%; padding: 0.6rem; border-radius: 999px; border: none; background: var(--primary); color: var(--surface); font-weight: 800; font-size: 0.82rem; }
+.recipe-card__add-all:hover { background: var(--primary-light); }
+.recipe-card__add-all:disabled { background: var(--line); color: var(--muted); }
+.recipe-card__note { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; text-align: center; }
 .more-btn { border: 1.5px solid var(--primary); background: var(--surface); color: var(--primary); font-weight: 800; padding: 0.7rem 1.5rem; border-radius: 999px; font-size: 0.85rem; letter-spacing: 0.03em; text-transform: uppercase; }
 .more-btn--outline { border-color: var(--line); color: var(--muted); }
 .more-btn--outline:hover { border-color: var(--primary); color: var(--primary); }
@@ -823,6 +846,10 @@ a { color: inherit; text-decoration: none; }
 #adminView .form-grid { display: grid; gap: 0.9rem; grid-template-columns: 1fr 1fr; }
 #adminView .form-grid .span-2 { grid-column: 1 / -1; }
 #adminView .tag-check-group { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; }
+#adminView .ingredient-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
+#adminView .ingredient-row input[type="text"] { flex: 1.3; min-width: 0; }
+#adminView .ingredient-row select { flex: 1; min-width: 0; }
+#adminView .ingredient-row .icon-action { flex-shrink: 0; width: 32px; height: 32px; }
 #adminView .tag-check-group label { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; font-weight: 500; cursor: pointer; }
 #adminView .image-drop { border: 1.5px dashed var(--gray-300); border-radius: var(--radius-md); padding: 1rem; text-align: center; cursor: pointer; color: var(--gray-500); font-size: 0.85rem; transition: border-color 0.12s ease, background 0.12s ease; }
 #adminView .image-drop.is-dragover { border-color: var(--black); background: var(--gray-100); border-style: solid; }
@@ -1088,6 +1115,11 @@ a { color: inherit; text-decoration: none; }
     <div class="product-grid" id="allProductsGrid"></div>
   </section>
 
+  <section id="recipesSection" style="display:none">
+    <div class="section-title-plain"><h2>Recetas</h2></div>
+    <div class="recipes-grid" id="recipesGrid"></div>
+  </section>
+
   <section id="contacto" class="contact-section">
     <h2>¿Tenés alguna consulta?</h2>
     <p>Escribinos y te respondemos a la brevedad.</p>
@@ -1249,6 +1281,7 @@ a { color: inherit; text-decoration: none; }
             <button class="admin-tab is-active" data-tab="products">Productos</button>
             <button class="admin-tab" data-tab="categories">Categorías</button>
             <button class="admin-tab" data-tab="news">Novedades</button>
+            <button class="admin-tab" data-tab="recipes">Recetas</button>
             <button class="admin-tab" data-tab="orders">Pedidos</button>
             <button class="admin-tab" data-tab="stats">Estadísticas</button>
             <button class="admin-tab" data-tab="settings">Ajustes</button>
@@ -1284,6 +1317,17 @@ a { color: inherit; text-decoration: none; }
           Pegá el link de un posteo o reel de Instagram (ej: https://www.instagram.com/p/XXXXXXX/) para que aparezca en el carrusel de la tienda.
         </p>
         <div class="admin-list" id="newsList"></div>
+      </section>
+
+      <section id="tab-recipes" style="display:none">
+        <div class="panel-head">
+          <h2>Recetas</h2>
+          <button class="btn btn--dark" id="newRecipeBtn">+ Nueva receta</button>
+        </div>
+        <p class="helper-text" style="margin-top:-0.6rem">
+          Pegá el link de un video de Instagram o TikTok y cargá los ingredientes. Los que vincules con un producto del catálogo se pueden agregar todos juntos al carrito con un solo botón, directo desde la receta.
+        </p>
+        <div class="admin-list" id="recipesList"></div>
       </section>
 
       <section id="tab-orders" style="display:none">
@@ -1344,8 +1388,9 @@ a { color: inherit; text-decoration: none; }
             <input type="text" id="setTagline" />
           </div>
           <div class="field">
-            <label for="setWhatsapp">WhatsApp de contacto (con código de país, ej: 5491122334455)</label>
-            <input type="text" id="setWhatsapp" />
+            <label for="setWhatsapp">WhatsApp de contacto</label>
+            <input type="text" id="setWhatsapp" placeholder="Ej: 11 1234-5678 (sin el 0 ni el 15)" />
+            <p class="helper-text" id="whatsappPreview" style="margin:0.4rem 0 0;"></p>
           </div>
           <div class="form-grid">
             <div class="field">
@@ -1578,6 +1623,44 @@ a { color: inherit; text-decoration: none; }
         <div class="form-actions">
           <button type="button" class="btn btn--outline" id="cancelNewsBtn">Cancelar</button>
           <button type="submit" class="btn btn--dark" id="saveNewsBtn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal receta -->
+  <div class="modal-overlay" id="recipeModalOverlay">
+    <div class="modal" style="max-width:560px">
+      <div class="modal__head">
+        <h3 id="recipeModalTitle">Nueva receta</h3>
+        <button class="close-btn" id="closeRecipeModal">✕</button>
+      </div>
+      <form id="recipeForm">
+        <input type="hidden" id="recipeId" />
+        <div class="field">
+          <label for="recipeTitle">Nombre de la receta</label>
+          <input type="text" id="recipeTitle" required placeholder="Ej: Bowl de avena con frutos secos" />
+        </div>
+        <div class="field">
+          <label for="recipeVideoUrl">Link del video (Instagram o TikTok)</label>
+          <input type="text" id="recipeVideoUrl" required placeholder="https://www.instagram.com/reel/... o https://www.tiktok.com/@usuario/video/..." />
+        </div>
+        <div class="field">
+          <label>Ingredientes</label>
+          <p class="helper-text" style="margin:0 0 0.6rem;">Si vinculás un ingrediente con un producto, va a poder agregarse al carrito con un solo botón.</p>
+          <div id="recipeIngredientsList"></div>
+          <button type="button" class="btn btn--outline" id="addIngredientBtn" style="margin-top:0.4rem; font-size:0.82rem;">+ Agregar ingrediente</button>
+        </div>
+        <div class="toggle-row">
+          <label for="recipeActive">Visible en la tienda</label>
+          <label class="switch">
+            <input type="checkbox" id="recipeActive" checked />
+            <span class="switch-track"></span>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn--outline" id="cancelRecipeBtn">Cancelar</button>
+          <button type="submit" class="btn btn--dark" id="saveRecipeBtn">Guardar</button>
         </div>
       </form>
     </div>
@@ -1854,6 +1937,43 @@ function applyProductImageBg(value, targetEl = document.documentElement) {
 }
 
 /* ============================================================
+   Normaliza cualquier forma en que carguen el WhatsApp (con o sin
+   0 inicial, con o sin 54, con o sin 9) al formato que WhatsApp
+   necesita para reconocer un celular argentino: 54 9 + número local.
+   Esto es lo que fallaba en celular: la Web de WhatsApp (PC) es
+   más permisiva, pero la app de celular exige el formato exacto.
+   ============================================================ */
+function normalizeArgWhatsapp(raw) {
+  let d = String(raw || "").replace(/\D/g, "");
+  if (!d) return "";
+  if (d.startsWith("0")) d = d.slice(1);
+  if (d.startsWith("54")) {
+    d = d.slice(2);
+    if (d.startsWith("0")) d = d.slice(1);
+  }
+  if (d.startsWith("9")) d = d.slice(1);
+  return "549" + d;
+}
+
+/* ============================================================
+   Detecta si un link de video es de Instagram o TikTok y arma la
+   URL de "embed" para reproducirlo adentro de la página, sin
+   mandar a la persona a la red social.
+   ============================================================ */
+function detectVideoEmbed(url) {
+  if (!url) return null;
+  const clean = url.trim().split("?")[0].replace(/\/$/, "");
+  if (/tiktok\.com/i.test(clean)) {
+    const m = clean.match(/video\/(\d+)/);
+    return { platform: "tiktok", embedUrl: m ? `https://www.tiktok.com/embed/v2/${m[1]}` : null, originalUrl: url };
+  }
+  if (/instagram\.com/i.test(clean)) {
+    return { platform: "instagram", embedUrl: `${clean}/embed`, originalUrl: url };
+  }
+  return { platform: "otro", embedUrl: null, originalUrl: url };
+}
+
+/* ============================================================
    MÓDULO AUTH — cuenta de cliente (obligatoria para comprar)
    ============================================================ */
 
@@ -2021,6 +2141,7 @@ const Store = (() => {
   let activeCategory = "all";
   let searchTerm = "";
   let cart = [];
+  let recipesCache = [];
   let newProductsLimit = 12;
 
   const el = {
@@ -2053,6 +2174,8 @@ const Store = (() => {
     allProductsSection: document.getElementById("allProductsSection"),
     allProductsGrid: document.getElementById("allProductsGrid"),
     allProductsCount: document.getElementById("allProductsCount"),
+    recipesSection: document.getElementById("recipesSection"),
+    recipesGrid: document.getElementById("recipesGrid"),
     searchInput: document.getElementById("searchInput"),
     searchBtn: document.getElementById("searchBtn"),
     cartBtn: document.getElementById("cartBtn"),
@@ -2162,7 +2285,7 @@ const Store = (() => {
       if (!settings?.whatsapp_phone) { showToast("Todavía no configuraron un WhatsApp de contacto"); return; }
       const lines = cart.map((i) => `• ${i.qty}x ${i.name} — ${money(i.price * i.qty)}`);
       const msg = [`¡Hola ${settings.store_name || "Sano Antojo"}! Quiero hacer este pedido:`, "", ...lines, "", `Total: ${money(cartTotal())}`].join("\n");
-      const phone = settings.whatsapp_phone.replace(/[^\d]/g, "");
+      const phone = normalizeArgWhatsapp(settings.whatsapp_phone);
       try {
         const user = Auth.getUser();
         await supabase.from("sano_antojo_orders").insert({
@@ -2196,7 +2319,7 @@ const Store = (() => {
 
     const contactLinks = [];
     if (data.whatsapp_phone) {
-      const phone = data.whatsapp_phone.replace(/[^\d]/g, "");
+      const phone = normalizeArgWhatsapp(data.whatsapp_phone);
       const wspText = encodeURIComponent(`¡Hola ${data.store_name || "Sano Antojo"}! Estoy interesado/a en...`);
       contactLinks.push(`<a href="https://wa.me/${phone}?text=${wspText}" target="_blank" rel="noopener" class="btn-wsp">💬 Escribinos por WhatsApp</a>`);
       el.promoWhatsapp.href = `https://wa.me/${phone}?text=${wspText}`;
@@ -2218,6 +2341,62 @@ const Store = (() => {
     if (!error && data) categories = data;
     renderCategories();
   }
+
+  async function loadRecipes() {
+    const { data, error } = await supabase.from("sano_antojo_recipes").select("*").eq("active", true).order("sort_order", { ascending: true });
+    if (error || !data || data.length === 0) { el.recipesSection.style.display = "none"; return; }
+    recipesCache = data;
+    el.recipesSection.style.display = "block";
+    el.recipesGrid.innerHTML = data.map(recipeCard).join("");
+  }
+
+  function recipeCard(recipe) {
+    const embed = detectVideoEmbed(recipe.video_url);
+    const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+    const linkedCount = ingredients.filter((i) => i.product_id).length;
+
+    const videoMarkup = embed?.embedUrl
+      ? `<iframe src="${embed.embedUrl}" loading="lazy" allowfullscreen scrolling="no"
+           allow="autoplay; encrypted-media; picture-in-picture"></iframe>`
+      : `<div class="recipe-video-fallback">
+           No pudimos mostrar este video acá adentro.<br />
+           <a href="${recipe.video_url}" target="_blank" rel="noopener">Verlo en la red social ↗</a>
+         </div>`;
+
+    const ingredientsMarkup = ingredients.map((ing) =>
+      `<li>${escapeHtml(ing.text)}${ing.product_id ? ` <span class="ing-linked">✓ en el catálogo</span>` : ""}</li>`
+    ).join("");
+
+    return `
+    <article class="recipe-card" data-id="${recipe.id}">
+      <div class="recipe-card__video">${videoMarkup}</div>
+      <div class="recipe-card__body">
+        <h3 class="recipe-card__title">${escapeHtml(recipe.title)}</h3>
+        <ul class="recipe-ingredients">${ingredientsMarkup}</ul>
+        <button type="button" class="recipe-card__add-all" data-id="${recipe.id}" ${linkedCount === 0 ? "disabled" : ""}>
+          ${linkedCount === 0 ? "Sin productos vinculados" : `Agregar ${linkedCount} ingrediente${linkedCount === 1 ? "" : "s"} al carrito`}
+        </button>
+        ${linkedCount > 0 && linkedCount < ingredients.length ? `<p class="recipe-card__note">Algunos ingredientes no están en el catálogo y hay que sumarlos aparte.</p>` : ""}
+      </div>
+    </article>`;
+  }
+
+  el.recipesGrid.addEventListener("click", (e) => {
+    const btn = e.target.closest(".recipe-card__add-all");
+    if (!btn || btn.disabled) return;
+    const recipe = recipesCache.find((r) => r.id === btn.dataset.id);
+    if (!recipe) return;
+    Auth.requireAuth(() => {
+      const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+      let added = 0;
+      ingredients.forEach((ing) => {
+        if (!ing.product_id) return;
+        const product = products.find((p) => p.id === ing.product_id);
+        if (product) { addToCart(product); added++; }
+      });
+      showToast(added > 0 ? `Se agregaron ${added} producto${added === 1 ? "" : "s"} al carrito` : "No se pudo agregar ningún producto");
+    });
+  });
 
   function categoryTile(c) {
     const initial = (c.name || "?").trim().charAt(0).toUpperCase();
@@ -2434,10 +2613,12 @@ const Store = (() => {
       el.categoriasSection.style.display = "none";
       el.ofertasSection.style.display = "none";
       el.recomendadosSection.style.display = "none";
+      el.recipesSection.style.display = "none";
     } else {
       renderCategories();
       renderOfertas();
       renderRecomendados();
+      el.recipesSection.style.display = recipesCache.length ? "block" : "none";
     }
   }
 
@@ -2498,6 +2679,7 @@ const Store = (() => {
     await loadSettings();
     await loadCategories();
     await loadProducts();
+    await loadRecipes();
 
     supabase.from("sano_antojo_visits").insert({ source: document.referrer ? "referral" : "direct" }).then(() => {}, () => {});
   }
@@ -2513,6 +2695,7 @@ const Admin = (() => {
   let products = [];
   let orders = [];
   let news = [];
+  let recipes = [];
   let pendingProductImageFile = null;
   let pendingProductImageFile2 = null;
   let pendingProductImageFile3 = null;
@@ -2537,6 +2720,7 @@ const Admin = (() => {
       products: document.getElementById("tab-products"),
       categories: document.getElementById("tab-categories"),
       news: document.getElementById("tab-news"),
+      recipes: document.getElementById("tab-recipes"),
       orders: document.getElementById("tab-orders"),
       stats: document.getElementById("tab-stats"),
       settings: document.getElementById("tab-settings"),
@@ -2592,6 +2776,20 @@ const Admin = (() => {
     closeNewsModal: document.getElementById("closeNewsModal"),
     cancelNewsBtn: document.getElementById("cancelNewsBtn"),
     saveNewsBtn: document.getElementById("saveNewsBtn"),
+    recipesList: document.getElementById("recipesList"),
+    newRecipeBtn: document.getElementById("newRecipeBtn"),
+    recipeModalOverlay: document.getElementById("recipeModalOverlay"),
+    recipeModalTitle: document.getElementById("recipeModalTitle"),
+    recipeForm: document.getElementById("recipeForm"),
+    recipeId: document.getElementById("recipeId"),
+    recipeTitle: document.getElementById("recipeTitle"),
+    recipeVideoUrl: document.getElementById("recipeVideoUrl"),
+    recipeIngredientsList: document.getElementById("recipeIngredientsList"),
+    addIngredientBtn: document.getElementById("addIngredientBtn"),
+    recipeActive: document.getElementById("recipeActive"),
+    closeRecipeModal: document.getElementById("closeRecipeModal"),
+    cancelRecipeBtn: document.getElementById("cancelRecipeBtn"),
+    saveRecipeBtn: document.getElementById("saveRecipeBtn"),
     productModalOverlay: document.getElementById("productModalOverlay"),
     productModalTitle: document.getElementById("productModalTitle"),
     productForm: document.getElementById("productForm"),
@@ -2631,6 +2829,7 @@ const Admin = (() => {
     setStoreName: document.getElementById("setStoreName"),
     setTagline: document.getElementById("setTagline"),
     setWhatsapp: document.getElementById("setWhatsapp"),
+    whatsappPreview: document.getElementById("whatsappPreview"),
     setInstagram: document.getElementById("setInstagram"),
     setFacebook: document.getElementById("setFacebook"),
     setAddress: document.getElementById("setAddress"),
@@ -2724,6 +2923,8 @@ const Admin = (() => {
       el.newsVideoDrop.innerHTML = `<span>🎥 ${escapeHtml(file.name)}</span>`;
     });
 
+    el.setWhatsapp.addEventListener("input", updateWhatsappPreview);
+
     el.imageBgPicker.addEventListener("click", (e) => {
       const btn = e.target.closest(".image-bg-option");
       if (!btn) return;
@@ -2765,6 +2966,26 @@ const Admin = (() => {
     el.closeNewsModal.addEventListener("click", closeNewsModalFn);
     el.cancelNewsBtn.addEventListener("click", closeNewsModalFn);
     el.newsForm.addEventListener("submit", saveNews);
+
+    el.newRecipeBtn.addEventListener("click", () => openRecipeModal());
+    el.recipesList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const id = btn.closest(".admin-row").dataset.id;
+      const recipe = recipes.find((r) => r.id === id);
+      if (btn.dataset.action === "edit") openRecipeModal(recipe);
+      if (btn.dataset.action === "delete") deleteRecipe(recipe);
+    });
+    el.closeRecipeModal.addEventListener("click", closeRecipeModalFn);
+    el.cancelRecipeBtn.addEventListener("click", closeRecipeModalFn);
+    el.addIngredientBtn.addEventListener("click", () => addIngredientRow());
+    el.recipeIngredientsList.addEventListener("click", (e) => {
+      const btn = e.target.closest('button[data-action="remove-ingredient"]');
+      if (!btn) return;
+      if (el.recipeIngredientsList.children.length > 1) btn.closest(".ingredient-row").remove();
+      else showToast("Tiene que quedar al menos un ingrediente");
+    });
+    el.recipeForm.addEventListener("submit", saveRecipe);
 
     el.newManualSaleBtn.addEventListener("click", openManualSaleModal);
     el.closeManualSaleModal.addEventListener("click", closeManualSaleModalFn);
@@ -3044,6 +3265,111 @@ const Admin = (() => {
     const { error } = await supabase.from("sano_antojo_news").delete().eq("id", item.id);
     if (error) { showToast("No se pudo eliminar"); return; }
     showToast("Publicación eliminada"); loadNews();
+  }
+
+  /* ============================================================
+     RECETAS — video de Instagram/TikTok + ingredientes vinculables
+     a productos del catálogo.
+     ============================================================ */
+  async function loadRecipes() {
+    const { data, error } = await supabase.from("sano_antojo_recipes").select("*").order("sort_order", { ascending: true });
+    if (!error) recipes = data || [];
+    renderRecipesList();
+  }
+
+  function renderRecipesList() {
+    if (recipes.length === 0) {
+      el.recipesList.innerHTML = `<p style="color:var(--gray-500)">Todavía no cargaste ninguna receta.</p>`;
+      return;
+    }
+    el.recipesList.innerHTML = recipes.map((r) => {
+      const ingredients = Array.isArray(r.ingredients) ? r.ingredients : [];
+      const linked = ingredients.filter((i) => i.product_id).length;
+      return `
+      <div class="admin-row" data-id="${r.id}">
+        <div class="admin-row__info">
+          <strong>${escapeHtml(r.title)}</strong>
+          <span>${ingredients.length} ingrediente${ingredients.length === 1 ? "" : "s"} · ${linked} vinculado${linked === 1 ? "" : "s"} a productos</span>
+        </div>
+        <span class="badge ${r.active ? "" : "is-off"}">${r.active ? "Visible" : "Oculto"}</span>
+        <div class="row-actions">
+          <button class="icon-action" data-action="edit" aria-label="Editar">✎</button>
+          <button class="icon-action" data-action="delete" aria-label="Eliminar">🗑</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function ingredientRowMarkup(ing = {}) {
+    const productOptions = products.map((p) =>
+      `<option value="${p.id}" ${ing.product_id === p.id ? "selected" : ""}>${escapeHtml(p.name)}</option>`
+    ).join("");
+    return `
+      <div class="ingredient-row">
+        <input type="text" class="ingredient-text" placeholder="Ej: 2 tazas de avena" value="${escapeHtml(ing.text || "")}" />
+        <select class="ingredient-product">
+          <option value="">Sin vincular a un producto</option>
+          ${productOptions}
+        </select>
+        <button type="button" class="icon-action" data-action="remove-ingredient" aria-label="Quitar">🗑</button>
+      </div>`;
+  }
+
+  function addIngredientRow(ing) {
+    el.recipeIngredientsList.insertAdjacentHTML("beforeend", ingredientRowMarkup(ing));
+  }
+
+  function collectIngredients() {
+    return Array.from(el.recipeIngredientsList.querySelectorAll(".ingredient-row")).map((row) => ({
+      text: row.querySelector(".ingredient-text").value.trim(),
+      product_id: row.querySelector(".ingredient-product").value || null,
+    })).filter((ing) => ing.text);
+  }
+
+  function openRecipeModal(recipe = null) {
+    el.recipeModalTitle.textContent = recipe ? "Editar receta" : "Nueva receta";
+    el.recipeId.value = recipe?.id || "";
+    el.recipeTitle.value = recipe?.title || "";
+    el.recipeVideoUrl.value = recipe?.video_url || "";
+    el.recipeActive.checked = recipe ? recipe.active : true;
+    el.recipeIngredientsList.innerHTML = "";
+    const ingredients = recipe?.ingredients?.length ? recipe.ingredients : [{}];
+    ingredients.forEach((ing) => addIngredientRow(ing));
+    el.recipeModalOverlay.classList.add("is-open");
+  }
+  function closeRecipeModalFn() { el.recipeModalOverlay.classList.remove("is-open"); }
+
+  async function saveRecipe(e) {
+    e.preventDefault();
+    const ingredients = collectIngredients();
+    el.saveRecipeBtn.disabled = true; el.saveRecipeBtn.textContent = "Guardando...";
+    try {
+      const id = el.recipeId.value;
+      const payload = {
+        title: el.recipeTitle.value.trim(),
+        video_url: el.recipeVideoUrl.value.trim(),
+        ingredients,
+        active: el.recipeActive.checked,
+      };
+      if (!id) payload.sort_order = recipes.length;
+      const query = id
+        ? supabase.from("sano_antojo_recipes").update(payload).eq("id", id)
+        : supabase.from("sano_antojo_recipes").insert(payload);
+      const { error } = await query;
+      if (error) throw error;
+      closeRecipeModalFn(); showToast("Receta guardada"); loadRecipes();
+    } catch (err) {
+      console.error(err); showToast("No se pudo guardar la receta");
+    } finally {
+      el.saveRecipeBtn.disabled = false; el.saveRecipeBtn.textContent = "Guardar";
+    }
+  }
+
+  async function deleteRecipe(recipe) {
+    if (!confirm(`¿Eliminar la receta "${recipe.title}"?`)) return;
+    const { error } = await supabase.from("sano_antojo_recipes").delete().eq("id", recipe.id);
+    if (error) { showToast("No se pudo eliminar"); return; }
+    showToast("Receta eliminada"); loadRecipes();
   }
 
   async function loadProducts() {
@@ -3570,6 +3896,13 @@ const Admin = (() => {
     });
   }
 
+  function updateWhatsappPreview() {
+    const raw = el.setWhatsapp.value.trim();
+    if (!raw) { el.whatsappPreview.textContent = ""; return; }
+    const normalized = normalizeArgWhatsapp(raw);
+    el.whatsappPreview.textContent = `Así se va a usar: +${normalized.slice(0,2)} ${normalized.slice(2,4)} ${normalized.slice(4)} — revisá que esté completo y sin el "15" viejo.`;
+  }
+
   function setPalettePreview(key) {
     const p = (PALETTES[key] || PALETTES[DEFAULT_PALETTE]).store;
     const style = el.palettePreview.style;
@@ -3612,6 +3945,7 @@ const Admin = (() => {
     el.setStoreName.value = data.store_name || "";
     el.setTagline.value = data.tagline || "";
     el.setWhatsapp.value = data.whatsapp_phone || "";
+    updateWhatsappPreview();
     el.setInstagram.value = data.instagram_url || "";
     el.setFacebook.value = data.facebook_url || "";
     el.setAddress.value = data.address || "";
@@ -3688,7 +4022,7 @@ const Admin = (() => {
 
   async function loadAll() {
     await loadCategories();
-    await Promise.all([loadProducts(), loadSettings(), loadOrders(), loadPaymentConfig(), loadNews()]);
+    await Promise.all([loadProducts(), loadSettings(), loadOrders(), loadPaymentConfig(), loadNews(), loadRecipes()]);
     await loadStats();
   }
 
