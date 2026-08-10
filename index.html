@@ -125,7 +125,7 @@ a { color: inherit; text-decoration: none; }
 .info-item { display: flex; gap: 0.8rem; align-items: flex-start; }
 .info-item svg { flex-shrink: 0; color: var(--primary); margin-top: 2px; }
 .info-item strong { display: block; font-size: 0.96rem; margin-bottom: 0.15rem; }
-.info-item span { font-size: 0.85rem; color: var(--muted); }
+.info-item span { font-size: 0.85rem; color: var(--muted); white-space: pre-line; }
 
 /* ---------- Section titles ---------- */
 .section-band { margin-top: 2.6rem; }
@@ -229,7 +229,7 @@ a { color: inherit; text-decoration: none; }
 .contact-details__item span { display: block; font-size: 0.82rem; color: var(--muted); white-space: pre-line; line-height: 1.5; }
 .contact-grid__map { display: flex; flex-direction: column; align-items: center; }
 .store-map-caption { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--ink); margin: 0 0 0.6rem; text-align: center; }
-.store-map { width: 100%; max-width: 320px; aspect-ratio: 1/1; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-soft, 0 8px 20px -10px rgba(0,0,0,0.2)); }
+.store-map { width: 100%; max-width: 320px; aspect-ratio: 1/1; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-soft, 0 8px 20px -10px rgba(0,0,0,0.2)); isolation: isolate; position: relative; z-index: 0; }
 .store-map .leaflet-popup-content-wrapper { border-radius: 10px; }
 .store-map .leaflet-popup-content { font-family: var(--font-body); font-size: 0.85rem; margin: 0.8rem 1rem; line-height: 1.5; }
 .store-map .leaflet-popup-content a { color: var(--primary); font-weight: 700; }
@@ -276,12 +276,13 @@ a { color: inherit; text-decoration: none; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.14); padding: 1.2rem 0; text-align: center; font-size: 0.78rem; opacity: 0.6; }
 
 /* ---------- Sección de Ayuda (FAQ + libro de sugerencias) ---------- */
-.help-section {
-  margin-top: 2.6rem; background: var(--ink); color: rgba(255,255,255,0.92); border-radius: var(--radius);
-  padding: 2.2rem 1.8rem; display: grid; grid-template-columns: 1fr; gap: 2.2rem;
+.modal.help-modal {
+  width: min(760px, 100%); max-height: 85vh; overflow-y: auto; position: relative;
+  background: var(--ink); color: rgba(255,255,255,0.92); padding: 2.2rem 1.8rem;
+  display: grid; grid-template-columns: 1fr; gap: 2.2rem;
 }
-@media (min-width: 780px) { .help-section { grid-template-columns: 1fr 1fr; padding: 2.6rem; } }
-.help-section h2 { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 1.1rem; color: var(--surface); }
+@media (min-width: 780px) { .modal.help-modal { grid-template-columns: 1fr 1fr; padding: 2.6rem; } }
+.help-modal .pd-close-btn { top: 1rem; right: 1rem; }
 .help-section__lead { font-size: 0.85rem; opacity: 0.75; margin: -0.6rem 0 1rem; }
 
 .faq-accordion { columns: 1; column-gap: 1.6rem; }
@@ -296,15 +297,15 @@ a { color: inherit; text-decoration: none; }
 .faq-item__a { max-height: 0; overflow: hidden; transition: max-height 0.2s ease; font-size: 0.8rem; opacity: 0.75; line-height: 1.5; }
 .faq-item.is-open .faq-item__a { max-height: 300px; padding-bottom: 0.6rem; }
 
-.feedback-toggle {
+.help-toggle {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
   background: none; border: none; color: var(--surface); font-family: var(--font-display);
-  font-size: 1.05rem; font-weight: 700; letter-spacing: 0.02em; padding: 0.3rem 0; text-align: left;
+  font-size: 1.05rem; font-weight: 700; letter-spacing: 0.02em; padding: 0.3rem 0; text-align: left; cursor: pointer;
 }
-.feedback-toggle .chev { transition: transform 0.15s ease; opacity: 0.7; flex-shrink: 0; }
-.feedback-toggle.is-open .chev { transform: rotate(180deg); }
-.feedback-panel { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
-.feedback-panel.is-open { max-height: 600px; margin-top: 1rem; }
+.help-toggle .chev { transition: transform 0.15s ease; opacity: 0.7; flex-shrink: 0; }
+.help-toggle.is-open .chev { transform: rotate(180deg); }
+.help-panel { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.help-panel.is-open { max-height: 2000px; margin-top: 1.1rem; }
 #feedbackForm { display: flex; flex-direction: column; gap: 0.7rem; }
 .feedback-type-row { display: flex; gap: 1.2rem; font-size: 0.85rem; }
 .feedback-type-row label { display: flex; align-items: center; gap: 0.4rem; opacity: 0.85; }
@@ -433,6 +434,46 @@ a { color: inherit; text-decoration: none; }
 }
 .admin-fab:hover { background: var(--primary-light); transform: translateY(-2px); }
 .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- Asistente virtual (busca en las FAQ) ---------- */
+.chatbot { position: fixed; left: 1.1rem; bottom: 1.1rem; z-index: 119; }
+.chatbot__fab {
+  width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: var(--surface);
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px -6px rgba(20, 15, 10, 0.5);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.chatbot__fab:hover { background: var(--primary-light); transform: translateY(-2px); }
+.chatbot.is-open .chatbot__fab { display: none; }
+.chatbot__window {
+  display: none; position: fixed; left: 1.1rem; bottom: 1.1rem; width: min(340px, calc(100vw - 2.2rem));
+  height: min(480px, calc(100vh - 6rem)); background: var(--surface); border-radius: var(--radius);
+  box-shadow: 0 20px 50px -14px rgba(0,0,0,0.35); flex-direction: column; overflow: hidden; border: 1px solid var(--line);
+}
+.chatbot.is-open .chatbot__window { display: flex; }
+.chatbot__head {
+  background: var(--primary); color: var(--surface); padding: 0.9rem 1rem; display: flex; align-items: center;
+  justify-content: space-between; font-weight: 700; font-size: 0.9rem;
+}
+.chatbot__head-title { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-size: 1rem; }
+.chatbot__head button { background: none; border: none; color: var(--surface); font-size: 1rem; opacity: 0.85; }
+.chatbot__messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.chatbot__msg { max-width: 85%; padding: 0.55rem 0.8rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.45; white-space: pre-line; }
+.chatbot__msg--bot { align-self: flex-start; background: var(--bg); color: var(--ink); border-bottom-left-radius: 3px; }
+.chatbot__msg--user { align-self: flex-end; background: var(--primary); color: var(--surface); border-bottom-right-radius: 3px; }
+.chatbot__msg--bot a { color: var(--primary); font-weight: 700; }
+.chatbot__suggestions { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 1rem 0.8rem; }
+.chatbot__suggestions button {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 0.76rem;
+  padding: 0.35rem 0.7rem; border-radius: 999px;
+}
+.chatbot__suggestions button:hover { border-color: var(--primary); color: var(--primary); }
+.chatbot__form { display: flex; gap: 0.5rem; padding: 0.8rem; border-top: 1px solid var(--line); }
+.chatbot__form input { flex: 1; padding: 0.55rem 0.8rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.85rem; }
+.chatbot__form button { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--primary); color: var(--surface); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+@media (max-width: 719px) {
+  .chatbot { left: 0.7rem; bottom: calc(68px + env(safe-area-inset-bottom)); }
+  .chatbot__window { left: 0.7rem; bottom: calc(68px + env(safe-area-inset-bottom)); }
+}
 
 /* ============================================================
    Estilos del panel de administración (#adminView), scopeados
@@ -1251,17 +1292,29 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
-  <section id="helpSection" class="help-section">
-    <div class="help-section__col">
-      <h2>Preguntas frecuentes</h2>
-      <div id="faqAccordion" class="faq-accordion"></div>
+  </main>
+
+<!-- Ayuda: se abre solo desde los links del pie de página -->
+<div class="modal-overlay" id="helpModalOverlay">
+  <div class="modal help-modal">
+    <button type="button" class="pd-close-btn" id="closeHelpModal" aria-label="Cerrar">✕</button>
+
+    <div class="help-modal__col">
+      <button type="button" class="help-toggle" id="faqToggle">
+        ❓ Preguntas frecuentes
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div id="faqPanel" class="help-panel">
+        <div id="faqAccordion" class="faq-accordion"></div>
+      </div>
     </div>
-    <div class="help-section__col">
-      <button type="button" class="feedback-toggle" id="feedbackToggle">
+
+    <div class="help-modal__col">
+      <button type="button" class="help-toggle" id="feedbackToggle">
         📋 Libro de sugerencias y reclamos
         <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div id="feedbackPanel" class="feedback-panel">
+      <div id="feedbackPanel" class="help-panel">
         <p class="help-section__lead">¿Algo que quieras contarnos? Nos ayuda un montón a mejorar.</p>
         <form id="feedbackForm">
           <div class="feedback-type-row">
@@ -1277,8 +1330,8 @@ a { color: inherit; text-decoration: none; }
         </form>
       </div>
     </div>
-  </section>
-</main>
+  </div>
+</div>
 
 <footer class="site-footer store-only">
   <div class="container footer-grid">
@@ -1304,8 +1357,8 @@ a { color: inherit; text-decoration: none; }
     <div class="footer-col">
       <button type="button" class="footer-col__toggle">Ayuda</button>
       <div class="footer-col__body">
-        <a href="#helpSection" id="footerFaqLink">Preguntas frecuentes</a>
-        <a href="#helpSection" id="footerFeedbackLink">Libro de sugerencias y reclamos</a>
+        <a href="#" id="footerFaqLink">Preguntas frecuentes</a>
+        <a href="#" id="footerFeedbackLink">Libro de sugerencias y reclamos</a>
       </div>
     </div>
 
@@ -1319,6 +1372,43 @@ a { color: inherit; text-decoration: none; }
     © <span id="footerYear"></span> <span id="footerStoreName">Sano Antojo</span> — Todos los derechos reservados.
   </div>
 </footer>
+
+<!-- Asistente virtual: busca la respuesta entre las Preguntas Frecuentes -->
+<div class="chatbot store-only" id="chatbot">
+  <div class="chatbot__window" id="chatbotWindow">
+    <div class="chatbot__head">
+      <span class="chatbot__head-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 8c-2-3-6-3.5-8-1.5 1.5 2.5 5 3.5 8 1.5z"/>
+          <path d="M12 8c2-3 6-3.5 8-1.5-1.5 2.5-5 3.5-8 1.5z"/>
+          <path d="M12 8c-5 0-8 4-8 8.5C4 20 7.5 22 12 22s8-2 8-5.5C20 12 17 8 12 8z"/>
+          <circle cx="9.3" cy="16" r="0.9" fill="currentColor" stroke="none"/>
+          <circle cx="14.7" cy="16" r="0.9" fill="currentColor" stroke="none"/>
+          <path d="M9.5 18.3c1 1 4 1 5 0"/>
+        </svg>
+        Antojito
+      </span>
+      <button type="button" id="chatbotClose" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="chatbot__messages" id="chatbotMessages"></div>
+    <form id="chatbotForm" class="chatbot__form">
+      <input type="text" id="chatbotInput" placeholder="Escribí tu pregunta..." autocomplete="off" />
+      <button type="submit" aria-label="Enviar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </div>
+  <button type="button" class="chatbot__fab" id="chatbotFab" aria-label="Abrir el chat con Antojito">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 8c-2-3-6-3.5-8-1.5 1.5 2.5 5 3.5 8 1.5z"/>
+      <path d="M12 8c2-3 6-3.5 8-1.5-1.5 2.5-5 3.5-8 1.5z"/>
+      <path d="M12 8c-5 0-8 4-8 8.5C4 20 7.5 22 12 22s8-2 8-5.5C20 12 17 8 12 8z"/>
+      <circle cx="9.3" cy="16" r="0.9" fill="currentColor" stroke="none"/>
+      <circle cx="14.7" cy="16" r="0.9" fill="currentColor" stroke="none"/>
+      <path d="M9.5 18.3c1 1 4 1 5 0"/>
+    </svg>
+  </button>
+</div>
 
 <!-- Barra de navegación inferior — solo se ve en celular -->
 <nav class="mobile-tabbar store-only" id="mobileTabbar" aria-label="Navegación">
@@ -1390,35 +1480,16 @@ a { color: inherit; text-decoration: none; }
 <!-- Login / cuenta -->
 <div class="modal-overlay" id="authModalOverlay">
   <div class="modal">
-    <h3 id="authModalTitle">Iniciar sesión</h3>
-    <div id="authFormWrap">
-      <div class="modal-tabs">
-        <button type="button" id="authTabLogin" class="is-active">Ingresar</button>
-        <button type="button" id="authTabSignup">Crear cuenta</button>
+    <h3 id="authModalTitle">¿Cómo te llamás?</h3>
+    <p style="font-size:0.85rem; color:var(--gray); margin-top:-0.4rem;">Solo necesitamos tu nombre para armar el pedido — nada de contraseñas ni registros.</p>
+    <form id="authForm">
+      <div class="field">
+        <label for="authFullName">Nombre y apellido</label>
+        <input type="text" id="authFullName" required placeholder="Ej: Ana Gómez" />
       </div>
-      <p id="authHelperText" style="font-size:0.85rem; color:var(--gray); margin-top:-0.4rem;">Necesitás una cuenta para agregar productos al carrito y comprar.</p>
-      <form id="authForm">
-        <div class="field">
-          <label for="authEmail">Email</label>
-          <input type="email" id="authEmail" required />
-        </div>
-        <div class="field">
-          <label for="authPassword">Contraseña</label>
-          <input type="password" id="authPassword" required minlength="6" />
-        </div>
-        <div class="field" id="authPasswordConfirmField" style="display:none">
-          <label for="authPasswordConfirm">Repetir contraseña</label>
-          <input type="password" id="authPasswordConfirm" />
-        </div>
-        <button type="submit" class="btn-checkout" id="authSubmitBtn">Ingresar</button>
-        <p class="modal-error" id="authMessage"></p>
-        <button type="button" class="link-btn" id="forgotPasswordBtn" style="margin-top:0.7rem;">Olvidé mi contraseña</button>
-      </form>
-    </div>
-    <div id="accountPanel" style="display:none">
-      <p style="font-weight:700;" id="accountEmail"></p>
-      <button class="btn-checkout" id="accountLogoutBtn">Cerrar sesión</button>
-    </div>
+      <button type="submit" class="btn-checkout" id="authSubmitBtn">Continuar</button>
+      <p class="modal-error" id="authMessage"></p>
+    </form>
     <button type="button" class="link-btn" id="closeAuthModal" style="margin-top:1rem;">Cerrar</button>
   </div>
 </div>
@@ -1613,7 +1684,7 @@ a { color: inherit; text-decoration: none; }
           </div>
           <div class="field">
             <label for="setAddress">Dirección / ubicación (texto)</label>
-            <input type="text" id="setAddress" placeholder="Ej: Calle 2 casi esquina 107, Local 1" />
+            <textarea id="setAddress" placeholder="Ej: Calle 2 casi esquina 107, Local 1&#10;Gral. Pico - La Pampa" style="min-height:70px"></textarea>
           </div>
           <div class="field">
             <label for="setHours">Horario de atención</label>
@@ -2259,136 +2330,65 @@ function showToast(msg) {
    mismo storage de sesión del navegador).
    ============================================================ */
 const Auth = (() => {
-  let currentUser = null;
   let pendingAction = null;
-  let mode = "login";
+  const STORAGE_KEY = "sano_antojo_customer_name";
 
   const overlayEl = document.getElementById("authModalOverlay");
   const el = {
     closeBtn: document.getElementById("closeAuthModal"),
-    tabLogin: document.getElementById("authTabLogin"),
-    tabSignup: document.getElementById("authTabSignup"),
-    helperText: document.getElementById("authHelperText"),
     form: document.getElementById("authForm"),
-    email: document.getElementById("authEmail"),
-    password: document.getElementById("authPassword"),
-    passwordConfirmField: document.getElementById("authPasswordConfirmField"),
-    passwordConfirm: document.getElementById("authPasswordConfirm"),
+    fullName: document.getElementById("authFullName"),
     message: document.getElementById("authMessage"),
     submitBtn: document.getElementById("authSubmitBtn"),
-    forgotBtn: document.getElementById("forgotPasswordBtn"),
-    formWrap: document.getElementById("authFormWrap"),
-    accountPanel: document.getElementById("accountPanel"),
-    accountEmail: document.getElementById("accountEmail"),
-    logoutBtn: document.getElementById("accountLogoutBtn"),
-    modalTitle: document.getElementById("authModalTitle"),
     accountBtn: document.getElementById("accountBtn"),
-    adminFab: document.getElementById("adminFab"),
   };
 
   function show() { overlayEl.classList.add("is-open"); }
   function hide() { overlayEl.classList.remove("is-open"); resetMessage(); }
   function resetMessage() { el.message.textContent = ""; el.message.classList.remove("is-visible"); }
-  function setMessage(text) { el.message.textContent = text; el.message.classList.add("is-visible"); }
 
-  function setMode(newMode) {
-    mode = newMode;
-    el.tabLogin.classList.toggle("is-active", mode === "login");
-    el.tabSignup.classList.toggle("is-active", mode === "signup");
-    el.modalTitle.textContent = mode === "login" ? "Iniciar sesión" : "Crear cuenta";
-    el.submitBtn.textContent = mode === "login" ? "Ingresar" : "Crear cuenta";
-    el.helperText.textContent = mode === "login"
-      ? "Necesitás una cuenta para agregar productos al carrito y comprar."
-      : "Creá tu cuenta para poder comprar en la tienda.";
-    el.passwordConfirmField.style.display = mode === "signup" ? "block" : "none";
-    el.passwordConfirm.required = mode === "signup";
+  function getCustomerName() {
+    try { return localStorage.getItem(STORAGE_KEY) || ""; } catch (e) { return ""; }
+  }
+  function setCustomerName(name) {
+    try { localStorage.setItem(STORAGE_KEY, name); } catch (e) {}
+  }
+
+  function openNameForm() {
+    el.fullName.value = getCustomerName();
     resetMessage();
-  }
-  el.tabLogin.addEventListener("click", () => setMode("login"));
-  el.tabSignup.addEventListener("click", () => setMode("signup"));
-
-  function openAuthForm() {
-    el.formWrap.style.display = "block";
-    el.accountPanel.style.display = "none";
-    setMode("login");
-    show();
-  }
-  function openAccountPanel() {
-    el.formWrap.style.display = "none";
-    el.accountPanel.style.display = "block";
-    el.accountEmail.textContent = currentUser?.email || "";
     show();
   }
 
-  el.accountBtn.addEventListener("click", () => {
-    if (currentUser) openAccountPanel(); else openAuthForm();
-  });
+  el.accountBtn.addEventListener("click", () => openNameForm());
   el.closeBtn.addEventListener("click", hide);
   overlayEl.addEventListener("click", (e) => { if (e.target === overlayEl) hide(); });
 
-  el.form.addEventListener("submit", async (e) => {
+  el.form.addEventListener("submit", (e) => {
     e.preventDefault();
-    resetMessage();
-    if (mode === "signup" && el.password.value !== el.passwordConfirm.value) {
-      setMessage("Las contraseñas no coinciden."); return;
-    }
-    el.submitBtn.disabled = true; el.submitBtn.textContent = "Un momento...";
-    try {
-      if (mode === "login") {
-        const { error } = await supabase.auth.signInWithPassword({ email: el.email.value.trim(), password: el.password.value });
-        if (error) throw error;
-        hide();
-        if (pendingAction) { const cb = pendingAction; pendingAction = null; cb(); }
-      } else {
-        const { error } = await supabase.auth.signUp({ email: el.email.value.trim(), password: el.password.value });
-        if (error) throw error;
-        setMessage("¡Listo! Si tu proyecto pide confirmación, revisá tu email.");
-      }
-    } catch (err) {
-      setMessage(err.message === "Invalid login credentials" ? "Email o contraseña incorrectos." : err.message);
-    } finally {
-      el.submitBtn.disabled = false; el.submitBtn.textContent = mode === "login" ? "Ingresar" : "Crear cuenta";
-    }
+    const name = el.fullName.value.trim();
+    if (!name) return;
+    setCustomerName(name);
+    updateButtonState();
+    hide();
+    if (pendingAction) { const cb = pendingAction; pendingAction = null; cb(); }
   });
-
-  el.forgotBtn.addEventListener("click", async () => {
-    const email = el.email.value.trim();
-    if (!email) { setMessage("Escribí tu email arriba primero."); return; }
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
-    setMessage(error ? error.message : "Te enviamos un email para recuperar tu contraseña.");
-  });
-
-  el.logoutBtn.addEventListener("click", async () => { await supabase.auth.signOut(); hide(); });
 
   function updateButtonState() {
-    el.accountBtn.classList.toggle("is-authed", !!currentUser);
-  }
-
-  async function updateAdminFab() {
-    if (!currentUser) { el.adminFab.style.display = "none"; return; }
-    const { data } = await supabase.from("sano_antojo_admins").select("id").eq("id", currentUser.id).maybeSingle();
-    el.adminFab.style.display = data ? "flex" : "none";
+    el.accountBtn.classList.toggle("is-authed", !!getCustomerName());
   }
 
   function requireAuth(callback) {
-    if (currentUser) { callback(); return; }
+    if (getCustomerName()) { callback(); return; }
     pendingAction = callback;
-    openAuthForm();
+    openNameForm();
   }
 
   async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-    currentUser = session?.user || null;
     updateButtonState();
-    updateAdminFab();
-    supabase.auth.onAuthStateChange((_event, newSession) => {
-      currentUser = newSession?.user || null;
-      updateButtonState();
-      updateAdminFab();
-    });
   }
 
-  return { init, requireAuth, getUser: () => currentUser };
+  return { init, requireAuth, getCustomerName };
 })();
 
 /* ============================================================
@@ -2447,6 +2447,16 @@ const Store = (() => {
     recipesSection: document.getElementById("recipesSection"),
     recipesGrid: document.getElementById("recipesGrid"),
     faqAccordion: document.getElementById("faqAccordion"),
+    chatbot: document.getElementById("chatbot"),
+    chatbotFab: document.getElementById("chatbotFab"),
+    chatbotClose: document.getElementById("chatbotClose"),
+    chatbotMessages: document.getElementById("chatbotMessages"),
+    chatbotForm: document.getElementById("chatbotForm"),
+    chatbotInput: document.getElementById("chatbotInput"),
+    helpModalOverlay: document.getElementById("helpModalOverlay"),
+    closeHelpModal: document.getElementById("closeHelpModal"),
+    faqToggle: document.getElementById("faqToggle"),
+    faqPanel: document.getElementById("faqPanel"),
     feedbackToggle: document.getElementById("feedbackToggle"),
     feedbackPanel: document.getElementById("feedbackPanel"),
     feedbackForm: document.getElementById("feedbackForm"),
@@ -2561,14 +2571,13 @@ const Store = (() => {
   el.checkoutBtn.addEventListener("click", () => {
     Auth.requireAuth(async () => {
       if (!settings?.whatsapp_phone) { showToast("Todavía no configuraron un WhatsApp de contacto"); return; }
+      const customerName = Auth.getCustomerName();
       const lines = cart.map((i) => `• ${i.qty}x ${i.name} — ${money(i.price * i.qty)}`);
-      const msg = [`¡Hola ${settings.store_name || "Sano Antojo"}! Quiero hacer este pedido:`, "", ...lines, "", `Total: ${money(cartTotal())}`].join("\n");
+      const msg = [`¡Hola ${settings.store_name || "Sano Antojo"}! Soy ${customerName} y quiero hacer este pedido:`, "", ...lines, "", `Total: ${money(cartTotal())}`].join("\n");
       const phone = normalizeArgWhatsapp(settings.whatsapp_phone);
       try {
-        const user = Auth.getUser();
         await supabase.from("sano_antojo_orders").insert({
-          user_id: user.id,
-          customer_email: user.email,
+          customer_full_name: customerName,
           items: cart.map((i) => ({ id: i.id, title: i.name, quantity: i.qty, unit_price: i.price })),
           total: cartTotal(),
           status: "whatsapp",
@@ -2808,9 +2817,11 @@ const Store = (() => {
     else if (bannersCache.length > 1) startCarouselAutoplay();
   });
 
+  let faqsCache = [];
   async function loadFaqs() {
     const { data, error } = await supabase.from("sano_antojo_faqs").select("*").eq("active", true).order("sort_order", { ascending: true });
     if (error || !data || data.length === 0) return;
+    faqsCache = data;
     el.faqAccordion.innerHTML = data.map((f, i) => `
       <div class="faq-item" data-index="${i}">
         <button type="button" class="faq-item__q">
@@ -2827,12 +2838,122 @@ const Store = (() => {
   });
 
   /* ============================================================
+     ASISTENTE VIRTUAL — busca la mejor coincidencia entre las
+     Preguntas Frecuentes cargadas (sin IA externa, sin costo).
+     ============================================================ */
+  function normalizeText(s) {
+    return (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9ñ\s]/g, " ");
+  }
+  const CHAT_STOPWORDS = new Set(["que","el","la","los","las","de","del","un","una","unos","unas","para","con","es","son",
+    "hay","tienen","tiene","como","donde","cual","cuales","puedo","puede","se","me","mi","su","sus","y","o","a","en",
+    "por","al","lo","les","le","este","esta","estos","estas","hacen","hace","cuanto","cuanta","cuando","quiero",
+    "necesito","tengo","sobre","desde","hasta","muy","mas","tambien","si","no"]);
+  function meaningfulWords(s) {
+    return normalizeText(s).split(/\s+/).filter((w) => w.length > 2 && !CHAT_STOPWORDS.has(w));
+  }
+  function findBestFaq(userText) {
+    const userWords = new Set(meaningfulWords(userText));
+    if (userWords.size === 0) return null;
+    let best = null, bestScore = 0;
+    faqsCache.forEach((f) => {
+      const qWords = meaningfulWords(f.question);
+      const overlap = qWords.filter((w) => userWords.has(w)).length;
+      if (overlap > bestScore) { bestScore = overlap; best = f; }
+    });
+    return best;
+  }
+
+  function addChatMsg(content, sender, isHtml = false) {
+    const div = document.createElement("div");
+    div.className = `chatbot__msg chatbot__msg--${sender}`;
+    if (isHtml) div.innerHTML = content; else div.textContent = content;
+    el.chatbotMessages.appendChild(div);
+    el.chatbotMessages.scrollTop = el.chatbotMessages.scrollHeight;
+  }
+
+  function whatsappFallbackHtml() {
+    const phone = settings?.whatsapp_phone ? normalizeArgWhatsapp(settings.whatsapp_phone) : "";
+    const text = encodeURIComponent("¡Hola! Tengo una consulta...");
+    const link = phone ? `<br /><a href="https://wa.me/${phone}?text=${text}" target="_blank" rel="noopener">Escribinos por WhatsApp ↗</a>` : "";
+    return `Mmm, no encontré nada sobre eso entre las preguntas frecuentes. ¿Te ayudo por WhatsApp?${link}`;
+  }
+
+  function renderChatSuggestions() {
+    if (faqsCache.length === 0) return;
+    const chips = faqsCache.slice(0, 4).map((f) =>
+      `<button type="button" data-q="${escapeHtml(f.question)}">${escapeHtml(f.question)}</button>`).join("");
+    const wrap = document.createElement("div");
+    wrap.className = "chatbot__suggestions";
+    wrap.innerHTML = chips;
+    el.chatbotMessages.appendChild(wrap);
+  }
+
+  function handleChatQuestion(text) {
+    addChatMsg(text, "user");
+    setTimeout(() => {
+      const match = findBestFaq(text);
+      if (match) addChatMsg(match.answer, "bot");
+      else addChatMsg(whatsappFallbackHtml(), "bot", true);
+    }, 350);
+  }
+
+  let chatStarted = false;
+  el.chatbotFab.addEventListener("click", () => {
+    el.chatbot.classList.add("is-open");
+    if (!chatStarted) {
+      chatStarted = true;
+      addChatMsg("¡Hola! Soy Antojito 🌱 Preguntame lo que necesites saber — por ejemplo:", "bot");
+      renderChatSuggestions();
+    }
+    el.chatbotInput.focus();
+  });
+  el.chatbotClose.addEventListener("click", () => el.chatbot.classList.remove("is-open"));
+  el.chatbotForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = el.chatbotInput.value.trim();
+    if (!text) return;
+    el.chatbotInput.value = "";
+    handleChatQuestion(text);
+  });
+  el.chatbotMessages.addEventListener("click", (e) => {
+    const btn = e.target.closest(".chatbot__suggestions button");
+    if (!btn) return;
+    handleChatQuestion(btn.dataset.q);
+  });
+
+  /* ============================================================
      LIBRO DE SUGERENCIAS Y RECLAMOS — no requiere cuenta, para que
      cualquiera pueda dejar su comentario sin fricción.
      ============================================================ */
+  function openHelpModal(which) {
+    el.helpModalOverlay.classList.add("is-open");
+    const showFaq = which === "faq";
+    el.faqToggle.classList.toggle("is-open", showFaq);
+    el.faqPanel.classList.toggle("is-open", showFaq);
+    el.feedbackToggle.classList.toggle("is-open", !showFaq);
+    el.feedbackPanel.classList.toggle("is-open", !showFaq);
+  }
+  el.closeHelpModal.addEventListener("click", () => el.helpModalOverlay.classList.remove("is-open"));
+  el.helpModalOverlay.addEventListener("click", (e) => { if (e.target === el.helpModalOverlay) el.helpModalOverlay.classList.remove("is-open"); });
+
+  el.faqToggle.addEventListener("click", () => {
+    const opening = !el.faqPanel.classList.contains("is-open");
+    el.faqToggle.classList.toggle("is-open", opening);
+    el.faqPanel.classList.toggle("is-open", opening);
+    if (opening) {
+      el.feedbackToggle.classList.remove("is-open");
+      el.feedbackPanel.classList.remove("is-open");
+    }
+  });
+
   el.feedbackToggle.addEventListener("click", () => {
-    el.feedbackToggle.classList.toggle("is-open");
-    el.feedbackPanel.classList.toggle("is-open");
+    const opening = !el.feedbackPanel.classList.contains("is-open");
+    el.feedbackToggle.classList.toggle("is-open", opening);
+    el.feedbackPanel.classList.toggle("is-open", opening);
+    if (opening) {
+      el.faqToggle.classList.remove("is-open");
+      el.faqPanel.classList.remove("is-open");
+    }
   });
 
   el.feedbackForm.addEventListener("submit", async (e) => {
@@ -3134,16 +3255,13 @@ const Store = (() => {
   document.querySelectorAll('.footer-col__body a[data-scroll-home]').forEach((a) => {
     a.addEventListener("click", (e) => { e.preventDefault(); goHome(); });
   });
-  el.footerFaqLink.addEventListener("click", () => {
-    // deja que el link haga scroll normal a #helpSection; nada más que hacer.
+  el.footerFaqLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    openHelpModal("faq");
   });
   el.footerFeedbackLink.addEventListener("click", (e) => {
     e.preventDefault();
-    document.getElementById("helpSection").scrollIntoView({ behavior: "smooth" });
-    if (!el.feedbackPanel.classList.contains("is-open")) {
-      el.feedbackToggle.classList.add("is-open");
-      el.feedbackPanel.classList.add("is-open");
-    }
+    openHelpModal("feedback");
   });
 
   // Barra inferior de celular: reutiliza las mismas acciones de siempre,
@@ -4197,7 +4315,7 @@ const Admin = (() => {
       <div class="admin-row" data-id="${o.id}" style="align-items:flex-start; flex-direction:column; gap:0.5rem;">
         <div style="display:flex; justify-content:space-between; width:100%; gap:0.8rem; flex-wrap:wrap;">
           <div class="admin-row__info" style="min-width:220px;">
-            <strong>${money(o.total)} — ${escapeHtml(o.customer_email || "sin email")}</strong>
+            <strong>${money(o.total)} — ${escapeHtml(o.customer_full_name || o.customer_email || "sin nombre")}</strong>
             <span>${date}${channelLabel}</span>
           </div>
           <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -4455,7 +4573,7 @@ const Admin = (() => {
     // clientes recurrentes vs nuevos (sobre todos los pedidos, pagados o coordinados por WhatsApp)
     const porCliente = {};
     orders.forEach((o) => {
-      const key = o.customer_email || o.user_id;
+      const key = o.customer_full_name || o.customer_email || o.user_id;
       if (!key) return;
       porCliente[key] = (porCliente[key] || 0) + 1;
     });
