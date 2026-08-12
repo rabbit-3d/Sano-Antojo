@@ -55,6 +55,7 @@ a { color: inherit; text-decoration: none; }
 .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1.1rem; }
 
 /* ---------- Header ---------- */
+.site-header-sticky { position: sticky; top: 0; z-index: 41; background: var(--surface); }
 .top-header { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
 .top-header__bar { display: flex; align-items: center; gap: 1rem; }
 .brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--primary); flex-shrink: 0; }
@@ -70,10 +71,10 @@ a { color: inherit; text-decoration: none; }
 .cart-badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: var(--surface); font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
 
 /* ---------- Nav ---------- */
-.main-nav { border-bottom: 1px solid var(--line); background: var(--surface); position: sticky; top: 0; z-index: 40; }
+.main-nav { border-bottom: 1px solid var(--line); background: var(--surface); z-index: 40; }
 /* Al saltar a una sección (categoría, ofertas, catálogo, contacto), dejamos
    este margen arriba para que el menú fijo no tape el título. */
-#catalogo, #ofertasSection, #recomendadosSection, #contacto, #categoriasSection { scroll-margin-top: 76px; }
+#catalogo, #ofertasSection, #recomendadosSection, #contacto, #categoriasSection { scroll-margin-top: 140px; }
 .main-nav__bar { display: flex; align-items: center; gap: 1.4rem; padding: 0.85rem 0; overflow-x: auto; scrollbar-width: none; }
 .main-nav__bar::-webkit-scrollbar { display: none; }
 .nav-cats-trigger { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); background: none; border: none; white-space: nowrap; font-size: 0.94rem; }
@@ -255,8 +256,8 @@ a { color: inherit; text-decoration: none; }
   color: var(--surface); font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.06em;
   text-transform: uppercase; padding: 0.3rem 0; cursor: pointer;
 }
-.footer-col__toggle::after { content: "+"; font-size: 1.1rem; font-weight: 400; }
-.footer-col__toggle.is-open::after { content: "–"; }
+.footer-col__toggle::after { display: none; }
+.footer-col__toggle { cursor: default; }
 .footer-col__body { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem; font-size: 0.85rem; }
 .footer-col__body a { color: rgba(255,255,255,0.72); }
 .footer-col__body a:hover { color: var(--surface); }
@@ -264,15 +265,6 @@ a { color: inherit; text-decoration: none; }
 .footer-contact-item { display: flex; gap: 0.55rem; align-items: flex-start; }
 .footer-contact-item svg { flex-shrink: 0; margin-top: 0.15rem; opacity: 0.75; }
 .footer-contact-item span { white-space: pre-line; line-height: 1.5; opacity: 0.8; }
-@media (max-width: 779px) {
-  .footer-col__body { display: none; }
-  .footer-col__body.is-open { display: flex; }
-}
-@media (min-width: 780px) {
-  .footer-col__toggle { cursor: default; pointer-events: none; }
-  .footer-col__toggle::after { display: none; }
-  .footer-col__body { display: flex !important; }
-}
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.14); padding: 1.2rem 0; text-align: center; font-size: 0.78rem; opacity: 0.6; }
 
 /* ---------- Sección de Ayuda (FAQ + libro de sugerencias) ---------- */
@@ -437,13 +429,37 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Asistente virtual (busca en las FAQ) ---------- */
 .chatbot { position: fixed; left: 1.1rem; bottom: 1.1rem; z-index: 119; }
-.chatbot__fab {
-  width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: var(--surface);
-  display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px -6px rgba(20, 15, 10, 0.5);
-  transition: transform 0.15s ease, background 0.15s ease;
+.chatbot__hint {
+  position: absolute; left: 4px; bottom: 66px; display: none; align-items: center; gap: 0.5rem;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.6rem 0.5rem 0.6rem 1rem; font-size: 0.82rem; font-weight: 600; white-space: nowrap;
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,0.3); animation: chatbotHintIn 0.25s ease;
 }
-.chatbot__fab:hover { background: var(--primary-light); transform: translateY(-2px); }
+.chatbot__hint::after {
+  content: ""; position: absolute; left: 20px; bottom: -7px; width: 14px; height: 14px;
+  background: var(--surface); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transform: rotate(45deg); border-radius: 0 0 3px 0;
+}
+.chatbot__hint.is-visible { display: flex; }
+.chatbot__hint button { background: var(--gray-100, rgba(0,0,0,0.06)); border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.65rem; color: var(--muted); flex-shrink: 0; position: relative; z-index: 1; }
+@keyframes chatbotHintIn { from { opacity: 0; transform: translateY(6px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.chatbot__fab {
+  width: 58px; height: 58px; border-radius: 50%; border: none; background: var(--primary); color: var(--surface);
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px -6px rgba(20, 15, 10, 0.5);
+  transition: background 0.15s ease; animation: chatbotFabBob 3.2s ease-in-out infinite;
+}
+.chatbot__fab:hover { background: var(--primary-light); animation-play-state: paused; transform: translateY(-2px) scale(1.05); }
 .chatbot.is-open .chatbot__fab { display: none; }
+.chatbot__hint.is-visible ~ .chatbot__fab { animation: chatbotFabWave 0.6s ease-in-out 2; }
+@keyframes chatbotFabBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-3deg); }
+}
+@keyframes chatbotFabWave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(10deg); }
+}
 .chatbot__window {
   display: none; position: fixed; left: 1.1rem; bottom: 1.1rem; width: min(340px, calc(100vw - 2.2rem));
   height: min(480px, calc(100vh - 6rem)); background: var(--surface); border-radius: var(--radius);
@@ -461,6 +477,7 @@ a { color: inherit; text-decoration: none; }
 .chatbot__msg--bot { align-self: flex-start; background: var(--bg); color: var(--ink); border-bottom-left-radius: 3px; }
 .chatbot__msg--user { align-self: flex-end; background: var(--primary); color: var(--surface); border-bottom-right-radius: 3px; }
 .chatbot__msg--bot a { color: var(--primary); font-weight: 700; }
+.chatbot__msg--typing { opacity: 0.6; font-style: italic; }
 .chatbot__suggestions { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0 1rem 0.8rem; }
 .chatbot__suggestions button {
   border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 0.76rem;
@@ -1158,7 +1175,8 @@ a { color: inherit; text-decoration: none; }
 </script>
 
 
-<header class="top-header store-only">
+<div class="site-header-sticky store-only">
+<header class="top-header">
   <div class="container top-header__bar">
     <a href="#" class="brand" id="brandLink">
       <img src="sano_antojo_logo.jpg" alt="" onerror="this.style.display='none'" />
@@ -1182,7 +1200,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </header>
 
-<nav class="main-nav store-only">
+<nav class="main-nav">
   <div class="container main-nav__bar">
     <button type="button" class="nav-cats-trigger" id="catsTrigger">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
@@ -1193,6 +1211,7 @@ a { color: inherit; text-decoration: none; }
     <a href="#contacto">Contacto</a>
   </div>
 </nav>
+</div>
 
 <div class="cats-panel-overlay store-only" id="catsPanelOverlay">
   <div class="cats-panel">
@@ -1378,13 +1397,16 @@ a { color: inherit; text-decoration: none; }
   <div class="chatbot__window" id="chatbotWindow">
     <div class="chatbot__head">
       <span class="chatbot__head-title">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 8c-2-3-6-3.5-8-1.5 1.5 2.5 5 3.5 8 1.5z"/>
-          <path d="M12 8c2-3 6-3.5 8-1.5-1.5 2.5-5 3.5-8 1.5z"/>
-          <path d="M12 8c-5 0-8 4-8 8.5C4 20 7.5 22 12 22s8-2 8-5.5C20 12 17 8 12 8z"/>
-          <circle cx="9.3" cy="16" r="0.9" fill="currentColor" stroke="none"/>
-          <circle cx="14.7" cy="16" r="0.9" fill="currentColor" stroke="none"/>
-          <path d="M9.5 18.3c1 1 4 1 5 0"/>
+        <svg width="24" height="24" viewBox="0 0 32 32">
+          <path d="M16 4c7 2.5 10.5 8 10.5 13.5A10.5 10.5 0 0 1 16 28 10.5 10.5 0 0 1 5.5 17.5C5.5 12 9 6.5 16 4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M16 9v14" stroke="currentColor" stroke-width="1.1" opacity="0.5" stroke-linecap="round"/>
+          <ellipse cx="10.6" cy="20.2" rx="1.6" ry="1" fill="#e8899a" opacity="0.6"/>
+          <ellipse cx="21.4" cy="20.2" rx="1.6" ry="1" fill="#e8899a" opacity="0.6"/>
+          <circle cx="12.3" cy="17.5" r="1.3" fill="currentColor"/>
+          <circle cx="19.7" cy="17.5" r="1.3" fill="currentColor"/>
+          <circle cx="12.7" cy="17" r="0.4" fill="#fff"/>
+          <circle cx="20.1" cy="17" r="0.4" fill="#fff"/>
+          <path d="M12.5 21c1.5 1.6 5.5 1.6 7 0" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
         </svg>
         Antojito
       </span>
@@ -1398,14 +1420,21 @@ a { color: inherit; text-decoration: none; }
       </button>
     </form>
   </div>
+  <div class="chatbot__hint" id="chatbotHint">
+    <span>¿Cómo podemos ayudarte?</span>
+    <button type="button" id="chatbotHintClose" aria-label="Cerrar">✕</button>
+  </div>
   <button type="button" class="chatbot__fab" id="chatbotFab" aria-label="Abrir el chat con Antojito">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 8c-2-3-6-3.5-8-1.5 1.5 2.5 5 3.5 8 1.5z"/>
-      <path d="M12 8c2-3 6-3.5 8-1.5-1.5 2.5-5 3.5-8 1.5z"/>
-      <path d="M12 8c-5 0-8 4-8 8.5C4 20 7.5 22 12 22s8-2 8-5.5C20 12 17 8 12 8z"/>
-      <circle cx="9.3" cy="16" r="0.9" fill="currentColor" stroke="none"/>
-      <circle cx="14.7" cy="16" r="0.9" fill="currentColor" stroke="none"/>
-      <path d="M9.5 18.3c1 1 4 1 5 0"/>
+    <svg width="34" height="34" viewBox="0 0 32 32">
+      <path d="M16 4c7 2.5 10.5 8 10.5 13.5A10.5 10.5 0 0 1 16 28 10.5 10.5 0 0 1 5.5 17.5C5.5 12 9 6.5 16 4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      <path d="M16 9v14" stroke="currentColor" stroke-width="1.1" opacity="0.5" stroke-linecap="round"/>
+      <ellipse cx="10.6" cy="20.2" rx="1.6" ry="1" fill="#e8899a" opacity="0.6"/>
+      <ellipse cx="21.4" cy="20.2" rx="1.6" ry="1" fill="#e8899a" opacity="0.6"/>
+      <circle cx="12.3" cy="17.5" r="1.3" fill="currentColor"/>
+      <circle cx="19.7" cy="17.5" r="1.3" fill="currentColor"/>
+      <circle cx="12.7" cy="17" r="0.4" fill="#fff"/>
+      <circle cx="20.1" cy="17" r="0.4" fill="#fff"/>
+      <path d="M12.5 21c1.5 1.6 5.5 1.6 7 0" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
     </svg>
   </button>
 </div>
@@ -1480,20 +1509,54 @@ a { color: inherit; text-decoration: none; }
 <!-- Login / cuenta -->
 <div class="modal-overlay" id="authModalOverlay">
   <div class="modal">
-    <h3 id="authModalTitle">¿Cómo te llamás?</h3>
-    <p style="font-size:0.85rem; color:var(--gray); margin-top:-0.4rem;">Solo necesitamos tu nombre para armar el pedido — nada de contraseñas ni registros.</p>
-    <form id="authForm">
-      <div class="field">
-        <label for="authFullName">Nombre y apellido</label>
-        <input type="text" id="authFullName" required placeholder="Ej: Ana Gómez" />
+    <div id="guestFormWrap">
+      <h3 id="authModalTitle">¿Cómo te llamás?</h3>
+      <p style="font-size:0.85rem; color:var(--gray); margin-top:-0.4rem;">Solo necesitamos tu nombre para armar el pedido — no hace falta crear una cuenta.</p>
+      <form id="authForm">
+        <div class="field">
+          <label for="authFullName">Nombre y apellido</label>
+          <input type="text" id="authFullName" required placeholder="Ej: Ana Gómez" />
+        </div>
+        <button type="submit" class="btn-checkout" id="authSubmitBtn">Continuar</button>
+        <p class="modal-error" id="authMessage"></p>
+      </form>
+      <button type="button" class="link-btn" id="showAccountFormBtn" style="margin-top:1rem;">¿Preferís crear una cuenta? →</button>
+    </div>
+
+    <div id="accountFormWrap" style="display:none">
+      <div class="modal-tabs">
+        <button type="button" id="authTabLogin" class="is-active">Ingresar</button>
+        <button type="button" id="authTabSignup">Crear cuenta</button>
       </div>
-      <button type="submit" class="btn-checkout" id="authSubmitBtn">Continuar</button>
-      <p class="modal-error" id="authMessage"></p>
-    </form>
+      <p id="authHelperText" style="font-size:0.85rem; color:var(--gray); margin-top:-0.4rem;">Con una cuenta no vas a tener que escribir tu nombre cada vez que entrás desde otro dispositivo.</p>
+      <form id="accountForm">
+        <div class="field" id="accountNameField">
+          <label for="accountFullName">Nombre y apellido</label>
+          <input type="text" id="accountFullName" placeholder="Ej: Ana Gómez" />
+        </div>
+        <div class="field">
+          <label for="accountEmailInput">Email</label>
+          <input type="email" id="accountEmailInput" required />
+        </div>
+        <div class="field">
+          <label for="accountPasswordInput">Contraseña</label>
+          <input type="password" id="accountPasswordInput" required minlength="6" />
+        </div>
+        <button type="submit" class="btn-checkout" id="accountSubmitBtn">Ingresar</button>
+        <p class="modal-error" id="accountMessage"></p>
+        <button type="button" class="link-btn" id="forgotPasswordBtn" style="margin-top:0.7rem;">Olvidé mi contraseña</button>
+      </form>
+      <button type="button" class="link-btn" id="showGuestFormBtn" style="margin-top:0.6rem;">← Prefiero solo poner mi nombre</button>
+    </div>
+
+    <div id="loggedInPanel" style="display:none">
+      <p style="font-weight:700;" id="loggedInEmail"></p>
+      <button class="btn-checkout" id="accountLogoutBtn">Cerrar sesión</button>
+    </div>
+
     <button type="button" class="link-btn" id="closeAuthModal" style="margin-top:1rem;">Cerrar</button>
   </div>
 </div>
-
 
 <!-- ============================================================
      VISTA ADMIN (privada) — se activa con #admin al final de la URL.
@@ -1691,10 +1754,6 @@ a { color: inherit; text-decoration: none; }
             <textarea id="setHours" placeholder="Lunes a viernes 9:00 a 13:00 / 16:00 a 20:00hs&#10;Sábado de 9:00 a 13:30hs" style="min-height:80px"></textarea>
           </div>
           <div class="field">
-            <label for="setMapsUrl">Link a Google Maps (opcional, para el botón "Cómo llegar")</label>
-            <input type="text" id="setMapsUrl" placeholder="https://maps.app.goo.gl/..." />
-          </div>
-          <div class="field">
             <label>Coordenadas del local (para mostrar el mapa en la tienda)</label>
             <p class="helper-text" style="margin:0 0 0.6rem;">
               Entrá a Google Maps, buscá tu local, hacé clic derecho justo en el punto exacto y elegí las
@@ -1748,34 +1807,6 @@ a { color: inherit; text-decoration: none; }
           </div>
           <button type="submit" class="btn btn--dark" id="saveSettingsBtn">Guardar ajustes</button>
         </form>
-
-        <div style="max-width:520px; margin-top:2.2rem; padding-top:1.8rem; border-top:1px solid var(--gray-150);">
-          <h3 style="font-family:var(--font-display); font-size:1.15rem; margin:0 0 0.3rem;">Cobros con Mercado Pago</h3>
-          <div style="background:var(--gray-100); border:1px solid var(--gray-150); border-radius:var(--radius-md); padding:0.9rem 1rem; margin:0.6rem 0 1rem;">
-            <p style="font-size:0.85rem; font-weight:700; margin:0 0 0.3rem;">⚠️ Esto todavía no está en uso</p>
-            <p style="font-size:0.83rem; color:var(--gray-700); margin:0;">
-              Aunque cargues un token acá, la tienda no cobra automáticamente — los pedidos siguen coordinándose por WhatsApp.
-              Si en algún momento quieren activar el cobro real desde la web, avisale a Mateo para configurarlo.
-            </p>
-          </div>
-          <p class="helper-text" style="margin-top:0.2rem">
-            Pegá acá tu propio Access Token de Mercado Pago (Developers → Tus integraciones → Credenciales).
-            Por seguridad, una vez guardado no se vuelve a mostrar — solo indica si ya está configurado.
-          </p>
-          <p style="font-size:0.85rem; font-weight:700; margin:0.8rem 0;">
-            Estado: <span id="mpStatusText">cargando...</span>
-          </p>
-          <form id="paymentConfigForm">
-            <div class="field">
-              <label for="mpAccessTokenInput">Access Token</label>
-              <input type="password" id="mpAccessTokenInput" placeholder="APP_USR-xxxxxxxx... o TEST-xxxxxxxx..." autocomplete="off" />
-            </div>
-            <div class="form-actions" style="margin-top:0.5rem">
-              <button type="submit" class="btn btn--dark" id="savePaymentConfigBtn">Guardar token</button>
-              <button type="button" class="btn btn--outline" id="clearPaymentConfigBtn">Quitar</button>
-            </div>
-          </form>
-        </div>
       </section>
     </main>
   </div>
@@ -2096,7 +2127,7 @@ a { color: inherit; text-decoration: none; }
 
 </div>
 
-<a href="#admin" class="admin-fab store-only" id="adminFab" style="display:none" title="Panel de administración" aria-label="Panel de administración">
+<a href="#admin" class="admin-fab" id="adminFab" style="display:none" title="Panel de administración" aria-label="Panel de administración">
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
 </a>
 
@@ -2331,21 +2362,45 @@ function showToast(msg) {
    ============================================================ */
 const Auth = (() => {
   let pendingAction = null;
+  let accountMode = "login";
+  let currentUser = null;
   const STORAGE_KEY = "sano_antojo_customer_name";
 
   const overlayEl = document.getElementById("authModalOverlay");
   const el = {
     closeBtn: document.getElementById("closeAuthModal"),
+    accountBtn: document.getElementById("accountBtn"),
+    guestFormWrap: document.getElementById("guestFormWrap"),
+    accountFormWrap: document.getElementById("accountFormWrap"),
+    loggedInPanel: document.getElementById("loggedInPanel"),
+    loggedInEmail: document.getElementById("loggedInEmail"),
+    accountLogoutBtn: document.getElementById("accountLogoutBtn"),
+    showAccountFormBtn: document.getElementById("showAccountFormBtn"),
+    showGuestFormBtn: document.getElementById("showGuestFormBtn"),
     form: document.getElementById("authForm"),
     fullName: document.getElementById("authFullName"),
     message: document.getElementById("authMessage"),
     submitBtn: document.getElementById("authSubmitBtn"),
-    accountBtn: document.getElementById("accountBtn"),
+    tabLogin: document.getElementById("authTabLogin"),
+    tabSignup: document.getElementById("authTabSignup"),
+    helperText: document.getElementById("authHelperText"),
+    accountForm: document.getElementById("accountForm"),
+    accountNameField: document.getElementById("accountNameField"),
+    accountFullName: document.getElementById("accountFullName"),
+    accountEmailInput: document.getElementById("accountEmailInput"),
+    accountPasswordInput: document.getElementById("accountPasswordInput"),
+    accountSubmitBtn: document.getElementById("accountSubmitBtn"),
+    accountMessage: document.getElementById("accountMessage"),
+    forgotBtn: document.getElementById("forgotPasswordBtn"),
   };
 
   function show() { overlayEl.classList.add("is-open"); }
-  function hide() { overlayEl.classList.remove("is-open"); resetMessage(); }
-  function resetMessage() { el.message.textContent = ""; el.message.classList.remove("is-visible"); }
+  function hide() { overlayEl.classList.remove("is-open"); resetMessages(); }
+  function resetMessages() {
+    el.message.textContent = ""; el.message.classList.remove("is-visible");
+    el.accountMessage.textContent = ""; el.accountMessage.classList.remove("is-visible");
+  }
+  function setAccountMessage(text) { el.accountMessage.textContent = text; el.accountMessage.classList.add("is-visible"); }
 
   function getCustomerName() {
     try { return localStorage.getItem(STORAGE_KEY) || ""; } catch (e) { return ""; }
@@ -2354,15 +2409,38 @@ const Auth = (() => {
     try { localStorage.setItem(STORAGE_KEY, name); } catch (e) {}
   }
 
+  function showPanel(which) {
+    el.guestFormWrap.style.display = which === "guest" ? "block" : "none";
+    el.accountFormWrap.style.display = which === "account" ? "block" : "none";
+    el.loggedInPanel.style.display = which === "logged" ? "block" : "none";
+  }
+
   function openNameForm() {
+    if (currentUser) { showPanel("logged"); el.loggedInEmail.textContent = currentUser.email; show(); return; }
     el.fullName.value = getCustomerName();
-    resetMessage();
+    resetMessages();
+    showPanel("guest");
     show();
   }
+
+  function setAccountMode(mode) {
+    accountMode = mode;
+    el.tabLogin.classList.toggle("is-active", mode === "login");
+    el.tabSignup.classList.toggle("is-active", mode === "signup");
+    el.accountSubmitBtn.textContent = mode === "login" ? "Ingresar" : "Crear cuenta";
+    el.accountNameField.style.display = mode === "signup" ? "block" : "none";
+    el.accountFullName.required = mode === "signup";
+    resetMessages();
+  }
+  el.tabLogin.addEventListener("click", () => setAccountMode("login"));
+  el.tabSignup.addEventListener("click", () => setAccountMode("signup"));
 
   el.accountBtn.addEventListener("click", () => openNameForm());
   el.closeBtn.addEventListener("click", hide);
   overlayEl.addEventListener("click", (e) => { if (e.target === overlayEl) hide(); });
+
+  el.showAccountFormBtn.addEventListener("click", () => { setAccountMode("login"); showPanel("account"); });
+  el.showGuestFormBtn.addEventListener("click", () => showPanel("guest"));
 
   el.form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -2374,6 +2452,47 @@ const Auth = (() => {
     if (pendingAction) { const cb = pendingAction; pendingAction = null; cb(); }
   });
 
+  el.accountForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    resetMessages();
+    el.accountSubmitBtn.disabled = true; el.accountSubmitBtn.textContent = "Un momento...";
+    try {
+      if (accountMode === "login") {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: el.accountEmailInput.value.trim(), password: el.accountPasswordInput.value,
+        });
+        if (error) throw error;
+        currentUser = data.user;
+        if (!getCustomerName()) setCustomerName(currentUser.email.split("@")[0]);
+        updateButtonState();
+        hide();
+        if (pendingAction) { const cb = pendingAction; pendingAction = null; cb(); }
+      } else {
+        const name = el.accountFullName.value.trim();
+        if (!name) { setAccountMessage("Falta tu nombre y apellido."); return; }
+        const { error } = await supabase.auth.signUp({
+          email: el.accountEmailInput.value.trim(), password: el.accountPasswordInput.value,
+        });
+        if (error) throw error;
+        setCustomerName(name);
+        setAccountMessage("¡Listo! Si tu proyecto pide confirmación, revisá tu email antes de ingresar.");
+      }
+    } catch (err) {
+      setAccountMessage(err.message === "Invalid login credentials" ? "Email o contraseña incorrectos." : err.message);
+    } finally {
+      el.accountSubmitBtn.disabled = false; el.accountSubmitBtn.textContent = accountMode === "login" ? "Ingresar" : "Crear cuenta";
+    }
+  });
+
+  el.forgotBtn.addEventListener("click", async () => {
+    const email = el.accountEmailInput.value.trim();
+    if (!email) { setAccountMessage("Escribí tu email arriba primero."); return; }
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    setAccountMessage(error ? error.message : "Te enviamos un email para recuperar tu contraseña.");
+  });
+
+  el.accountLogoutBtn.addEventListener("click", async () => { await supabase.auth.signOut(); currentUser = null; hide(); });
+
   function updateButtonState() {
     el.accountBtn.classList.toggle("is-authed", !!getCustomerName());
   }
@@ -2384,8 +2503,23 @@ const Auth = (() => {
     openNameForm();
   }
 
+  const adminFabEl = document.getElementById("adminFab");
+  async function updateAdminFab() {
+    if (!adminFabEl) return;
+    if (!currentUser) { adminFabEl.style.display = "none"; return; }
+    const { data } = await supabase.from("sano_antojo_admins").select("id").eq("id", currentUser.id).maybeSingle();
+    adminFabEl.style.display = data ? "flex" : "none";
+  }
+
   async function init() {
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUser = session?.user || null;
     updateButtonState();
+    updateAdminFab();
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      currentUser = newSession?.user || null;
+      updateAdminFab();
+    });
   }
 
   return { init, requireAuth, getCustomerName };
@@ -2449,6 +2583,8 @@ const Store = (() => {
     faqAccordion: document.getElementById("faqAccordion"),
     chatbot: document.getElementById("chatbot"),
     chatbotFab: document.getElementById("chatbotFab"),
+    chatbotHint: document.getElementById("chatbotHint"),
+    chatbotHintClose: document.getElementById("chatbotHintClose"),
     chatbotClose: document.getElementById("chatbotClose"),
     chatbotMessages: document.getElementById("chatbotMessages"),
     chatbotForm: document.getElementById("chatbotForm"),
@@ -2838,9 +2974,17 @@ const Store = (() => {
   });
 
   /* ============================================================
-     ASISTENTE VIRTUAL — busca la mejor coincidencia entre las
-     Preguntas Frecuentes cargadas (sin IA externa, sin costo).
+     ASISTENTE VIRTUAL — Antojito responde con una IA real (Gemini)
+     a través de una Supabase Edge Function que le pasa como contexto
+     los datos reales de la tienda (settings, FAQs, catálogo). La API
+     key de Gemini vive solo en la Edge Function, nunca acá.
+     Si la Edge Function no está desplegada o falla, se cae a una
+     búsqueda simple por palabras clave entre las FAQ + link de WhatsApp,
+     para que el chat nunca quede roto.
      ============================================================ */
+  const CHAT_FN_URL = `${SUPABASE_URL}/functions/v1/sano-antojo-chat`;
+  let chatHistory = []; // [{role:"user"|"bot", text}], se manda como contexto a la IA
+
   function normalizeText(s) {
     return (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9ñ\s]/g, " ");
   }
@@ -2869,13 +3013,20 @@ const Store = (() => {
     if (isHtml) div.innerHTML = content; else div.textContent = content;
     el.chatbotMessages.appendChild(div);
     el.chatbotMessages.scrollTop = el.chatbotMessages.scrollHeight;
+    return div;
   }
 
-  function whatsappFallbackHtml() {
+  function showTypingIndicator() {
+    const div = addChatMsg("Antojito está escribiendo…", "bot");
+    div.classList.add("chatbot__msg--typing");
+    return div;
+  }
+
+  function whatsappFallbackHtml(intro) {
     const phone = settings?.whatsapp_phone ? normalizeArgWhatsapp(settings.whatsapp_phone) : "";
     const text = encodeURIComponent("¡Hola! Tengo una consulta...");
     const link = phone ? `<br /><a href="https://wa.me/${phone}?text=${text}" target="_blank" rel="noopener">Escribinos por WhatsApp ↗</a>` : "";
-    return `Mmm, no encontré nada sobre eso entre las preguntas frecuentes. ¿Te ayudo por WhatsApp?${link}`;
+    return `${intro}${link}`;
   }
 
   function renderChatSuggestions() {
@@ -2888,17 +3039,47 @@ const Store = (() => {
     el.chatbotMessages.appendChild(wrap);
   }
 
-  function handleChatQuestion(text) {
+  // Fallback local: solo se usa si la Edge Function no responde
+  // (todavía no desplegada, sin internet, cuota agotada, etc.)
+  function localFallbackAnswer(text) {
+    const match = findBestFaq(text);
+    if (match) return { html: false, content: match.answer };
+    return { html: true, content: whatsappFallbackHtml("Mmm, no pude conectarme con Antojito en este momento. ¿Te ayudo por WhatsApp?") };
+  }
+
+  async function askAntojito(text) {
+    const res = await fetch(CHAT_FN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-6) }),
+    });
+    if (!res.ok) throw new Error("chat_fn_error");
+    const data = await res.json();
+    if (!data.reply) throw new Error("empty_reply");
+    return data.reply;
+  }
+
+  async function handleChatQuestion(text) {
     addChatMsg(text, "user");
-    setTimeout(() => {
-      const match = findBestFaq(text);
-      if (match) addChatMsg(match.answer, "bot");
-      else addChatMsg(whatsappFallbackHtml(), "bot", true);
-    }, 350);
+    chatHistory.push({ role: "user", text });
+    const typingEl = showTypingIndicator();
+    try {
+      const reply = await askAntojito(text);
+      typingEl.remove();
+      addChatMsg(reply, "bot");
+      chatHistory.push({ role: "bot", text: reply });
+    } catch (err) {
+      typingEl.remove();
+      const fallback = localFallbackAnswer(text);
+      addChatMsg(fallback.content, "bot", fallback.html);
+      chatHistory.push({ role: "bot", text: fallback.content });
+    }
   }
 
   let chatStarted = false;
   el.chatbotFab.addEventListener("click", () => {
+    hideChatHint();
+    stopChatHintCycle();
     el.chatbot.classList.add("is-open");
     if (!chatStarted) {
       chatStarted = true;
@@ -2908,6 +3089,25 @@ const Store = (() => {
     el.chatbotInput.focus();
   });
   el.chatbotClose.addEventListener("click", () => el.chatbot.classList.remove("is-open"));
+
+  // Burbuja "¿Cómo podemos ayudarte?" — aparece cada tanto para invitar a
+  // usar el chat, y deja de mostrarse apenas alguien lo abre una vez.
+  let chatHintTimer = null;
+  function showChatHint() {
+    if (chatStarted || el.chatbot.classList.contains("is-open")) return;
+    el.chatbotHint.classList.add("is-visible");
+    setTimeout(hideChatHint, 6000);
+  }
+  function hideChatHint() { el.chatbotHint.classList.remove("is-visible"); }
+  function stopChatHintCycle() { clearInterval(chatHintTimer); }
+  el.chatbotHintClose.addEventListener("click", () => { hideChatHint(); stopChatHintCycle(); });
+  el.chatbotHint.addEventListener("click", (e) => {
+    if (e.target === el.chatbotHintClose) return;
+    el.chatbotFab.click();
+  });
+  setTimeout(showChatHint, 4000);
+  chatHintTimer = setInterval(showChatHint, 28000);
+
   el.chatbotForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const text = el.chatbotInput.value.trim();
@@ -3118,6 +3318,7 @@ const Store = (() => {
     el.pdThumbs.innerHTML = (images.length > 1 || hasVideo) ? thumbButtons.join("") : "";
 
     el.productDetailOverlay.classList.add("is-open");
+    supabase.from("sano_antojo_product_views").insert({ product_id: product.id }).then(() => {}, () => {});
   }
   function closePdModalFn() { el.productDetailOverlay.classList.remove("is-open"); }
   el.closePdModal.addEventListener("click", closePdModalFn);
@@ -3174,11 +3375,12 @@ const Store = (() => {
     if (list.length === 0) {
       el.productGrid.innerHTML = `<p class="empty-note" style="grid-column:1/-1;">No encontramos productos. Probá con otra categoría o búsqueda.</p>`;
       el.moreBtnWrap.style.display = "none";
-      return;
+      return 0;
     }
     const showLimit = (activeCategory === "all" && !searchTerm) ? newProductsLimit : list.length;
     el.productGrid.innerHTML = list.slice(0, showLimit).map(productCard).join("");
     el.moreBtnWrap.style.display = (activeCategory === "all" && !searchTerm && list.length > showLimit) ? "block" : "none";
+    return list.length;
   }
   el.moreBtn.addEventListener("click", () => { newProductsLimit += 12; renderMainGrid(); });
 
@@ -3219,8 +3421,11 @@ const Store = (() => {
     searchTerm = value.trim().toLowerCase();
     el.searchInput.value = value;
     applySearchVisibility();
-    renderMainGrid();
-    if (searchTerm) document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
+    const resultsCount = renderMainGrid();
+    if (searchTerm) {
+      document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
+      supabase.from("sano_antojo_search_queries").insert({ query: searchTerm, results_count: resultsCount }).then(() => {}, () => {});
+    }
   }
   el.searchBtn.addEventListener("click", () => onSearch(el.searchInput.value));
   el.searchInput.addEventListener("keydown", (e) => {
@@ -3465,7 +3670,6 @@ const Admin = (() => {
     setFacebook: document.getElementById("setFacebook"),
     setAddress: document.getElementById("setAddress"),
     setHours: document.getElementById("setHours"),
-    setMapsUrl: document.getElementById("setMapsUrl"),
     setLat: document.getElementById("setLat"),
     setLng: document.getElementById("setLng"),
     setAboutUs: document.getElementById("setAboutUs"),
@@ -3473,11 +3677,6 @@ const Admin = (() => {
     paletteGrid: document.getElementById("paletteGrid"),
     palettePreview: document.getElementById("palettePreview"),
     saveSettingsBtn: document.getElementById("saveSettingsBtn"),
-    mpStatusText: document.getElementById("mpStatusText"),
-    paymentConfigForm: document.getElementById("paymentConfigForm"),
-    mpAccessTokenInput: document.getElementById("mpAccessTokenInput"),
-    savePaymentConfigBtn: document.getElementById("savePaymentConfigBtn"),
-    clearPaymentConfigBtn: document.getElementById("clearPaymentConfigBtn"),
   };
 
   let wired = false;
@@ -3672,8 +3871,6 @@ const Admin = (() => {
     el.productForm.addEventListener("submit", saveProduct);
 
     el.settingsForm.addEventListener("submit", saveSettings);
-    el.paymentConfigForm.addEventListener("submit", savePaymentConfig);
-    el.clearPaymentConfigBtn.addEventListener("click", clearPaymentConfig);
   }
 
   function setupImageDrop(dropEl, inputEl, onFile) {
@@ -4559,7 +4756,9 @@ const Admin = (() => {
     const now = new Date();
     const dayStart = startOfDay(now), weekStart = startOfWeek(now), monthStart = startOfMonth(now);
 
-    const paid = orders.filter((o) => o.status === "approved");
+    // Todas las ventas se coordinan por WhatsApp, así que esa es la base
+    // real de facturación (ya no depende de un pago "aprobado" online).
+    const paid = orders.filter((o) => o.status === "whatsapp" || o.status === "approved");
     const whatsappOrders = orders.filter((o) => o.status === "whatsapp");
 
     const sumSince = (list, since) => list.filter((o) => new Date(o.created_at) >= since).reduce((s, o) => s + Number(o.total || 0), 0);
@@ -4596,11 +4795,11 @@ const Admin = (() => {
     const gananciaMes = gananciaDesde(monthStart);
 
     const cards = [
-      { label: "Ventas hoy (Mercado Pago)", value: money(ventasHoy) },
+      { label: "Ventas hoy", value: money(ventasHoy) },
       { label: "Ventas esta semana", value: money(ventasSemana) },
       { label: "Ventas este mes", value: money(ventasMes) },
       { label: "Ganancia estimada este mes", value: money(gananciaMes), sub: "solo productos con precio de compra cargado" },
-      { label: "Ticket promedio", value: money(ticketPromedio), sub: `sobre ${paid.length} pago${paid.length === 1 ? "" : "s"} confirmado${paid.length === 1 ? "" : "s"}` },
+      { label: "Ticket promedio", value: money(ticketPromedio), sub: `sobre ${paid.length} pedido${paid.length === 1 ? "" : "s"}` },
       { label: "Pedidos por WhatsApp", value: whatsappOrders.length },
       { label: "Pendientes de entrega", value: pendientesEntrega },
       { label: "Clientes con más de 1 compra", value: `${recurrentes} / ${totalClientes}` },
@@ -4743,7 +4942,6 @@ const Admin = (() => {
     el.setFacebook.value = data.facebook_url || "";
     el.setAddress.value = data.address || "";
     el.setHours.value = data.hours || "";
-    el.setMapsUrl.value = data.maps_url || "";
     el.setLat.value = data.lat ?? "";
     el.setLng.value = data.lng ?? "";
     el.setAboutUs.value = data.about_us || "";
@@ -4767,7 +4965,6 @@ const Admin = (() => {
         facebook_url: el.setFacebook.value.trim(),
         address: el.setAddress.value.trim(),
         hours: el.setHours.value.trim(),
-        maps_url: el.setMapsUrl.value.trim(),
         lat: el.setLat.value.trim() === "" ? null : Number(el.setLat.value),
         lng: el.setLng.value.trim() === "" ? null : Number(el.setLng.value),
         about_us: el.setAboutUs.value.trim(),
@@ -4787,41 +4984,9 @@ const Admin = (() => {
     }
   }
 
-  async function loadPaymentConfig() {
-    const { data, error } = await supabase
-      .from("sano_antojo_payment_config")
-      .select("mp_configured")
-      .eq("id", 1)
-      .single();
-    if (error || !data) { el.mpStatusText.textContent = "no se pudo verificar"; return; }
-    el.mpStatusText.textContent = data.mp_configured ? "✅ configurado" : "⚠️ todavía no configurado";
-  }
-
-  async function savePaymentConfig(e) {
-    e.preventDefault();
-    const token = el.mpAccessTokenInput.value.trim();
-    if (!token) { showToast("Pegá el Access Token antes de guardar"); return; }
-    el.savePaymentConfigBtn.disabled = true; el.savePaymentConfigBtn.textContent = "Guardando...";
-    const { error } = await supabase.from("sano_antojo_payment_config").update({ mp_access_token: token }).eq("id", 1);
-    el.savePaymentConfigBtn.disabled = false; el.savePaymentConfigBtn.textContent = "Guardar token";
-    if (error) { showToast("No se pudo guardar el token"); return; }
-    el.mpAccessTokenInput.value = "";
-    showToast("Token de Mercado Pago guardado");
-    loadPaymentConfig();
-  }
-
-  async function clearPaymentConfig() {
-    if (!confirm("¿Quitar el Access Token de Mercado Pago? Los cobros con Mercado Pago van a dejar de funcionar hasta que carguen uno nuevo.")) return;
-    const { error } = await supabase.from("sano_antojo_payment_config").update({ mp_access_token: null }).eq("id", 1);
-    if (error) { showToast("No se pudo quitar el token"); return; }
-    el.mpAccessTokenInput.value = "";
-    showToast("Token quitado");
-    loadPaymentConfig();
-  }
-
   async function loadAll() {
     await loadCategories();
-    await Promise.all([loadProducts(), loadSettings(), loadOrders(), loadPaymentConfig(), loadRecipes(), loadFaqs(), loadFeedback(), loadBanners()]);
+    await Promise.all([loadProducts(), loadSettings(), loadOrders(), loadRecipes(), loadFaqs(), loadFeedback(), loadBanners()]);
     await loadStats();
   }
 
