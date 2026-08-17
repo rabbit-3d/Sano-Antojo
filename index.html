@@ -2524,6 +2524,7 @@ const Auth = (() => {
         if (!name) { setAccountMessage("Falta tu nombre y apellido."); return; }
         const { error } = await supabase.auth.signUp({
           email: el.accountEmailInput.value.trim(), password: el.accountPasswordInput.value,
+          options: { data: { site: "sano_antojo", full_name: name } },
         });
         if (error) throw error;
         setCustomerName(name);
