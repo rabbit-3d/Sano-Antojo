@@ -2524,7 +2524,7 @@ const Auth = (() => {
         if (!name) { setAccountMessage("Falta tu nombre y apellido."); return; }
         const { error } = await supabase.auth.signUp({
           email: el.accountEmailInput.value.trim(), password: el.accountPasswordInput.value,
-          options: { data: { site: "sano_antojo", full_name: name } },
+          options: { data: { site: "sano_antojo", full_name: name }, emailRedirectTo: window.location.origin + window.location.pathname },
         });
         if (error) throw error;
         setCustomerName(name);
@@ -2540,7 +2540,9 @@ const Auth = (() => {
   el.forgotBtn.addEventListener("click", async () => {
     const email = el.accountEmailInput.value.trim();
     if (!email) { setAccountMessage("Escribí tu email arriba primero."); return; }
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname,
+    });
     setAccountMessage(error ? error.message : "Te enviamos un email para recuperar tu contraseña.");
   });
 
