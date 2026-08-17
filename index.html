@@ -378,6 +378,10 @@ a { color: inherit; text-decoration: none; }
 .field { margin-bottom: 0.9rem; }
 .field label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
 .field input { width: 100%; padding: 0.6rem 0.7rem; border-radius: 7px; border: 1px solid var(--line); font-size: 0.92rem; }
+.password-field { position: relative; }
+.password-field input { padding-right: 2.4rem; }
+.password-toggle { position: absolute; top: 50%; right: 0.5rem; transform: translateY(-50%); background: none; border: none; font-size: 1rem; line-height: 1; padding: 0.2rem; opacity: 0.55; }
+.password-toggle:hover { opacity: 1; }
 .modal .btn-checkout { margin-top: 0.4rem; }
 .modal-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .modal-tabs button { flex: 1; padding: 0.5rem; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; font-size: 0.85rem; }
@@ -1564,7 +1568,17 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="field">
           <label for="accountPasswordInput">Contraseña</label>
-          <input type="password" id="accountPasswordInput" required minlength="6" />
+          <div class="password-field">
+            <input type="password" id="accountPasswordInput" required minlength="6" autocomplete="new-password" />
+            <button type="button" class="password-toggle" data-target="accountPasswordInput" aria-label="Mostrar contraseña">👁</button>
+          </div>
+        </div>
+        <div class="field" id="accountPasswordConfirmField" style="display:none;">
+          <label for="accountPasswordConfirmInput">Confirmar contraseña</label>
+          <div class="password-field">
+            <input type="password" id="accountPasswordConfirmInput" minlength="6" autocomplete="new-password" />
+            <button type="button" class="password-toggle" data-target="accountPasswordConfirmInput" aria-label="Mostrar contraseña">👁</button>
+          </div>
         </div>
         <button type="submit" class="btn-checkout" id="accountSubmitBtn">Ingresar</button>
         <p class="modal-error" id="accountMessage"></p>
@@ -2441,6 +2455,8 @@ const Auth = (() => {
     accountFullName: document.getElementById("accountFullName"),
     accountEmailInput: document.getElementById("accountEmailInput"),
     accountPasswordInput: document.getElementById("accountPasswordInput"),
+    accountPasswordConfirmField: document.getElementById("accountPasswordConfirmField"),
+    accountPasswordConfirmInput: document.getElementById("accountPasswordConfirmInput"),
     accountSubmitBtn: document.getElementById("accountSubmitBtn"),
     accountMessage: document.getElementById("accountMessage"),
     forgotBtn: document.getElementById("forgotPasswordBtn"),
@@ -2482,10 +2498,26 @@ const Auth = (() => {
     el.accountSubmitBtn.textContent = mode === "login" ? "Ingresar" : "Crear cuenta";
     el.accountNameField.style.display = mode === "signup" ? "block" : "none";
     el.accountFullName.required = mode === "signup";
+    el.accountPasswordConfirmField.style.display = mode === "signup" ? "block" : "none";
+    el.accountPasswordConfirmInput.required = mode === "signup";
+    el.accountPasswordConfirmInput.value = "";
     resetMessages();
   }
   el.tabLogin.addEventListener("click", () => setAccountMode("login"));
   el.tabSignup.addEventListener("click", () => setAccountMode("signup"));
+
+  // Botón de ojito: alterna entre mostrar y ocultar cualquier campo de
+  // contraseña que lo tenga al lado (login, signup, y confirmar).
+  document.querySelectorAll(".password-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      const showing = input.type === "text";
+      input.type = showing ? "password" : "text";
+      btn.textContent = showing ? "👁" : "🙈";
+      btn.setAttribute("aria-label", showing ? "Mostrar contraseña" : "Ocultar contraseña");
+    });
+  });
 
   el.accountBtn.addEventListener("click", () => openNameForm());
   el.closeBtn.addEventListener("click", hide);
@@ -2522,6 +2554,10 @@ const Auth = (() => {
       } else {
         const name = el.accountFullName.value.trim();
         if (!name) { setAccountMessage("Falta tu nombre y apellido."); return; }
+        if (el.accountPasswordInput.value !== el.accountPasswordConfirmInput.value) {
+          setAccountMessage("Las contraseñas no coinciden.");
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email: el.accountEmailInput.value.trim(), password: el.accountPasswordInput.value,
           options: { data: { site: "sano_antojo", full_name: name }, emailRedirectTo: window.location.origin + window.location.pathname },
