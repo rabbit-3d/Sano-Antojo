@@ -127,6 +127,7 @@ a { color: inherit; text-decoration: none; }
 .section-band__title { border: 1.5px solid var(--primary); border-radius: 999px; padding: 0.7rem 1rem; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--primary); text-transform: uppercase; }
 .section-title-plain { display: flex; align-items: baseline; justify-content: space-between; margin: 2.6rem 0 1.1rem; }
 .section-title-plain h2 { font-family: var(--font-display); font-size: 1.35rem; margin: 0; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink); }
+.sort-select { font-size: 0.82rem; padding: 0.35rem 0.5rem; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 
 /* ---------- Categorías ---------- */
 .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; margin-top: 1.3rem; }
@@ -1317,7 +1318,13 @@ a { color: inherit; text-decoration: none; }
   <section id="allProductsSection">
     <div class="section-title-plain">
       <h2>Todos los productos</h2>
-      <span id="allProductsCount" style="font-size:0.85rem; color:var(--gray);"></span>
+      <div style="display:flex; align-items:center; gap:0.7rem;">
+        <span id="allProductsCount" style="font-size:0.85rem; color:var(--gray);"></span>
+        <select id="allProductsSort" class="sort-select">
+          <option value="az">Orden alfabético</option>
+          <option value="newest">Más recientes</option>
+        </select>
+      </div>
     </div>
     <div class="product-grid" id="allProductsGrid"></div>
   </section>
@@ -2693,6 +2700,7 @@ const Store = (() => {
     allProductsSection: document.getElementById("allProductsSection"),
     allProductsGrid: document.getElementById("allProductsGrid"),
     allProductsCount: document.getElementById("allProductsCount"),
+    allProductsSort: document.getElementById("allProductsSort"),
     recipesSection: document.getElementById("recipesSection"),
     recipesGrid: document.getElementById("recipesGrid"),
     faqAccordion: document.getElementById("faqAccordion"),
@@ -3779,14 +3787,20 @@ const Store = (() => {
 
   // "Todos los productos" es una sección fija aparte: siempre muestra el
   // catálogo completo, sin paginar ni depender del filtro de categoría.
+  // Por default va alfabético; la persona puede cambiar a más nuevos/antiguos.
   function renderAllProducts() {
-    const list = products;
+    const sortMode = el.allProductsSort.value;
+    const list = [...products].sort((a, b) => {
+      if (sortMode === "newest") return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      return a.name.localeCompare(b.name, "es");
+    });
     el.allProductsCount.textContent = list.length ? `${list.length} producto${list.length === 1 ? "" : "s"}` : "";
     el.allProductsGrid.innerHTML = list.length
       ? list.map(productCard).join("")
       : `<p class="empty-note" style="grid-column:1/-1;">Todavía no hay productos cargados.</p>`;
   }
   wireAddButtons(el.allProductsGrid);
+  el.allProductsSort.addEventListener("change", renderAllProducts);
 
   // Mientras hay una búsqueda activa, la home (hero, categorías, banners,
   // ofertas, recomendados) se oculta y solo se ve el resultado — así el
