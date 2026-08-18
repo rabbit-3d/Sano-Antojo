@@ -992,6 +992,9 @@ a { color: inherit; text-decoration: none; }
 #adminView .simple-list__row span:last-child { color: var(--gray-500); font-weight: 600; flex-shrink: 0; }
 #adminView .panel-head h2 { font-family: var(--font-display); margin: 0; font-size: 1.4rem; }
 #adminView .admin-list { display: flex; flex-direction: column; gap: 0.7rem; }
+#adminView .admin-list-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+#adminView .admin-list-toolbar input { flex: 1; min-width: 200px; padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--line); font-size: 0.88rem; }
+#adminView .admin-list-toolbar select { padding: 0.55rem 0.7rem; border-radius: 8px; border: 1px solid var(--line); font-size: 0.85rem; background: var(--surface); }
 
 #adminView .admin-fab {
   position: fixed; bottom: 20px; right: 20px; z-index: 40; display: none;
@@ -1036,6 +1039,9 @@ a { color: inherit; text-decoration: none; }
 #adminView .variant-row input { min-width: 0; }
 #adminView .variant-row .icon-action { flex-shrink: 0; width: 32px; height: 32px; }
 #adminView .variant-row input[readonly] { background: var(--bg); color: var(--gray-500); }
+#adminView .variant-stock-toggle { border: 1.5px solid var(--line); border-radius: 7px; padding: 0.4rem 0.3rem; font-size: 0.74rem; font-weight: 700; background: var(--surface); white-space: nowrap; }
+#adminView .variant-stock-toggle.is-in-stock { border-color: var(--black); color: var(--black); }
+#adminView .variant-stock-toggle.is-out { border-color: var(--gray-300); color: var(--gray-500); background: var(--bg); }
 #adminView .variant-row__unit { grid-column: 1 / -1; font-size: 0.76rem; color: var(--gray-500); margin: -0.3rem 0 0.2rem; }
 /* Modo "se vende por peso": el peso alcanza para armar la etiqueta, así que
    se oculta esa columna en vez de pedirla dos veces. */
@@ -1657,6 +1663,13 @@ a { color: inherit; text-decoration: none; }
         <div class="panel-head">
           <h2>Productos</h2>
         </div>
+        <div class="admin-list-toolbar">
+          <input type="text" id="adminProductSearch" placeholder="Buscar productos por nombre..." />
+          <select id="adminProductSort">
+            <option value="recent">Más recientes primero</option>
+            <option value="az">Alfabético (A-Z)</option>
+          </select>
+        </div>
         <div class="admin-list" id="productsList"></div>
       </section>
 
@@ -1882,6 +1895,11 @@ a { color: inherit; text-decoration: none; }
             <label for="productName">Nombre</label>
             <input type="text" id="productName" required />
           </div>
+          <div class="field span-2" id="productCategoryField" style="border:1.5px solid var(--primary); border-radius:10px; padding:0.7rem 0.9rem; background: color-mix(in srgb, var(--primary) 6%, transparent);">
+            <label for="productCategory" style="color:var(--primary); font-size:0.88rem;">📁 Categoría</label>
+            <select id="productCategory"><option value="">Sin categoría</option></select>
+            <p class="helper-text" style="margin:0.4rem 0 0;">Así aparece agrupado en el menú de categorías de la tienda — no te olvides de elegir una.</p>
+          </div>
           <div class="field span-2">
             <label for="productDescription">Descripción</label>
             <textarea id="productDescription"></textarea>
@@ -1909,17 +1927,15 @@ a { color: inherit; text-decoration: none; }
             <input type="number" id="productComparePrice" min="0" step="1" placeholder="Dejalo vacío si no está en oferta" />
           </div>
           <div class="field" id="productSimpleStockField">
-            <label for="productStock">Stock</label>
-            <input type="number" id="productStock" min="0" step="1" />
+            <label class="toggle-row" style="padding:0.3rem 0;">
+              <span>¿Tiene stock disponible?</span>
+              <label class="switch"><input type="checkbox" id="productInStockToggle" checked /><span class="switch-track"></span></label>
+            </label>
           </div>
 
           <div class="field">
             <label for="productCostPrice">Precio de compra ($) <span style="font-weight:400; color:var(--gray-500)">— opcional</span></label>
             <input type="number" id="productCostPrice" min="0" step="1" placeholder="Lo que te costó a vos" />
-          </div>
-          <div class="field span-2">
-            <label for="productCategory">Categoría</label>
-            <select id="productCategory"><option value="">Sin categoría</option></select>
           </div>
 
           <!-- Producto POR PESO: precio por kilo + variantes con precio calculado -->
@@ -2632,6 +2648,10 @@ const Store = (() => {
   // catálogo, para que el mini selector no se resetee mientras navega
   // (id de producto -> id de variante elegida).
   const cardSelections = new Map();
+  // Como el stock ahora es solo "con stock / sin stock" (sin cantidad real
+  // cargada), ponemos un tope prudente por línea del carrito para que nadie
+  // ponga 500 unidades por error — no representa inventario real.
+  const MAX_QTY_PER_LINE = 20;
 
   const el = {
     heroTitle: document.getElementById("heroTitle"),
@@ -2772,13 +2792,13 @@ const Store = (() => {
   function addToCart(product, variant = null, qty = 1) {
     const v = variant || null;
     const lineId = v ? `${product.id}::${v.id}` : product.id;
-    const maxQty = v ? (Number(v.stock) || 0) : (product.stock ?? 99);
+    const maxQty = MAX_QTY_PER_LINE;
     const price = v ? v.price : product.price;
     const existing = cart.find((i) => i.lineId === lineId);
     if (existing) {
       if (existing.qty + qty > maxQty) {
         existing.qty = maxQty;
-        showToast("No hay más stock disponible");
+        showToast(`Máximo ${maxQty} unidades por pedido`);
       } else {
         existing.qty += qty;
       }
@@ -2803,7 +2823,7 @@ const Store = (() => {
     if (!item) return;
     item.qty += delta;
     if (item.qty <= 0) { cart = cart.filter((i) => i.lineId !== lineId); }
-    else if (item.qty > item.stock) { item.qty = item.stock; showToast("No hay más stock disponible"); }
+    else if (item.qty > MAX_QTY_PER_LINE) { item.qty = MAX_QTY_PER_LINE; showToast(`Máximo ${MAX_QTY_PER_LINE} unidades por pedido`); }
     saveCart(); renderCart();
   }
   function removeFromCart(lineId) { cart = cart.filter((i) => i.lineId !== lineId); saveCart(); renderCart(); }
@@ -3353,16 +3373,18 @@ const Store = (() => {
 
   /* ---------- Variantes de peso/cantidad (ej: Chía 100g/250g/500g) ----------
      Un producto puede tener un array `variants` (jsonb) con
-     { id, label, weight_grams, price, compare_at_price, stock }.
+     { id, label, weight_grams, price, compare_at_price, in_stock }.
      Si `variants` está vacío o no existe, el producto sigue siendo
-     "simple" y usa directamente p.price / p.stock / p.compare_at_price
+     "simple" y usa directamente p.price / p.in_stock / p.compare_at_price
      como siempre — nada de esto rompe productos existentes. */
   function hasVariants(p) {
     return Array.isArray(p.variants) && p.variants.length > 0;
   }
-  function productStock(p) {
-    if (hasVariants(p)) return p.variants.reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
-    return p.stock ?? 0;
+  // Con o sin stock, sin cantidades: alcanza con que UNA variante tenga
+  // stock para que el producto en general se muestre como disponible.
+  function productInStock(p) {
+    if (hasVariants(p)) return p.variants.some((v) => v.in_stock !== false);
+    return p.in_stock !== false;
   }
   // Variantes ordenadas de mayor a menor peso, para mostrar siempre en ese
   // orden en el selector de la ficha (las sin peso cargado van al final).
@@ -3372,7 +3394,7 @@ const Store = (() => {
   }
   function cheapestVariant(p) {
     if (!hasVariants(p)) return null;
-    const withStock = p.variants.filter((v) => (Number(v.stock) || 0) > 0);
+    const withStock = p.variants.filter((v) => v.in_stock !== false);
     const pool = withStock.length ? withStock : p.variants;
     return pool.reduce((min, v) => (v.price < min.price ? v : min), pool[0]);
   }
@@ -3429,7 +3451,7 @@ const Store = (() => {
   function productCard(p) {
     const variantMode = hasVariants(p);
     const displayVariant = variantMode ? getCardDisplayVariant(p) : null;
-    const outOfStock = productStock(p) <= 0;
+    const outOfStock = !productInStock(p);
     const pct = discountPct(p, displayVariant);
     const displayPrice = variantMode ? displayVariant.price : p.price;
     const compareVal = variantMode ? displayVariant.compare_at_price : p.compare_at_price;
@@ -3456,7 +3478,7 @@ const Store = (() => {
         ${variantMode ? `
         <div class="p-card__weight-menu">
           ${sortedVariants(p).map((v) => {
-            const optOutOfStock = (Number(v.stock) || 0) <= 0;
+            const optOutOfStock = v.in_stock === false;
             const selected = v.id === displayVariant.id;
             return `<button type="button" class="p-card__weight-option ${selected ? "is-selected" : ""}" data-variant-id="${v.id}" ${optOutOfStock ? "disabled" : ""}>
               <span>${escapeHtml(variantDisplayLabel(v))}${optOutOfStock ? " (sin stock)" : ""}</span><span>${money(v.price)}</span>
@@ -3566,9 +3588,7 @@ const Store = (() => {
     const price = variant ? variant.price : product.price;
     const comparePrice = variant ? variant.compare_at_price : product.compare_at_price;
     const showCompare = comparePrice && comparePrice > price;
-    const stock = variant ? (Number(variant.stock) || 0) : (product.stock ?? 0);
-    const outOfStock = hasVariants(product) ? (!variant || stock <= 0) : stock <= 0;
-    const lowStock = !outOfStock && stock <= 3;
+    const outOfStock = variant ? variant.in_stock === false : product.in_stock === false;
 
     // Badge bien visible al lado del precio, para que quede clarísimo a
     // qué peso corresponde el número que se está mostrando.
@@ -3583,8 +3603,8 @@ const Store = (() => {
     el.pdUnitPrice.style.display = perKg ? "block" : "none";
     el.pdUnitPrice.textContent = perKg ? `${money(perKg)} el kilo` : "";
 
-    el.pdStockNote.textContent = outOfStock ? "Sin stock" : lowStock ? `¡Últimas ${stock}!` : "En stock";
-    el.pdStockNote.className = `pd-stock ${outOfStock ? "is-out" : lowStock ? "is-low" : ""}`;
+    el.pdStockNote.textContent = outOfStock ? "Sin stock" : "En stock";
+    el.pdStockNote.className = `pd-stock ${outOfStock ? "is-out" : ""}`;
     el.pdAddBtn.disabled = outOfStock;
     el.pdAddBtn.textContent = outOfStock ? "Sin stock" : "Agregar al carrito";
 
@@ -3601,7 +3621,7 @@ const Store = (() => {
     el.pdVariants.style.display = "flex";
     // Siempre de mayor a menor peso (las sin peso cargado, al final).
     el.pdVariants.innerHTML = sortedVariants(product).map((v) => {
-      const outOfStock = (Number(v.stock) || 0) <= 0;
+      const outOfStock = v.in_stock === false;
       const selected = pdCurrentVariant?.id === v.id;
       return `<button type="button" class="pd-variant-btn ${selected ? "is-selected" : ""}" data-variant-id="${v.id}" ${outOfStock ? "disabled" : ""}>${selected ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ""}${escapeHtml(variantDisplayLabel(v))}${outOfStock ? " (sin stock)" : ""}</button>`;
     }).join("");
@@ -3665,8 +3685,7 @@ const Store = (() => {
   });
 
   function updatePdQty(delta) {
-    const max = pdCurrentVariant ? (Number(pdCurrentVariant.stock) || 0) : (pdCurrentProduct?.stock ?? 99);
-    pdQty = Math.min(max, Math.max(1, pdQty + delta));
+    pdQty = Math.min(MAX_QTY_PER_LINE, Math.max(1, pdQty + delta));
     el.pdQtyValue.textContent = pdQty;
   }
   el.pdQtyDec.addEventListener("click", () => updatePdQty(-1));
@@ -3680,6 +3699,46 @@ const Store = (() => {
     });
   });
 
+
+  const SEARCH_FN_URL = `${SUPABASE_URL}/functions/v1/sano-antojo-search`;
+  let aiSearchIds = null; // ids devueltos por la IA para la búsqueda actual (null = todavía no llegaron)
+  let aiSearchQueryForIds = ""; // a qué búsqueda corresponden esos ids, para no usarlos si el término cambió
+
+  // Combina el filtro instantáneo por texto (siempre disponible, sin
+  // esperar nada) con los resultados de la IA cuando ya llegaron para esta
+  // misma búsqueda — la IA va primero (entiende sinónimos/errores de tipeo),
+  // y atrás se agregan coincidencias literales que la IA no haya traído,
+  // para no perder nunca un resultado obvio.
+  function computeSearchResults(term, baseList) {
+    const pool = baseList || products;
+    const substringMatches = pool.filter((p) => p.name.toLowerCase().includes(term));
+    if (!aiSearchIds || aiSearchQueryForIds !== term) return substringMatches;
+    const poolIds = new Set(pool.map((p) => p.id));
+    const aiMatches = aiSearchIds.map((id) => products.find((p) => p.id === id)).filter((p) => p && poolIds.has(p.id));
+    const seen = new Set(aiMatches.map((p) => p.id));
+    return [...aiMatches, ...substringMatches.filter((p) => !seen.has(p.id))];
+  }
+
+  async function fetchAiSearch(term) {
+    try {
+      const res = await fetch(SEARCH_FN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ query: term }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!Array.isArray(data.ids)) return;
+      // Si mientras esperábamos la persona ya cambió lo que busca, estos
+      // resultados quedaron viejos — los descartamos.
+      if (searchTerm !== term) return;
+      aiSearchIds = data.ids;
+      aiSearchQueryForIds = term;
+      renderMainGrid();
+    } catch {
+      // Sin IA no pasa nada grave: el filtro instantáneo por texto sigue andando solo.
+    }
+  }
 
   function renderOfertas() {
     const list = products.filter((p) => discountPct(p) !== null);
@@ -3700,7 +3759,7 @@ const Store = (() => {
       title = categories.find((c) => c.id === activeCategory)?.name || "Catálogo";
     }
     if (searchTerm) {
-      list = list.filter((p) => p.name.toLowerCase().includes(searchTerm));
+      list = computeSearchResults(searchTerm, list);
       title = `Resultados para "${searchTerm}"`;
     }
     el.catalogTitle.textContent = title;
@@ -3754,11 +3813,15 @@ const Store = (() => {
   function onSearch(value) {
     searchTerm = value.trim().toLowerCase();
     el.searchInput.value = value;
+    // Los resultados de IA de la búsqueda anterior ya no aplican a esta.
+    aiSearchIds = null;
+    aiSearchQueryForIds = "";
     applySearchVisibility();
     const resultsCount = renderMainGrid();
     if (searchTerm) {
       document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
       supabase.from("sano_antojo_search_queries").insert({ query: searchTerm, results_count: resultsCount }).then(() => {}, () => {});
+      fetchAiSearch(searchTerm);
     }
   }
   el.searchBtn.addEventListener("click", () => onSearch(el.searchInput.value));
@@ -3870,9 +3933,9 @@ const Admin = (() => {
   function hasVariants(p) {
     return Array.isArray(p.variants) && p.variants.length > 0;
   }
-  function productStock(p) {
-    if (hasVariants(p)) return p.variants.reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
-    return p.stock ?? 0;
+  function productInStock(p) {
+    if (hasVariants(p)) return p.variants.some((v) => v.in_stock !== false);
+    return p.in_stock !== false;
   }
 
   const el = {
@@ -3896,6 +3959,8 @@ const Admin = (() => {
       settings: document.getElementById("tab-settings"),
     },
     productsList: document.getElementById("productsList"),
+    adminProductSearch: document.getElementById("adminProductSearch"),
+    adminProductSort: document.getElementById("adminProductSort"),
     newProductBtn: document.getElementById("newProductBtn"),
     categoriesList: document.getElementById("categoriesList"),
     newCategoryBtn: document.getElementById("newCategoryBtn"),
@@ -3982,7 +4047,7 @@ const Admin = (() => {
     productPrice: document.getElementById("productPrice"),
     productComparePrice: document.getElementById("productComparePrice"),
     productCostPrice: document.getElementById("productCostPrice"),
-    productStock: document.getElementById("productStock"),
+    productInStockToggle: document.getElementById("productInStockToggle"),
     productCategory: document.getElementById("productCategory"),
     productActive: document.getElementById("productActive"),
     productFeatured: document.getElementById("productFeatured"),
@@ -4214,6 +4279,8 @@ const Admin = (() => {
     el.editOrderForm.addEventListener("submit", saveEditOrder);
 
     el.newProductBtn.addEventListener("click", () => openProductModal());
+    el.adminProductSearch.addEventListener("input", () => renderProductsList());
+    el.adminProductSort.addEventListener("change", () => renderProductsList());
     el.productsList.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
       if (!btn) return;
@@ -4227,9 +4294,16 @@ const Admin = (() => {
     el.productForm.addEventListener("submit", saveProduct);
     el.addVariantBtn.addEventListener("click", () => { addVariantRow(); applySoldByWeightMode(); });
     el.productVariantsList.addEventListener("click", (e) => {
-      const btn = e.target.closest('button[data-action="remove-variant"]');
-      if (!btn) return;
-      btn.closest(".variant-row").remove();
+      const removeBtn = e.target.closest('button[data-action="remove-variant"]');
+      if (removeBtn) { removeBtn.closest(".variant-row").remove(); return; }
+      const stockBtn = e.target.closest(".variant-stock-toggle");
+      if (stockBtn) {
+        const nowInStock = stockBtn.dataset.inStock !== "true";
+        stockBtn.dataset.inStock = String(nowInStock);
+        stockBtn.textContent = nowInStock ? "Con stock" : "Sin stock";
+        stockBtn.classList.toggle("is-in-stock", nowInStock);
+        stockBtn.classList.toggle("is-out", !nowInStock);
+      }
     });
     el.productVariantsList.addEventListener("input", (e) => {
       if (e.target.classList.contains("variant-weight")) {
@@ -4241,6 +4315,13 @@ const Admin = (() => {
     });
     el.productSoldByWeight.addEventListener("change", () => {
       applySoldByWeightMode();
+      // Si es la primera vez que se activa y todavía no hay ninguna
+      // variante cargada, arrancamos con los tres pesos más comunes
+      // (500 g, 250 g y 100 g) para no obligar a agregarlas una por una.
+      if (el.productSoldByWeight.checked && el.productVariantsList.children.length === 0) {
+        [500, 250, 100].forEach((grams) => addVariantRow({ weight_grams: grams }));
+        applySoldByWeightMode();
+      }
       recalcAllVariantRows();
     });
     el.productPricePerKg.addEventListener("input", recalcAllVariantRows);
@@ -4474,6 +4555,7 @@ const Admin = (() => {
   function variantRowMarkup(v = {}) {
     const id = v.id || `v_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const isNewRow = !v.label; // fila recién agregada, sin etiqueta cargada todavía
+    const inStock = v.in_stock !== false; // default: con stock
     return `
       <div class="variant-row" data-variant-id="${id}" data-auto-label="${isNewRow ? "1" : "0"}">
         <div class="variant-label-wrap">
@@ -4482,7 +4564,7 @@ const Admin = (() => {
         <input type="number" class="variant-weight" placeholder="Peso en gramos" min="0" step="1" value="${v.weight_grams ?? ""}" />
         <input type="number" class="variant-price" placeholder="Precio $" min="0" step="1" value="${v.price ?? ""}" />
         <input type="number" class="variant-compare" placeholder="Antes $ (opcional)" min="0" step="1" value="${v.compare_at_price ?? ""}" />
-        <input type="number" class="variant-stock" placeholder="Stock" min="0" step="1" value="${v.stock ?? ""}" />
+        <button type="button" class="variant-stock-toggle ${inStock ? "is-in-stock" : "is-out"}" data-in-stock="${inStock}">${inStock ? "Con stock" : "Sin stock"}</button>
         <button type="button" class="icon-action" data-action="remove-variant" aria-label="Quitar variante">🗑</button>
       </div>`;
   }
@@ -4526,7 +4608,6 @@ const Admin = (() => {
     el.productSimpleStockField.style.display = on ? "none" : "block";
     el.productWeightModeSection.style.display = on ? "block" : "none";
     el.productPrice.required = !on;
-    el.productStock.required = !on;
     el.productVariantsList.classList.toggle("is-sold-by-weight", on);
     el.productVariantsList.querySelectorAll(".variant-row .variant-price, .variant-row .variant-compare").forEach((input) => {
       input.readOnly = on;
@@ -4549,7 +4630,7 @@ const Admin = (() => {
       weight_grams: row.querySelector(".variant-weight").value === "" ? null : Number(row.querySelector(".variant-weight").value),
       price: Number(row.querySelector(".variant-price").value) || 0,
       compare_at_price: row.querySelector(".variant-compare").value === "" ? null : Number(row.querySelector(".variant-compare").value),
-      stock: Number(row.querySelector(".variant-stock").value) || 0,
+      in_stock: row.querySelector(".variant-stock-toggle").dataset.inStock === "true",
     })).filter((v) => v.label);
     return list.sort((a, b) => (b.weight_grams ?? -Infinity) - (a.weight_grams ?? -Infinity));
   }
@@ -4834,8 +4915,17 @@ const Admin = (() => {
   }
 
   function renderProductsList() {
+    const term = (el.adminProductSearch?.value || "").trim().toLowerCase();
+    const sortMode = el.adminProductSort?.value || "recent";
+    let list = term ? products.filter((p) => p.name.toLowerCase().includes(term)) : products;
+    list = [...list].sort((a, b) => {
+      if (sortMode === "az") return a.name.localeCompare(b.name, "es");
+      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
+
     if (products.length === 0) { el.productsList.innerHTML = `<p style="color:var(--gray-500)">Todavía no cargaste productos.</p>`; return; }
-    el.productsList.innerHTML = products.map((p) => {
+    if (list.length === 0) { el.productsList.innerHTML = `<p style="color:var(--gray-500)">No hay productos que coincidan con "${escapeHtml(term)}".</p>`; return; }
+    el.productsList.innerHTML = list.map((p) => {
       const catName = categories.find((c) => c.id === p.category_id)?.name;
       const hasCost = p.cost_price !== null && p.cost_price !== undefined && p.cost_price !== "";
       const margin = hasCost ? p.price - Number(p.cost_price) : null;
@@ -4843,9 +4933,13 @@ const Admin = (() => {
       const marginText = hasCost
         ? ` · ganancia ${money(margin)}${marginPct !== null ? ` (${marginPct}%)` : ""}`
         : "";
+      const outCount = hasVariants(p) ? p.variants.filter((v) => v.in_stock === false).length : 0;
+      const stockText = hasVariants(p)
+        ? (outCount > 0 ? `${outCount} sin stock` : "todas con stock")
+        : (p.in_stock === false ? "Sin stock" : "Con stock");
       const infoLine = hasVariants(p)
-        ? `${p.variants.length} variante${p.variants.length === 1 ? "" : "s"} (${p.variants.map((v) => variantDisplayLabel(v)).join(", ")}) · stock total ${productStock(p)} ${catName ? "· " + escapeHtml(catName) : ""}`
-        : `${money(p.price)} · stock ${p.stock} ${catName ? "· " + escapeHtml(catName) : ""}${marginText}`;
+        ? `${p.variants.length} variante${p.variants.length === 1 ? "" : "s"} (${p.variants.map((v) => variantDisplayLabel(v)).join(", ")}) · ${stockText} ${catName ? "· " + escapeHtml(catName) : ""}`
+        : `${money(p.price)} · ${stockText} ${catName ? "· " + escapeHtml(catName) : ""}${marginText}`;
       return `
       <div class="admin-row" data-id="${p.id}">
         <div class="admin-row__media">${p.image_url ? `<img src="${p.image_url}" alt="" />` : ""}</div>
@@ -4876,7 +4970,7 @@ const Admin = (() => {
     el.productPrice.value = product?.price ?? "";
     el.productComparePrice.value = product?.compare_at_price ?? "";
     el.productCostPrice.value = product?.cost_price ?? "";
-    el.productStock.value = product?.stock ?? 0;
+    el.productInStockToggle.checked = product?.in_stock ?? true;
     el.productCategory.value = product?.category_id || "";
     el.productActive.checked = product ? product.active : true;
     el.productFeatured.checked = product?.featured || false;
@@ -4929,7 +5023,7 @@ const Admin = (() => {
         price: Number(el.productPrice.value) || 0,
         compare_at_price: el.productComparePrice.value === "" ? null : Number(el.productComparePrice.value),
         cost_price: el.productCostPrice.value === "" ? null : Number(el.productCostPrice.value),
-        stock: Number(el.productStock.value) || 0,
+        in_stock: el.productInStockToggle.checked,
         category_id: el.productCategory.value || null,
         active: el.productActive.checked,
         featured: el.productFeatured.checked,
@@ -5040,11 +5134,11 @@ const Admin = (() => {
     if (variantId) return product.variants?.find((v) => v.id === variantId)?.price ?? 0;
     return product.price;
   }
-  function getVariantAwareStock(productId, variantId) {
+  function getVariantAwareInStock(productId, variantId) {
     const product = products.find((p) => p.id === productId);
-    if (!product) return 0;
-    if (variantId) return Number(product.variants?.find((v) => v.id === variantId)?.stock) || 0;
-    return product.stock ?? 0;
+    if (!product) return true;
+    if (variantId) return product.variants?.find((v) => v.id === variantId)?.in_stock !== false;
+    return product.in_stock !== false;
   }
   function getVariantAwareLabel(productId, variantId) {
     const product = products.find((p) => p.id === productId);
@@ -5060,33 +5154,19 @@ const Admin = (() => {
     products.forEach((p) => {
       if (hasVariants(p)) {
         p.variants.forEach((v) => {
-          const stock = Number(v.stock) || 0;
+          const inStock = v.in_stock !== false;
           const isSelected = selectedProductId === p.id && selectedVariantId === v.id;
-          if (stock <= 0 && !isSelected) return;
-          opts.push(`<option value="${p.id}::${v.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)} — ${escapeHtml(variantDisplayLabel(v))} (stock: ${stock})</option>`);
+          if (!inStock && !isSelected) return;
+          opts.push(`<option value="${p.id}::${v.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)} — ${escapeHtml(variantDisplayLabel(v))}</option>`);
         });
       } else {
-        const stock = p.stock ?? 0;
+        const inStock = p.in_stock !== false;
         const isSelected = selectedProductId === p.id && !selectedVariantId;
-        if (stock <= 0 && !isSelected) return;
-        opts.push(`<option value="${p.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)} (stock: ${stock})</option>`);
+        if (!inStock && !isSelected) return;
+        opts.push(`<option value="${p.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)}</option>`);
       }
     });
     return opts.join("");
-  }
-  // Suma (o resta, con delta negativo) stock a un producto o a una variante
-  // puntual dentro de su array `variants`.
-  async function adjustStock(productId, variantId, delta) {
-    const product = products.find((p) => p.id === productId);
-    if (!product) return;
-    if (variantId && Array.isArray(product.variants)) {
-      const variants = product.variants.map((v) =>
-        v.id === variantId ? { ...v, stock: Math.max(0, (Number(v.stock) || 0) + delta) } : v);
-      await supabase.from("sano_antojo_products").update({ variants }).eq("id", productId);
-    } else {
-      const newStock = Math.max(0, (product.stock ?? 0) + delta);
-      await supabase.from("sano_antojo_products").update({ stock: newStock }).eq("id", productId);
-    }
   }
 
   function openManualSaleModal() {
@@ -5111,11 +5191,6 @@ const Admin = (() => {
     if (!product) { showToast("Elegí un producto"); return; }
     const qty = Math.max(1, Number(el.manualSaleQty.value) || 1);
     const unitPrice = Number(el.manualSalePrice.value) || 0;
-    const availableStock = getVariantAwareStock(productId, variantId);
-    if (qty > availableStock) {
-      showToast(`Solo quedan ${availableStock} unidades de ese producto`);
-      return;
-    }
 
     el.saveManualSaleBtn.disabled = true; el.saveManualSaleBtn.textContent = "Guardando...";
     try {
@@ -5132,8 +5207,6 @@ const Admin = (() => {
         fulfilled: true,
       });
       if (orderError) throw orderError;
-
-      await adjustStock(productId, variantId, -qty);
 
       closeManualSaleModalFn();
       showToast("Venta registrada");
@@ -5195,20 +5268,9 @@ const Admin = (() => {
       const isManualSingleItem = order.channel === "manual" && (order.items || []).length === 1;
       if (isManualSingleItem) {
         const oldItem = order.items[0];
-        const oldVariantId = oldItem.variant_id || null;
         const { productId: newProductId, variantId: newVariantId } = parseProductOptionValue(el.editOrderProduct.value);
         const newQty = Math.max(1, Number(el.editOrderQty.value) || 1);
         const newPrice = Number(el.editOrderPrice.value) || 0;
-
-        // Ajustamos el stock según lo que cambió, sin tocar productos/variantes que no correspondan
-        const sameLine = newProductId === oldItem.id && newVariantId === oldVariantId;
-        if (!sameLine) {
-          await adjustStock(oldItem.id, oldVariantId, Number(oldItem.quantity || 0)); // repone lo viejo
-          await adjustStock(newProductId, newVariantId, -newQty); // descuenta lo nuevo
-        } else if (newQty !== oldItem.quantity) {
-          const delta = newQty - oldItem.quantity; // positivo = vendió más, negativo = corrigió para abajo
-          await adjustStock(newProductId, newVariantId, -delta);
-        }
 
         payload.items = [{ id: newProductId, variant_id: newVariantId, title: getVariantAwareLabel(newProductId, newVariantId) || oldItem.title, quantity: newQty, unit_price: newPrice }];
         payload.total = newQty * newPrice;
@@ -5395,16 +5457,13 @@ const Admin = (() => {
       if (!p.active) return;
       if (hasVariants(p)) {
         p.variants.forEach((v) => {
-          const stock = Number(v.stock) || 0;
-          if (stock <= 3) rows.push({ label: `${p.name} (${v.label})`, stock, value: stock === 0 ? "Sin stock" : `Quedan ${stock}` });
+          if (v.in_stock === false) rows.push({ label: `${p.name} (${variantDisplayLabel(v)})`, value: "Sin stock" });
         });
-      } else {
-        const stock = p.stock ?? 0;
-        if (stock <= 3) rows.push({ label: p.name, stock, value: stock === 0 ? "Sin stock" : `Quedan ${stock}` });
+      } else if (p.in_stock === false) {
+        rows.push({ label: p.name, value: "Sin stock" });
       }
     });
-    rows.sort((a, b) => a.stock - b.stock);
-    renderSimpleList(el.statStockAlerts, rows, "No hay productos con poco stock. 👍");
+    renderSimpleList(el.statStockAlerts, rows, "No hay productos marcados sin stock. 👍");
   }
 
   function renderFailedSearches(searches) {
