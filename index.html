@@ -159,18 +159,18 @@ a { color: inherit; text-decoration: none; }
 .product-row .p-card { flex: 0 0 calc((100% - 1rem) / 2); }
 @media (min-width: 620px) { .product-row .p-card { flex-basis: calc((100% - 2rem) / 3); } }
 @media (min-width: 960px) { .product-row .p-card { flex-basis: calc((100% - 5rem) / 6); } }
-.product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.3rem; }
-@media (min-width: 620px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 960px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
+.product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.3rem; }
+@media (min-width: 620px) { .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 960px) { .product-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 
-.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; cursor: pointer; }
-.p-card__media { position: relative; aspect-ratio: 1/1; background: var(--product-bg); }
-.p-card__media img { width: 100%; height: 100%; object-fit: contain; }
-.p-badge { position: absolute; left: 0.5rem; top: 0.5rem; font-size: 0.66rem; font-weight: 800; padding: 0.22rem 0.5rem; border-radius: 5px; color: var(--surface); background: var(--accent); }
+.p-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; cursor: pointer; min-width: 0; }
+.p-card__media { position: relative; width: 100%; padding-top: 100%; background: var(--product-bg); overflow: hidden; }
+.p-card__media img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+.p-badge { position: absolute; left: 0.5rem; top: 0.5rem; font-size: 0.66rem; font-weight: 800; padding: 0.22rem 0.5rem; border-radius: 5px; color: var(--surface); background: var(--accent); z-index: 2; }
 .p-badge--nuevo { left: auto; right: 0.5rem; background: var(--primary); }
 .p-badge--agotado { background: var(--muted); }
 .p-card__body { padding: 0.75rem 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
-.p-card__name { font-size: 0.87rem; font-weight: 600; line-height: 1.3; }
+.p-card__name { font-size: 0.87rem; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: calc(1.3em * 2); }
 .p-card__price-row { display: flex; align-items: center; gap: 0.4rem; margin-top: auto; flex-wrap: wrap; }
 .p-card__price { font-weight: 800; font-size: 1.02rem; }
 .p-card__compare { font-size: 0.78rem; color: var(--muted); text-decoration: line-through; }
@@ -1044,6 +1044,8 @@ a { color: inherit; text-decoration: none; }
 #adminView .variant-stock-toggle.is-in-stock { border-color: var(--black); color: var(--black); }
 #adminView .variant-stock-toggle.is-out { border-color: var(--gray-300); color: var(--gray-500); background: var(--bg); }
 #adminView .variant-row__unit { grid-column: 1 / -1; font-size: 0.76rem; color: var(--gray-500); margin: -0.3rem 0 0.2rem; }
+#adminView .variant-row__barcode { grid-column: 1 / -1; margin: -0.15rem 0 0.35rem; }
+#adminView .variant-row__barcode input { width: 100%; font-size: 0.82rem; padding: 0.4rem 0.6rem; }
 /* Modo "se vende por peso": el peso alcanza para armar la etiqueta, así que
    se oculta esa columna en vez de pedirla dos veces. */
 #productVariantsList.is-sold-by-weight .variant-row { grid-template-columns: 0.9fr 0.9fr 0.9fr 0.8fr auto; }
@@ -1054,6 +1056,12 @@ a { color: inherit; text-decoration: none; }
 #adminView .image-drop { border: 1.5px dashed var(--gray-300); border-radius: var(--radius-md); padding: 1rem; text-align: center; cursor: pointer; color: var(--gray-500); font-size: 0.85rem; transition: border-color 0.12s ease, background 0.12s ease; }
 #adminView .image-drop.is-dragover { border-color: var(--black); background: var(--gray-100); border-style: solid; }
 #adminView .image-drop img { max-height: 120px; margin: 0 auto 0.5rem; border-radius: var(--radius-sm); }
+#adminView .crop-editor { margin-top: 0.6rem; }
+#adminView .crop-editor__preview { width: 170px; height: 170px; margin: 0 auto; border-radius: 10px; overflow: hidden; position: relative; background: var(--product-bg); cursor: grab; border: 1px solid var(--line); touch-action: none; }
+#adminView .crop-editor__preview.is-dragging { cursor: grabbing; }
+#adminView .crop-editor__preview img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+#adminView .crop-editor__zoom { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; font-size: 1rem; max-width: 170px; margin-left: auto; margin-right: auto; }
+#adminView .crop-editor__zoom input[type="range"] { flex: 1; }
 #adminView .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; }
 #adminView .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
 #adminView .switch input { opacity: 0; width: 0; height: 0; }
@@ -1327,6 +1335,9 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
     <div class="product-grid" id="allProductsGrid"></div>
+    <div class="more-btn-wrap" id="allProductsMoreBtnWrap" style="display:none">
+      <button type="button" class="more-btn" id="allProductsMoreBtn">Ver más</button>
+    </div>
   </section>
 
   <section id="recipesSection" style="display:none">
@@ -1561,7 +1572,7 @@ a { color: inherit; text-decoration: none; }
         <button type="submit" class="btn-checkout" id="authSubmitBtn">Continuar</button>
         <p class="modal-error" id="authMessage"></p>
       </form>
-      <button type="button" class="link-btn" id="showAccountFormBtn" style="margin-top:1rem;">¿Preferís crear una cuenta? →</button>
+      <button type="button" class="link-btn" id="showAccountFormBtn" style="margin-top:1rem;">Iniciar sesión →</button>
     </div>
 
     <div id="accountFormWrap" style="display:none">
@@ -1655,7 +1666,6 @@ a { color: inherit; text-decoration: none; }
             <button class="admin-tab" data-tab="recipes">Recetas</button>
             <button class="admin-tab" data-tab="banners">Banners</button>
             <button class="admin-tab" data-tab="help">Ayuda</button>
-            <button class="admin-tab" data-tab="orders">Pedidos</button>
             <button class="admin-tab" data-tab="stats">Estadísticas</button>
             <button class="admin-tab" data-tab="settings">Ajustes</button>
           </div>
@@ -1731,33 +1741,12 @@ a { color: inherit; text-decoration: none; }
         <div class="admin-list" id="feedbackList"></div>
       </section>
 
-      <section id="tab-orders" style="display:none">
-        <div class="panel-head">
-          <h2>Pedidos</h2>
-          <button class="btn btn--dark" id="newManualSaleBtn">+ Registrar venta</button>
-        </div>
-        <p class="helper-text" style="margin-top:-0.6rem">
-          Los pedidos online se actualizan solos. Usá "+ Registrar venta" para algo que vendiste en el local, por transferencia directa, etc. — descuenta el stock y queda en las estadísticas.
-        </p>
-        <div class="admin-list" id="ordersList"></div>
-      </section>
-
       <section id="tab-stats" style="display:none">
         <div class="panel-head">
           <h2>Estadísticas</h2>
         </div>
 
-        <div class="stat-cards" id="statCards"></div>
-
         <div class="stats-grid">
-          <div class="stats-block">
-            <h3>Productos más vendidos</h3>
-            <div id="statTopSelling" class="bar-list"></div>
-          </div>
-          <div class="stats-block">
-            <h3>Ingresos por categoría</h3>
-            <div id="statByCategory" class="bar-list"></div>
-          </div>
           <div class="stats-block">
             <h3>Productos más vistos</h3>
             <div id="statMostViewed" class="bar-list"></div>
@@ -1882,6 +1871,17 @@ a { color: inherit; text-decoration: none; }
           <label>Foto principal (obligatoria)</label>
           <div class="image-drop" id="productImageDrop"><span id="productImageDropText">Tocá para subir una foto</span></div>
           <input type="file" id="productImageInput" accept="image/*" hidden />
+          <div class="crop-editor" id="productImageCropBox" style="display:none;">
+            <div class="crop-editor__preview" id="productImageCropPreview">
+              <img id="productImageCropImg" src="" alt="" draggable="false" />
+            </div>
+            <div class="crop-editor__zoom">
+              <span>🔍−</span>
+              <input type="range" id="productImageCropZoom" min="1" max="4" step="0.05" value="1" />
+              <span>🔍+</span>
+            </div>
+            <p class="helper-text" style="margin:0.4rem 0 0; text-align:center;">Arrastrá la foto para centrarla y usá la barra para acercar o alejar. Si alejás y quedan espacios vacíos, se rellenan solos con el color de fondo de las fotos (configurable en Ajustes).</p>
+          </div>
         </div>
         <div class="form-grid">
           <div class="field">
@@ -1906,6 +1906,19 @@ a { color: inherit; text-decoration: none; }
             <label for="productCategory" style="color:var(--primary); font-size:0.88rem;">📁 Categoría</label>
             <select id="productCategory"><option value="">Sin categoría</option></select>
             <p class="helper-text" style="margin:0.4rem 0 0;">Así aparece agrupado en el menú de categorías de la tienda — no te olvides de elegir una.</p>
+          </div>
+          <div class="field">
+            <label for="productBarcode">Código de barras / QR <span style="font-weight:400; color:var(--gray-500)">— opcional</span></label>
+            <input type="text" id="productBarcode" placeholder="Escaneá el código acá con el lector" />
+            <p class="helper-text" style="margin:0.4rem 0 0;">Para el Punto de Venta: hacé clic en el campo y escaneá el código con el lector, se completa solo.</p>
+          </div>
+          <div class="field">
+            <label for="productIvaRate">Tasa de IVA</label>
+            <select id="productIvaRate">
+              <option value="21">21% (general)</option>
+              <option value="10.5">10,5%</option>
+              <option value="0">0% (exento)</option>
+            </select>
           </div>
           <div class="field span-2">
             <label for="productDescription">Descripción</label>
@@ -2118,101 +2131,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 
   <!-- Modal venta manual -->
-  <div class="modal-overlay" id="manualSaleModalOverlay">
-    <div class="modal">
-      <div class="modal__head">
-        <h3>Registrar venta</h3>
-        <button class="close-btn" id="closeManualSaleModal">✕</button>
-      </div>
-      <form id="manualSaleForm">
-        <div class="field">
-          <label for="manualSaleProduct">Producto</label>
-          <select id="manualSaleProduct" required></select>
-        </div>
-        <div class="form-grid">
-          <div class="field">
-            <label for="manualSaleQty">Cantidad</label>
-            <input type="number" id="manualSaleQty" min="1" value="1" required />
-          </div>
-          <div class="field">
-            <label for="manualSalePrice">Precio unitario ($)</label>
-            <input type="number" id="manualSalePrice" min="0" step="1" required />
-          </div>
-        </div>
-        <div class="field">
-          <label for="manualSaleCustomer">Cliente (opcional)</label>
-          <input type="text" id="manualSaleCustomer" placeholder="Ej: venta en el local, Juan Pérez..." />
-        </div>
-        <p class="helper-text" style="margin-top:-0.4rem">
-          Al guardar, se descuenta el stock del producto y queda registrada en Pedidos y Estadísticas.
-        </p>
-        <div class="form-actions">
-          <button type="button" class="btn btn--outline" id="cancelManualSaleBtn">Cancelar</button>
-          <button type="submit" class="btn btn--dark" id="saveManualSaleBtn">Guardar venta</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
-  <!-- Modal editar pedido -->
-  <div class="modal-overlay" id="editOrderModalOverlay">
-    <div class="modal">
-      <div class="modal__head">
-        <h3>Editar pedido</h3>
-        <button class="close-btn" id="closeEditOrderModal">✕</button>
-      </div>
-      <form id="editOrderForm">
-        <input type="hidden" id="editOrderId" />
-        <div class="field">
-          <label for="editOrderCustomer">Cliente</label>
-          <input type="text" id="editOrderCustomer" placeholder="Nombre o email del cliente" />
-        </div>
-        <div class="field">
-          <label for="editOrderDate">Fecha y hora del pedido</label>
-          <input type="datetime-local" id="editOrderDate" required />
-        </div>
-        <div class="field">
-          <label for="editOrderStatus">Estado</label>
-          <select id="editOrderStatus">
-            <option value="pending">Pendiente</option>
-            <option value="approved">Pagado</option>
-            <option value="in_process">En proceso</option>
-            <option value="rejected">Rechazado</option>
-            <option value="cancelled">Cancelado</option>
-            <option value="whatsapp">Coordinado por WhatsApp</option>
-          </select>
-        </div>
-
-        <div id="editOrderItemsEditable" style="display:none">
-          <div class="form-grid">
-            <div class="field span-2">
-              <label for="editOrderProduct">Producto</label>
-              <select id="editOrderProduct"></select>
-            </div>
-            <div class="field">
-              <label for="editOrderQty">Cantidad</label>
-              <input type="number" id="editOrderQty" min="1" />
-            </div>
-            <div class="field">
-              <label for="editOrderPrice">Precio unitario ($)</label>
-              <input type="number" id="editOrderPrice" min="0" step="1" />
-            </div>
-          </div>
-          <p class="helper-text" style="margin-top:-0.4rem">Si cambiás el producto o la cantidad, el stock se ajusta solo.</p>
-        </div>
-        <div id="editOrderItemsReadonly" style="display:none">
-          <p class="helper-text" style="margin-top:-0.4rem">
-            Los productos de un pedido online no se pueden editar acá: <span id="editOrderItemsText"></span>
-          </p>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn--outline" id="cancelEditOrderBtn">Cancelar</button>
-          <button type="submit" class="btn btn--dark" id="saveEditOrderBtn">Guardar cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
 </div>
 
@@ -2651,6 +2570,10 @@ const Store = (() => {
   let cart = [];
   let recipesCache = [];
   let newProductsLimit = 12;
+  // 4 filas × 6 columnas (el ancho de grilla más grande, en desktop) — en
+  // pantallas más angostas con menos columnas por fila, simplemente se ven
+  // más de 4 filas antes de tener que tocar "Ver más", nunca menos.
+  let allProductsLimit = 24;
   // Recuerda qué variante (peso) eligió la persona en cada tarjeta del
   // catálogo, para que el mini selector no se resetee mientras navega
   // (id de producto -> id de variante elegida).
@@ -2701,6 +2624,8 @@ const Store = (() => {
     allProductsGrid: document.getElementById("allProductsGrid"),
     allProductsCount: document.getElementById("allProductsCount"),
     allProductsSort: document.getElementById("allProductsSort"),
+    allProductsMoreBtnWrap: document.getElementById("allProductsMoreBtnWrap"),
+    allProductsMoreBtn: document.getElementById("allProductsMoreBtn"),
     recipesSection: document.getElementById("recipesSection"),
     recipesGrid: document.getElementById("recipesGrid"),
     faqAccordion: document.getElementById("faqAccordion"),
@@ -3378,6 +3303,16 @@ const Store = (() => {
     const days = (Date.now() - new Date(p.created_at).getTime()) / 86400000;
     return days <= 14;
   }
+  // Arma el object-position + zoom guardados a mano en el panel admin para
+  // la foto de portada, para que se vea recortada igual que la eligieron.
+  // Base pareja para todas las fotos de portada: se ve la imagen completa
+  // por default (zoom 1) y se acerca solo si alguien lo ajusta a mano. Los
+  // espacios que puedan quedar (fotos rectangulares) se rellenan solos con
+  // el color de fondo configurado, gracias al object-fit: contain.
+  function cropStyle(crop) {
+    const c = { x: 50, y: 50, zoom: 1, ...(crop || {}) };
+    return `object-fit:contain; object-position:${c.x}% ${c.y}%; transform:scale(${c.zoom});`;
+  }
 
   /* ---------- Variantes de peso/cantidad (ej: Chía 100g/250g/500g) ----------
      Un producto puede tener un array `variants` (jsonb) con
@@ -3470,7 +3405,7 @@ const Store = (() => {
         ${pct ? `<span class="p-badge">-${pct}%</span>` : ""}
         ${isNew(p) ? `<span class="p-badge p-badge--nuevo">Nuevo</span>` : ""}
         ${outOfStock ? `<span class="p-badge p-badge--agotado" style="left:auto; right:0.5rem;">Agotado</span>` : ""}
-        ${p.image_url ? `<img src="${p.image_url}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" />` : ""}
+        ${p.image_url ? `<img src="${p.image_url}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" style="${cropStyle(p.image_crop)}" />` : ""}
       </div>
       <div class="p-card__body">
         <p class="p-card__name">${escapeHtml(p.name)}</p>
@@ -3786,8 +3721,9 @@ const Store = (() => {
   el.moreBtn.addEventListener("click", () => { newProductsLimit += 12; renderMainGrid(); });
 
   // "Todos los productos" es una sección fija aparte: siempre muestra el
-  // catálogo completo, sin paginar ni depender del filtro de categoría.
-  // Por default va alfabético; la persona puede cambiar a más nuevos/antiguos.
+  // catálogo completo, sin depender del filtro de categoría. Por default va
+  // alfabético; la persona puede cambiar a más nuevos/antiguos. Arranca
+  // mostrando 4 filas y suma más de a un tanto con "Ver más".
   function renderAllProducts() {
     const sortMode = el.allProductsSort.value;
     const list = [...products].sort((a, b) => {
@@ -3795,12 +3731,17 @@ const Store = (() => {
       return a.name.localeCompare(b.name, "es");
     });
     el.allProductsCount.textContent = list.length ? `${list.length} producto${list.length === 1 ? "" : "s"}` : "";
-    el.allProductsGrid.innerHTML = list.length
-      ? list.map(productCard).join("")
-      : `<p class="empty-note" style="grid-column:1/-1;">Todavía no hay productos cargados.</p>`;
+    if (list.length === 0) {
+      el.allProductsGrid.innerHTML = `<p class="empty-note" style="grid-column:1/-1;">Todavía no hay productos cargados.</p>`;
+      el.allProductsMoreBtnWrap.style.display = "none";
+      return;
+    }
+    el.allProductsGrid.innerHTML = list.slice(0, allProductsLimit).map(productCard).join("");
+    el.allProductsMoreBtnWrap.style.display = list.length > allProductsLimit ? "block" : "none";
   }
   wireAddButtons(el.allProductsGrid);
-  el.allProductsSort.addEventListener("change", renderAllProducts);
+  el.allProductsSort.addEventListener("change", () => { allProductsLimit = 24; renderAllProducts(); });
+  el.allProductsMoreBtn.addEventListener("click", () => { allProductsLimit += 24; renderAllProducts(); });
 
   // Mientras hay una búsqueda activa, la home (hero, categorías, banners,
   // ofertas, recomendados) se oculta y solo se ve el resultado — así el
@@ -3924,7 +3865,6 @@ const Store = (() => {
 const Admin = (() => {
   let categories = [];
   let products = [];
-  let orders = [];
   let recipes = [];
   let faqs = [];
   let banners = [];
@@ -3932,6 +3872,7 @@ const Admin = (() => {
   let pendingProductImageFile = null;
   let pendingProductImageFile2 = null;
   let pendingProductImageFile3 = null;
+  let productImageCrop = { x: 50, y: 50, zoom: 1 }; // posición y zoom elegidos a mano para la foto de portada
   let removeImage2 = false;
   let removeImage3 = false;
   let pendingCategoryImageFile = null;
@@ -3968,7 +3909,6 @@ const Admin = (() => {
       banners: document.getElementById("tab-banners"),
       recipes: document.getElementById("tab-recipes"),
       help: document.getElementById("tab-help"),
-      orders: document.getElementById("tab-orders"),
       stats: document.getElementById("tab-stats"),
       settings: document.getElementById("tab-settings"),
     },
@@ -3978,35 +3918,6 @@ const Admin = (() => {
     newProductBtn: document.getElementById("newProductBtn"),
     categoriesList: document.getElementById("categoriesList"),
     newCategoryBtn: document.getElementById("newCategoryBtn"),
-    ordersList: document.getElementById("ordersList"),
-    newManualSaleBtn: document.getElementById("newManualSaleBtn"),
-    manualSaleModalOverlay: document.getElementById("manualSaleModalOverlay"),
-    manualSaleForm: document.getElementById("manualSaleForm"),
-    manualSaleProduct: document.getElementById("manualSaleProduct"),
-    manualSaleQty: document.getElementById("manualSaleQty"),
-    manualSalePrice: document.getElementById("manualSalePrice"),
-    manualSaleCustomer: document.getElementById("manualSaleCustomer"),
-    closeManualSaleModal: document.getElementById("closeManualSaleModal"),
-    cancelManualSaleBtn: document.getElementById("cancelManualSaleBtn"),
-    saveManualSaleBtn: document.getElementById("saveManualSaleBtn"),
-    editOrderModalOverlay: document.getElementById("editOrderModalOverlay"),
-    editOrderForm: document.getElementById("editOrderForm"),
-    editOrderId: document.getElementById("editOrderId"),
-    editOrderCustomer: document.getElementById("editOrderCustomer"),
-    editOrderDate: document.getElementById("editOrderDate"),
-    editOrderStatus: document.getElementById("editOrderStatus"),
-    editOrderItemsEditable: document.getElementById("editOrderItemsEditable"),
-    editOrderItemsReadonly: document.getElementById("editOrderItemsReadonly"),
-    editOrderItemsText: document.getElementById("editOrderItemsText"),
-    editOrderProduct: document.getElementById("editOrderProduct"),
-    editOrderQty: document.getElementById("editOrderQty"),
-    editOrderPrice: document.getElementById("editOrderPrice"),
-    closeEditOrderModal: document.getElementById("closeEditOrderModal"),
-    cancelEditOrderBtn: document.getElementById("cancelEditOrderBtn"),
-    saveEditOrderBtn: document.getElementById("saveEditOrderBtn"),
-    statCards: document.getElementById("statCards"),
-    statTopSelling: document.getElementById("statTopSelling"),
-    statByCategory: document.getElementById("statByCategory"),
     statMostViewed: document.getElementById("statMostViewed"),
     statStockAlerts: document.getElementById("statStockAlerts"),
     statFailedSearches: document.getElementById("statFailedSearches"),
@@ -4063,10 +3974,16 @@ const Admin = (() => {
     productCostPrice: document.getElementById("productCostPrice"),
     productInStockToggle: document.getElementById("productInStockToggle"),
     productCategory: document.getElementById("productCategory"),
+    productBarcode: document.getElementById("productBarcode"),
+    productIvaRate: document.getElementById("productIvaRate"),
     productActive: document.getElementById("productActive"),
     productFeatured: document.getElementById("productFeatured"),
     productImageDrop: document.getElementById("productImageDrop"),
     productImageInput: document.getElementById("productImageInput"),
+    productImageCropBox: document.getElementById("productImageCropBox"),
+    productImageCropPreview: document.getElementById("productImageCropPreview"),
+    productImageCropImg: document.getElementById("productImageCropImg"),
+    productImageCropZoom: document.getElementById("productImageCropZoom"),
     productImageDrop2: document.getElementById("productImageDrop2"),
     productImageInput2: document.getElementById("productImageInput2"),
     removeImage2Btn: document.getElementById("removeImage2Btn"),
@@ -4159,7 +4076,12 @@ const Admin = (() => {
     });
 
     setupImageDrop(el.categoryImageDrop, el.categoryImageInput, (file) => { pendingCategoryImageFile = file; });
-    setupImageDrop(el.productImageDrop, el.productImageInput, (file) => { pendingProductImageFile = file; });
+    setupImageDrop(el.productImageDrop, el.productImageInput, (file) => {
+      pendingProductImageFile = file;
+      resetProductImageCrop();
+      showProductImageCropEditor(URL.createObjectURL(file));
+    });
+    setupProductImageCropEditor();
     setupImageDrop(el.productImageDrop2, el.productImageInput2, (file) => {
       pendingProductImageFile2 = file;
       removeImage2 = false;
@@ -4268,30 +4190,6 @@ const Admin = (() => {
       if (btn.dataset.action === "delete-feedback") deleteFeedback(item);
     });
 
-    el.newManualSaleBtn.addEventListener("click", openManualSaleModal);
-    el.closeManualSaleModal.addEventListener("click", closeManualSaleModalFn);
-    el.cancelManualSaleBtn.addEventListener("click", closeManualSaleModalFn);
-    el.manualSaleProduct.addEventListener("change", () => {
-      const { productId, variantId } = parseProductOptionValue(el.manualSaleProduct.value);
-      el.manualSalePrice.value = getVariantAwarePrice(productId, variantId);
-    });
-    el.manualSaleForm.addEventListener("submit", saveManualSale);
-
-    el.ordersList.addEventListener("click", (e) => {
-      const btn = e.target.closest('button[data-action="edit-order"]');
-      if (!btn) return;
-      const id = btn.closest(".admin-row").dataset.id;
-      const order = orders.find((o) => o.id === id);
-      if (order) openEditOrderModal(order);
-    });
-    el.closeEditOrderModal.addEventListener("click", closeEditOrderModalFn);
-    el.cancelEditOrderBtn.addEventListener("click", closeEditOrderModalFn);
-    el.editOrderProduct.addEventListener("change", () => {
-      const { productId, variantId } = parseProductOptionValue(el.editOrderProduct.value);
-      el.editOrderPrice.value = getVariantAwarePrice(productId, variantId);
-    });
-    el.editOrderForm.addEventListener("submit", saveEditOrder);
-
     el.newProductBtn.addEventListener("click", () => openProductModal());
     el.adminProductSearch.addEventListener("input", () => renderProductsList());
     el.adminProductSort.addEventListener("change", () => renderProductsList());
@@ -4342,6 +4240,57 @@ const Admin = (() => {
     el.productComparePricePerKg.addEventListener("input", recalcAllVariantRows);
 
     el.settingsForm.addEventListener("submit", saveSettings);
+  }
+
+  function resetProductImageCrop() {
+    productImageCrop = { x: 50, y: 50, zoom: 1 };
+    el.productImageCropZoom.value = 1;
+  }
+  function applyProductImageCrop() {
+    el.productImageCropImg.style.objectPosition = `${productImageCrop.x}% ${productImageCrop.y}%`;
+    el.productImageCropImg.style.transform = `scale(${productImageCrop.zoom})`;
+  }
+  function showProductImageCropEditor(src) {
+    el.productImageCropImg.src = src;
+    el.productImageCropBox.style.display = "block";
+    applyProductImageCrop();
+  }
+  // Arrastrar (mouse o touch) para reposicionar la foto dentro del cuadro,
+  // y la barra para acercar/alejar — así se elige a mano cómo se va a ver
+  // recortada en la tienda.
+  function setupProductImageCropEditor() {
+    const box = el.productImageCropPreview;
+    let dragging = false;
+    let startX = 0, startY = 0, startCropX = 50, startCropY = 50;
+
+    function onDown(clientX, clientY) {
+      dragging = true;
+      startX = clientX; startY = clientY;
+      startCropX = productImageCrop.x; startCropY = productImageCrop.y;
+      box.classList.add("is-dragging");
+    }
+    function onMove(clientX, clientY) {
+      if (!dragging) return;
+      const rect = box.getBoundingClientRect();
+      const dxPercent = ((clientX - startX) / rect.width) * 100;
+      const dyPercent = ((clientY - startY) / rect.height) * 100;
+      productImageCrop.x = Math.min(100, Math.max(0, startCropX - dxPercent));
+      productImageCrop.y = Math.min(100, Math.max(0, startCropY - dyPercent));
+      applyProductImageCrop();
+    }
+    function onUp() { dragging = false; box.classList.remove("is-dragging"); }
+
+    box.addEventListener("mousedown", (e) => { e.preventDefault(); onDown(e.clientX, e.clientY); });
+    window.addEventListener("mousemove", (e) => onMove(e.clientX, e.clientY));
+    window.addEventListener("mouseup", onUp);
+    box.addEventListener("touchstart", (e) => { const t = e.touches[0]; onDown(t.clientX, t.clientY); }, { passive: true });
+    box.addEventListener("touchmove", (e) => { const t = e.touches[0]; onMove(t.clientX, t.clientY); }, { passive: true });
+    box.addEventListener("touchend", onUp);
+
+    el.productImageCropZoom.addEventListener("input", () => {
+      productImageCrop.zoom = Number(el.productImageCropZoom.value);
+      applyProductImageCrop();
+    });
   }
 
   function setupImageDrop(dropEl, inputEl, onFile) {
@@ -4416,6 +4365,7 @@ const Admin = (() => {
           <button class="icon-action" data-action="move-up" aria-label="Subir" ${i === 0 ? "disabled" : ""}>▲</button>
           <button class="icon-action" data-action="move-down" aria-label="Bajar" ${i === categories.length - 1 ? "disabled" : ""}>▼</button>
         </div>
+        <div class="admin-row__media">${c.image_url ? `<img src="${c.image_url}" alt="" />` : ""}</div>
         <div class="admin-row__info"><strong>${escapeHtml(c.name)}</strong></div>
         <div class="row-actions">
           <button class="icon-action" data-action="edit" aria-label="Editar">✎</button>
@@ -4580,6 +4530,9 @@ const Admin = (() => {
         <input type="number" class="variant-compare" placeholder="Antes $ (opcional)" min="0" step="1" value="${v.compare_at_price ?? ""}" />
         <button type="button" class="variant-stock-toggle ${inStock ? "is-in-stock" : "is-out"}" data-in-stock="${inStock}">${inStock ? "Con stock" : "Sin stock"}</button>
         <button type="button" class="icon-action" data-action="remove-variant" aria-label="Quitar variante">🗑</button>
+        <div class="variant-row__barcode">
+          <input type="text" class="variant-barcode" placeholder="Código de barras / QR de este peso puntual (opcional)" value="${escapeHtml(v.barcode || "")}" />
+        </div>
       </div>`;
   }
 
@@ -4645,6 +4598,7 @@ const Admin = (() => {
       price: Number(row.querySelector(".variant-price").value) || 0,
       compare_at_price: row.querySelector(".variant-compare").value === "" ? null : Number(row.querySelector(".variant-compare").value),
       in_stock: row.querySelector(".variant-stock-toggle").dataset.inStock === "true",
+      barcode: row.querySelector(".variant-barcode").value.trim() || null,
     })).filter((v) => v.label);
     return list.sort((a, b) => (b.weight_grams ?? -Infinity) - (a.weight_grams ?? -Infinity));
   }
@@ -4985,6 +4939,8 @@ const Admin = (() => {
     el.productComparePrice.value = product?.compare_at_price ?? "";
     el.productCostPrice.value = product?.cost_price ?? "";
     el.productInStockToggle.checked = product?.in_stock ?? true;
+    el.productBarcode.value = product?.barcode || "";
+    el.productIvaRate.value = product?.iva_rate ?? 21;
     el.productCategory.value = product?.category_id || "";
     el.productActive.checked = product ? product.active : true;
     el.productFeatured.checked = product?.featured || false;
@@ -5003,6 +4959,14 @@ const Admin = (() => {
     el.productImageDrop3.innerHTML = product?.image_url_3 ? `<img src="${product.image_url_3}" alt="" />` : `<span>Tocá para subir una foto</span>`;
     el.removeImage2Btn.style.display = product?.image_url_2 ? "inline-block" : "none";
     el.removeImage3Btn.style.display = product?.image_url_3 ? "inline-block" : "none";
+    if (product?.image_url) {
+      productImageCrop = { x: 50, y: 50, zoom: 1, ...(product.image_crop || {}) };
+      el.productImageCropZoom.value = productImageCrop.zoom;
+      showProductImageCropEditor(product.image_url);
+    } else {
+      resetProductImageCrop();
+      el.productImageCropBox.style.display = "none";
+    }
     el.productModalOverlay.classList.add("is-open");
   }
   function closeProductModalFn() { el.productModalOverlay.classList.remove("is-open"); }
@@ -5038,6 +5002,9 @@ const Admin = (() => {
         compare_at_price: el.productComparePrice.value === "" ? null : Number(el.productComparePrice.value),
         cost_price: el.productCostPrice.value === "" ? null : Number(el.productCostPrice.value),
         in_stock: el.productInStockToggle.checked,
+        barcode: el.productBarcode.value.trim() || null,
+        iva_rate: Number(el.productIvaRate.value),
+        image_crop: productImageCrop,
         category_id: el.productCategory.value || null,
         active: el.productActive.checked,
         featured: el.productFeatured.checked,
@@ -5069,255 +5036,9 @@ const Admin = (() => {
     showToast("Producto eliminado"); loadProducts();
   }
 
-  const ORDER_STATUS_LABELS = {
-    pending: "Pendiente",
-    approved: "Pagado",
-    in_process: "En proceso",
-    rejected: "Rechazado",
-    cancelled: "Cancelado",
-    whatsapp: "Coordinado por WhatsApp",
-  };
-
-  async function loadOrders() {
-    const { data, error } = await supabase
-      .from("sano_antojo_orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error) orders = data || [];
-    renderOrdersList();
-  }
-
-  function renderOrdersList() {
-    if (orders.length === 0) {
-      el.ordersList.innerHTML = `<p style="color:var(--gray-500)">Todavía no hay pedidos.</p>`;
-      return;
-    }
-    el.ordersList.innerHTML = orders.map((o) => {
-      const itemsSummary = (o.items || []).map((i) => `${i.quantity}x ${i.title}`).join(", ");
-      const date = new Date(o.created_at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" });
-      const statusLabel = ORDER_STATUS_LABELS[o.status] || o.status;
-      const isPaid = o.status === "approved";
-      const channelLabel = o.channel === "manual" ? " · 🏬 En el local" : "";
-      return `
-      <div class="admin-row" data-id="${o.id}" style="align-items:flex-start; flex-direction:column; gap:0.5rem;">
-        <div style="display:flex; justify-content:space-between; width:100%; gap:0.8rem; flex-wrap:wrap;">
-          <div class="admin-row__info" style="min-width:220px;">
-            <strong>${money(o.total)} — ${escapeHtml(o.customer_full_name || o.customer_email || "sin nombre")}</strong>
-            <span>${date}${channelLabel}</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span class="badge ${isPaid ? "" : "is-off"}">${escapeHtml(statusLabel)}</span>
-            <button class="icon-action" data-action="edit-order" aria-label="Editar pedido">✎</button>
-          </div>
-        </div>
-        <p style="font-size:0.85rem; color:var(--gray-500); margin:0;">${escapeHtml(itemsSummary)}</p>
-        <label class="toggle-row" style="width:100%; padding:0;" title="Activalo cuando ya le entregaste el pedido al cliente en mano">
-          <span style="font-size:0.85rem;">¿Ya se lo entregaste al cliente?</span>
-          <label class="switch">
-            <input type="checkbox" data-action="fulfilled" ${o.fulfilled ? "checked" : ""} ${isPaid ? "" : "disabled"} />
-            <span class="switch-track"></span>
-          </label>
-        </label>
-        ${!isPaid ? `<p class="helper-text" style="margin:0;">Este toggle se habilita cuando el pedido está pagado.</p>` : ""}
-      </div>`;
-    }).join("");
-  }
-
-  el.ordersList.addEventListener("change", async (e) => {
-    const input = e.target.closest('input[data-action="fulfilled"]');
-    if (!input) return;
-    const id = input.closest(".admin-row").dataset.id;
-    const { error } = await supabase.from("sano_antojo_orders").update({ fulfilled: input.checked }).eq("id", id);
-    if (error) { showToast("No se pudo actualizar"); input.checked = !input.checked; return; }
-    const order = orders.find((o) => o.id === id);
-    if (order) order.fulfilled = input.checked;
-  });
-
-  /* ---------- Helpers para elegir producto+variante en los selects del admin
-     (venta manual y edición de pedido). El value del <option> codifica
-     "productId" para productos simples o "productId::variantId" para
-     variantes, igual que el lineId del carrito. ---------- */
-  function parseProductOptionValue(value) {
-    if (!value) return { productId: null, variantId: null };
-    const [productId, variantId] = value.split("::");
-    return { productId, variantId: variantId || null };
-  }
-  function getVariantAwarePrice(productId, variantId) {
-    const product = products.find((p) => p.id === productId);
-    if (!product) return 0;
-    if (variantId) return product.variants?.find((v) => v.id === variantId)?.price ?? 0;
-    return product.price;
-  }
-  function getVariantAwareInStock(productId, variantId) {
-    const product = products.find((p) => p.id === productId);
-    if (!product) return true;
-    if (variantId) return product.variants?.find((v) => v.id === variantId)?.in_stock !== false;
-    return product.in_stock !== false;
-  }
-  function getVariantAwareLabel(productId, variantId) {
-    const product = products.find((p) => p.id === productId);
-    if (!product) return "";
-    const variant = variantId ? product.variants?.find((v) => v.id === variantId) : null;
-    return variant ? `${product.name} (${variantDisplayLabel(variant)})` : product.name;
-  }
-  // Arma las <option> para elegir producto (o producto+variante) en un <select>,
-  // mostrando solo lo que tiene stock — salvo el que ya está seleccionado hoy,
-  // para no perderlo del dropdown al editar.
-  function buildProductOptionsHtml(selectedProductId, selectedVariantId) {
-    const opts = [];
-    products.forEach((p) => {
-      if (hasVariants(p)) {
-        p.variants.forEach((v) => {
-          const inStock = v.in_stock !== false;
-          const isSelected = selectedProductId === p.id && selectedVariantId === v.id;
-          if (!inStock && !isSelected) return;
-          opts.push(`<option value="${p.id}::${v.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)} — ${escapeHtml(variantDisplayLabel(v))}</option>`);
-        });
-      } else {
-        const inStock = p.in_stock !== false;
-        const isSelected = selectedProductId === p.id && !selectedVariantId;
-        if (!inStock && !isSelected) return;
-        opts.push(`<option value="${p.id}" ${isSelected ? "selected" : ""}>${escapeHtml(p.name)}</option>`);
-      }
-    });
-    return opts.join("");
-  }
-
-  function openManualSaleModal() {
-    const optionsHtml = buildProductOptionsHtml(null, null);
-    if (!optionsHtml) {
-      showToast("No hay productos con stock disponible para vender");
-      return;
-    }
-    el.manualSaleProduct.innerHTML = optionsHtml;
-    const { productId, variantId } = parseProductOptionValue(el.manualSaleProduct.value);
-    el.manualSaleQty.value = 1;
-    el.manualSalePrice.value = getVariantAwarePrice(productId, variantId);
-    el.manualSaleCustomer.value = "";
-    el.manualSaleModalOverlay.classList.add("is-open");
-  }
-  function closeManualSaleModalFn() { el.manualSaleModalOverlay.classList.remove("is-open"); }
-
-  async function saveManualSale(e) {
-    e.preventDefault();
-    const { productId, variantId } = parseProductOptionValue(el.manualSaleProduct.value);
-    const product = products.find((p) => p.id === productId);
-    if (!product) { showToast("Elegí un producto"); return; }
-    const qty = Math.max(1, Number(el.manualSaleQty.value) || 1);
-    const unitPrice = Number(el.manualSalePrice.value) || 0;
-
-    el.saveManualSaleBtn.disabled = true; el.saveManualSaleBtn.textContent = "Guardando...";
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const adminUser = session?.user;
-
-      const { error: orderError } = await supabase.from("sano_antojo_orders").insert({
-        user_id: adminUser.id,
-        customer_email: el.manualSaleCustomer.value.trim() || "Venta en el local",
-        items: [{ id: productId, variant_id: variantId, title: getVariantAwareLabel(productId, variantId), quantity: qty, unit_price: unitPrice }],
-        total: qty * unitPrice,
-        status: "approved",
-        channel: "manual",
-        fulfilled: true,
-      });
-      if (orderError) throw orderError;
-
-      closeManualSaleModalFn();
-      showToast("Venta registrada");
-      await loadProducts();
-      await loadOrders();
-      await loadStats();
-    } catch (err) {
-      console.error(err);
-      showToast("No se pudo registrar la venta");
-    } finally {
-      el.saveManualSaleBtn.disabled = false; el.saveManualSaleBtn.textContent = "Guardar venta";
-    }
-  }
-
-  function toDatetimeLocalValue(dateStr) {
-    const d = new Date(dateStr);
-    const pad = (n) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
-  function openEditOrderModal(order) {
-    el.editOrderId.value = order.id;
-    el.editOrderCustomer.value = order.customer_email || "";
-    el.editOrderDate.value = toDatetimeLocalValue(order.created_at);
-    el.editOrderStatus.value = order.status;
-
-    const isManualSingleItem = order.channel === "manual" && (order.items || []).length === 1;
-    if (isManualSingleItem) {
-      const item = order.items[0];
-      el.editOrderItemsEditable.style.display = "block";
-      el.editOrderItemsReadonly.style.display = "none";
-      el.editOrderProduct.innerHTML = buildProductOptionsHtml(item.id, item.variant_id || null);
-      el.editOrderQty.value = item.quantity;
-      el.editOrderPrice.value = item.unit_price;
-    } else {
-      el.editOrderItemsEditable.style.display = "none";
-      el.editOrderItemsReadonly.style.display = "block";
-      el.editOrderItemsText.textContent = (order.items || []).map((i) => `${i.quantity}x ${i.title}`).join(", ");
-    }
-
-    el.editOrderModalOverlay.classList.add("is-open");
-  }
-  function closeEditOrderModalFn() { el.editOrderModalOverlay.classList.remove("is-open"); }
-
-  async function saveEditOrder(e) {
-    e.preventDefault();
-    const id = el.editOrderId.value;
-    const order = orders.find((o) => o.id === id);
-    if (!order) return;
-
-    el.saveEditOrderBtn.disabled = true; el.saveEditOrderBtn.textContent = "Guardando...";
-    try {
-      const payload = {
-        customer_email: el.editOrderCustomer.value.trim() || null,
-        created_at: new Date(el.editOrderDate.value).toISOString(),
-        status: el.editOrderStatus.value,
-      };
-
-      const isManualSingleItem = order.channel === "manual" && (order.items || []).length === 1;
-      if (isManualSingleItem) {
-        const oldItem = order.items[0];
-        const { productId: newProductId, variantId: newVariantId } = parseProductOptionValue(el.editOrderProduct.value);
-        const newQty = Math.max(1, Number(el.editOrderQty.value) || 1);
-        const newPrice = Number(el.editOrderPrice.value) || 0;
-
-        payload.items = [{ id: newProductId, variant_id: newVariantId, title: getVariantAwareLabel(newProductId, newVariantId) || oldItem.title, quantity: newQty, unit_price: newPrice }];
-        payload.total = newQty * newPrice;
-      }
-
-      const { error } = await supabase.from("sano_antojo_orders").update(payload).eq("id", id);
-      if (error) throw error;
-
-      closeEditOrderModalFn();
-      showToast("Pedido actualizado");
-      await loadProducts();
-      await loadOrders();
-      await loadStats();
-    } catch (err) {
-      console.error(err);
-      showToast("No se pudo guardar el pedido");
-    } finally {
-      el.saveEditOrderBtn.disabled = false; el.saveEditOrderBtn.textContent = "Guardar cambios";
-    }
-  }
-
   // ------------------------------------------------------------
   // ESTADÍSTICAS
   // ------------------------------------------------------------
-  function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
-  function startOfWeek(d) {
-    const x = startOfDay(d);
-    const day = (x.getDay() + 6) % 7; // lunes = 0
-    x.setDate(x.getDate() - day);
-    return x;
-  }
-  function startOfMonth(d) { const x = new Date(d); x.setDate(1); x.setHours(0, 0, 0, 0); return x; }
-
   function renderBarList(container, rows, formatValue) {
     if (rows.length === 0) {
       container.innerHTML = `<p class="empty-note">Todavía no hay datos suficientes.</p>`;
@@ -5353,106 +5074,10 @@ const Admin = (() => {
     const searches = searchesRes.data || [];
     const visits = visitsRes.data || [];
 
-    renderStatCards(views, visits);
-    renderTopSelling();
-    renderRevenueByCategory();
     renderMostViewed(views);
     renderStockAlerts();
     renderFailedSearches(searches);
     renderTraffic(visits);
-  }
-
-  function renderStatCards() {
-    const now = new Date();
-    const dayStart = startOfDay(now), weekStart = startOfWeek(now), monthStart = startOfMonth(now);
-
-    // Todas las ventas se coordinan por WhatsApp, así que esa es la base
-    // real de facturación (ya no depende de un pago "aprobado" online).
-    const paid = orders.filter((o) => o.status === "whatsapp" || o.status === "approved");
-    const whatsappOrders = orders.filter((o) => o.status === "whatsapp");
-
-    const sumSince = (list, since) => list.filter((o) => new Date(o.created_at) >= since).reduce((s, o) => s + Number(o.total || 0), 0);
-
-    const ventasHoy = sumSince(paid, dayStart);
-    const ventasSemana = sumSince(paid, weekStart);
-    const ventasMes = sumSince(paid, monthStart);
-    const ticketPromedio = paid.length ? paid.reduce((s, o) => s + Number(o.total || 0), 0) / paid.length : 0;
-    const pendientesEntrega = orders.filter((o) => (o.status === "approved" || o.status === "whatsapp") && !o.fulfilled).length;
-
-    // clientes recurrentes vs nuevos (sobre todos los pedidos, pagados o coordinados por WhatsApp)
-    const porCliente = {};
-    orders.forEach((o) => {
-      const key = o.customer_full_name || o.customer_email || o.user_id;
-      if (!key) return;
-      porCliente[key] = (porCliente[key] || 0) + 1;
-    });
-    const totalClientes = Object.keys(porCliente).length;
-    const recurrentes = Object.values(porCliente).filter((n) => n > 1).length;
-
-    // Ganancia estimada: precio de venta al momento del pedido menos el
-    // precio de compra ACTUAL del producto (si nunca lo cargaron, ese
-    // producto simplemente no suma a la ganancia).
-    const costById = {};
-    products.forEach((p) => { costById[p.id] = p.cost_price; });
-    const gananciaDesde = (since) =>
-      paid
-        .filter((o) => new Date(o.created_at) >= since)
-        .reduce((sum, o) => sum + (o.items || []).reduce((s, it) => {
-          const cost = costById[it.id];
-          if (cost === null || cost === undefined) return s;
-          return s + (Number(it.unit_price || 0) - Number(cost)) * Number(it.quantity || 0);
-        }, 0), 0);
-    const gananciaMes = gananciaDesde(monthStart);
-
-    const cards = [
-      { label: "Ventas hoy", value: money(ventasHoy) },
-      { label: "Ventas esta semana", value: money(ventasSemana) },
-      { label: "Ventas este mes", value: money(ventasMes) },
-      { label: "Ganancia estimada este mes", value: money(gananciaMes), sub: "solo productos con precio de compra cargado" },
-      { label: "Ticket promedio", value: money(ticketPromedio), sub: `sobre ${paid.length} pedido${paid.length === 1 ? "" : "s"}` },
-      { label: "Pedidos por WhatsApp", value: whatsappOrders.length },
-      { label: "Pendientes de entrega", value: pendientesEntrega },
-      { label: "Clientes con más de 1 compra", value: `${recurrentes} / ${totalClientes}` },
-    ];
-
-    el.statCards.innerHTML = cards.map((c) => `
-      <div class="stat-card">
-        <span class="stat-card__label">${escapeHtml(c.label)}</span>
-        <span class="stat-card__value">${c.value}</span>
-        ${c.sub ? `<span class="stat-card__sub">${escapeHtml(c.sub)}</span>` : ""}
-      </div>`).join("");
-  }
-
-  function renderTopSelling() {
-    const counts = {};
-    orders.forEach((o) => {
-      (o.items || []).forEach((it) => {
-        const name = it.title || it.name || "Producto";
-        counts[name] = (counts[name] || 0) + Number(it.quantity || 0);
-      });
-    });
-    const rows = Object.entries(counts)
-      .map(([label, value]) => ({ label, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 8);
-    renderBarList(el.statTopSelling, rows, (v) => `${v} vendidos`);
-  }
-
-  function renderRevenueByCategory() {
-    const catByProductId = {};
-    products.forEach((p) => { catByProductId[p.id] = categories.find((c) => c.id === p.category_id)?.name || "Sin categoría"; });
-
-    const totals = {};
-    orders.forEach((o) => {
-      (o.items || []).forEach((it) => {
-        const catName = catByProductId[it.id] || "Sin categoría";
-        totals[catName] = (totals[catName] || 0) + Number(it.unit_price || 0) * Number(it.quantity || 0);
-      });
-    });
-    const rows = Object.entries(totals)
-      .map(([label, value]) => ({ label, value }))
-      .sort((a, b) => b.value - a.value);
-    renderBarList(el.statByCategory, rows, (v) => money(v));
   }
 
   function renderMostViewed(views) {
@@ -5603,7 +5228,7 @@ const Admin = (() => {
 
   async function loadAll() {
     await loadCategories();
-    await Promise.all([loadProducts(), loadSettings(), loadOrders(), loadRecipes(), loadFaqs(), loadFeedback(), loadBanners()]);
+    await Promise.all([loadProducts(), loadSettings(), loadRecipes(), loadFaqs(), loadFeedback(), loadBanners()]);
     await loadStats();
   }
 
